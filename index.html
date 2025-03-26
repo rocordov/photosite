@@ -546,7 +546,7 @@
       <canvas id="heroCanvas"></canvas>
       <!-- Hero content overlays the canvas -->
       <div class="hero-content">
-        <h1>Welcome</h1>
+        <h1 id="animated-welcome">Welcome</h1>
         <p>Discover moments that transform</p>
       </div>
     </section>
@@ -730,5 +730,46 @@
       });
     });
   </script>
-</body>
+  <script>
+    const welcomeMessages = [
+      "Welcome",
+      "Bienvenido",
+      "Bienvenue",
+      "Willkommen",
+      "Benvenuto",
+      "ยินดีต้อนรับ",  // Thai
+      "ようこそ",       // Japanese
+      "환영합니다",      // Korean
+      "欢迎",          // Chinese
+      "स्वागत है",     // Hindi
+    ];
+    
+    let currentIndex = 0;
+    const welcomeEl = document.getElementById('animated-welcome');
+    
+    function cycleWelcomeMessages() {
+      welcomeEl.classList.remove('fade-in');
+      void welcomeEl.offsetWidth; // Trigger reflow
+      welcomeEl.classList.add('fade-in');
+      welcomeEl.textContent = welcomeMessages[currentIndex];
+      currentIndex = (currentIndex + 1) % welcomeMessages.length;
+    }
+    
+    setInterval(cycleWelcomeMessages, 2500); // Change message every 2.5 seconds
+    
+    document.addEventListener("DOMContentLoaded", () => {
+      welcomeEl.classList.add('fade-in');
+    });
+  </script>
+  <style>
+    #animated-welcome.fade-in {
+      animation: fadeInText 1s ease-in-out;
+    }
+    
+    @keyframes fadeInText {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  </body>
 </html>
