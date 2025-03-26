@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
-	>
-			<image imageURL="images/IMG_4685.jpg" thumbURL="thumbs/IMG_4685.jpg" linkURL="" linkTarget="_blank">
+    enableAutoPlay="true"
+    displayTime="7"
+    maxThumbRows="2"
+    imageScaleMode="SCALE"
+    randomizeImages="true"
+    autoPlayOnLoad="true"
+    enablePreloading="true"
+    galleryTitle="Me"
+    imageTransitionType="CROSS_FADE"
+    enableFullscreen="true"
+    showCaptions="true"
+    captionTextColor="#ffffff"
+    captionBackgroundColor="#000000"
+    backgroundColor="#121212"
+    borderColor="#00bcd4" 
+>
+	<image imageURL="images/IMG_4685.jpg" thumbURL="thumbs/IMG_4685.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-	</juiceboxgallery>
+</juiceboxgallery>

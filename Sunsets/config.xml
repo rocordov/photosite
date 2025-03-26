@@ -1,40 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
-				enableAutoPlay="true"
-					imageScaleMode="SCALE"
-					autoPlayOnLoad="true"
-					galleryTitle="Sunsets"
-		>
-			<image imageURL="images/IMG_1767.jpg" thumbURL="thumbs/IMG_1767.jpg" linkURL="" linkTarget="_blank">
+    enableAutoPlay="true"
+    displayTime="7"
+    maxThumbRows="2"
+    imageScaleMode="SCALE"
+    randomizeImages="true"
+    autoPlayOnLoad="true"
+    enablePreloading="true"
+    galleryTitle="Sunsets"
+    imageTransitionType="CROSS_FADE"
+    enableFullscreen="true"
+    showCaptions="true"
+    captionTextColor="#ffffff"
+    captionBackgroundColor="#000000"
+    backgroundColor="#121212"
+    borderColor="#00bcd4" 
+>
+	<image imageURL="images/IMG_1767.jpg" thumbURL="thumbs/IMG_1767.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/IMG_2008.jpg" thumbURL="thumbs/IMG_2008.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/IMG_2008.jpg" thumbURL="thumbs/IMG_2008.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/IMG_2026.jpg" thumbURL="thumbs/IMG_2026.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/IMG_2026.jpg" thumbURL="thumbs/IMG_2026.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/IMG_2107.jpg" thumbURL="thumbs/IMG_2107.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/IMG_2107.jpg" thumbURL="thumbs/IMG_2107.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/IMG_0906.jpg" thumbURL="thumbs/IMG_0906.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/IMG_0906.jpg" thumbURL="thumbs/IMG_0906.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/IMG_0917.jpg" thumbURL="thumbs/IMG_0917.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/IMG_0917.jpg" thumbURL="thumbs/IMG_0917.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/IMG_0921.jpg" thumbURL="thumbs/IMG_0921.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/IMG_0921.jpg" thumbURL="thumbs/IMG_0921.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/IMG_0924.jpg" thumbURL="thumbs/IMG_0924.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/IMG_0924.jpg" thumbURL="thumbs/IMG_0924.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-	</juiceboxgallery>
+</juiceboxgallery>

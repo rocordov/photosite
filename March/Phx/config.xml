@@ -1,149 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
-				enableAutoPlay="true"
-					showAutoPlayButton="true"
-					thumbWidth="100"
-					thumbHeight="100"
-					imageScaleMode="SCALE"
-					useFullscreenExpand="true"
-					autoPlayOnLoad="true"
-					galleryTitle="Phoenix in March"
-					imageTransitionType="CROSS_FADE"
-		>
-			<image imageURL="images/_7RV1117.jpg" thumbURL="thumbs/_7RV1117.jpg" linkURL="" linkTarget="_blank">
+    enableAutoPlay="true"
+    displayTime="7"
+    maxThumbRows="2"
+    imageScaleMode="SCALE"
+    randomizeImages="true"
+    autoPlayOnLoad="true"
+    enablePreloading="true"
+    galleryTitle="March"
+    imageTransitionType="CROSS_FADE"
+    enableFullscreen="true"
+    showCaptions="true"
+    captionTextColor="#ffffff"
+    captionBackgroundColor="#000000"
+    backgroundColor="#121212"
+    borderColor="#00bcd4" 
+>
+	<image imageURL="images/_7RV1117.jpg" thumbURL="thumbs/_7RV1117.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1130.jpg" thumbURL="thumbs/_7RV1130.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1130.jpg" thumbURL="thumbs/_7RV1130.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1145.jpg" thumbURL="thumbs/_7RV1145.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1145.jpg" thumbURL="thumbs/_7RV1145.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1163.jpg" thumbURL="thumbs/_7RV1163.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1163.jpg" thumbURL="thumbs/_7RV1163.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1166.jpg" thumbURL="thumbs/_7RV1166.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1166.jpg" thumbURL="thumbs/_7RV1166.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1169.jpg" thumbURL="thumbs/_7RV1169.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1169.jpg" thumbURL="thumbs/_7RV1169.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1172.jpg" thumbURL="thumbs/_7RV1172.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1172.jpg" thumbURL="thumbs/_7RV1172.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1177.jpg" thumbURL="thumbs/_7RV1177.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1177.jpg" thumbURL="thumbs/_7RV1177.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1187.jpg" thumbURL="thumbs/_7RV1187.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1187.jpg" thumbURL="thumbs/_7RV1187.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1190.jpg" thumbURL="thumbs/_7RV1190.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1190.jpg" thumbURL="thumbs/_7RV1190.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1193.jpg" thumbURL="thumbs/_7RV1193.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1193.jpg" thumbURL="thumbs/_7RV1193.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1202.jpg" thumbURL="thumbs/_7RV1202.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1202.jpg" thumbURL="thumbs/_7RV1202.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1205.jpg" thumbURL="thumbs/_7RV1205.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1205.jpg" thumbURL="thumbs/_7RV1205.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1232.jpg" thumbURL="thumbs/_7RV1232.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1232.jpg" thumbURL="thumbs/_7RV1232.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1235.jpg" thumbURL="thumbs/_7RV1235.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1235.jpg" thumbURL="thumbs/_7RV1235.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1241.jpg" thumbURL="thumbs/_7RV1241.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1241.jpg" thumbURL="thumbs/_7RV1241.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1274.jpg" thumbURL="thumbs/_7RV1274.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1274.jpg" thumbURL="thumbs/_7RV1274.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1277.jpg" thumbURL="thumbs/_7RV1277.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1277.jpg" thumbURL="thumbs/_7RV1277.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1280.jpg" thumbURL="thumbs/_7RV1280.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1280.jpg" thumbURL="thumbs/_7RV1280.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1317.jpg" thumbURL="thumbs/_7RV1317.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1317.jpg" thumbURL="thumbs/_7RV1317.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1320.jpg" thumbURL="thumbs/_7RV1320.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1320.jpg" thumbURL="thumbs/_7RV1320.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/7RV01519.jpg" thumbURL="thumbs/7RV01519.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/7RV01519.jpg" thumbURL="thumbs/7RV01519.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/7RV01794-Edit-Edit.jpg" thumbURL="thumbs/7RV01794-Edit-Edit.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/7RV01794-Edit-Edit.jpg" thumbURL="thumbs/7RV01794-Edit-Edit.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_SZV0375.jpg" thumbURL="thumbs/_SZV0375.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_SZV0375.jpg" thumbURL="thumbs/_SZV0375.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1857.jpg" thumbURL="thumbs/_7RV1857.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1857.jpg" thumbURL="thumbs/_7RV1857.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1862.jpg" thumbURL="thumbs/_7RV1862.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1862.jpg" thumbURL="thumbs/_7RV1862.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1882.jpg" thumbURL="thumbs/_7RV1882.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1882.jpg" thumbURL="thumbs/_7RV1882.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1887.jpg" thumbURL="thumbs/_7RV1887.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1887.jpg" thumbURL="thumbs/_7RV1887.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1894.jpg" thumbURL="thumbs/_7RV1894.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1894.jpg" thumbURL="thumbs/_7RV1894.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1908.jpg" thumbURL="thumbs/_7RV1908.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1908.jpg" thumbURL="thumbs/_7RV1908.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1930.jpg" thumbURL="thumbs/_7RV1930.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1930.jpg" thumbURL="thumbs/_7RV1930.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1933-HDR.jpg" thumbURL="thumbs/_7RV1933-HDR.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1933-HDR.jpg" thumbURL="thumbs/_7RV1933-HDR.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV1983.jpg" thumbURL="thumbs/_7RV1983.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV1983.jpg" thumbURL="thumbs/_7RV1983.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-			<image imageURL="images/_7RV2010-Enhanced-NR.jpg" thumbURL="thumbs/_7RV2010-Enhanced-NR.jpg" linkURL="" linkTarget="_blank">
+	<image imageURL="images/_7RV2010-Enhanced-NR.jpg" thumbURL="thumbs/_7RV2010-Enhanced-NR.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
-	</juiceboxgallery>
+</juiceboxgallery>
