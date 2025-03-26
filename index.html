@@ -173,6 +173,8 @@
       position: relative;
       padding: 6px 0;
       transition: var(--transition-standard);
+      z-index: 20;
+      pointer-events: auto;
     }
 
     .nav-links a:hover, .nav-links a:focus {
@@ -519,12 +521,15 @@
         visibility: hidden;
         transition: opacity 0.3s ease;
         z-index: 5;
+        pointer-events: none;
       }
-
+      
       .overlay.active {
         opacity: 1;
         visibility: visible;
+        pointer-events: auto;
       }
+
     }
   </style>
 </head>
@@ -640,7 +645,8 @@
         const overlay = document.querySelector('.overlay');
         
         if (mobileMenuBtn && navLinks) {
-          mobileMenuBtn.addEventListener('click', () => {
+          mobileMenuBtn.addEventListener('click', (e) => {
+            // Don't prevent default behavior for the button
             const isOpen = mobileMenuBtn.classList.toggle('open');
             navLinks.classList.toggle('open');
             if (overlay) overlay.classList.toggle('active');
@@ -648,6 +654,19 @@
             // Update ARIA attributes
             mobileMenuBtn.setAttribute('aria-expanded', isOpen);
             navLinks.setAttribute('aria-hidden', !isOpen);
+          });
+          
+          // Ensure nav links are clickable
+          document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+              // Let the default navigation happen
+              // Close the menu after clicking a link
+              mobileMenuBtn.classList.remove('open');
+              navLinks.classList.remove('open');
+              if (overlay) overlay.classList.remove('active');
+              mobileMenuBtn.setAttribute('aria-expanded', 'false');
+              navLinks.setAttribute('aria-hidden', 'true');
+            });
           });
           
           if (overlay) {
