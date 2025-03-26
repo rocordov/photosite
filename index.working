@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rois Cordova | Creative Work</title>
+  <meta name="description" content="Discover the creative work of Rois Cordova. Explore inspiring photography, innovative projects, and interactive designs that engage and captivate.">
+  
+  <!-- Open Graph tags for better social sharing -->
+  <meta property="og:title" content="Rois Cordova | Creative Work">
+  <meta property="og:description" content="Explore inspiring photography, innovative projects, and interactive designs by Rois Cordova.">
+  <meta property="og:image" content="https://rocordov.github.io/photosite/Me/images/IMG_4685.jpg">
+  <meta property="og:url" content="https://rocordov.github.io/photosite/">
+  <meta property="og:type" content="website">
+  
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Rois Cordova",
+    "url": "https://rocordov.github.io/photosite/",
+    "sameAs": [
+      "https://instagram.com/rois_cordova",
+      "https://tiktok.com/@rois.c"
+    ],
+    "jobTitle": "Photographer and Creative Professional",
+    "description": "Discover the creative work of Rois Cordova featuring inspiring photography, innovative projects, and interactive designs."
+  }
+  </script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+  <style>
+    :root {
+      --bg: #121212;
+      --bg-gradient: linear-gradient(145deg, #141414, #0f0f0f);
+      --card: #1e1e1e;
+      --accent: #00bcd4;
+      --text: #e0e0e0;
+      --text-secondary: #aaa;
+      --hover-scale: 1.05;
+      --transition-standard: all 0.3s ease;
+      --spacing-sm: 10px;
+      --spacing-md: 20px;
+      --spacing-lg: 30px;
+      --spacing-xl: 60px;
+      --border-radius: 12px;
+      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --header-border: #333;
+      --accent-glow: rgba(0, 188, 212, 0.5);
+      --footer-bg: rgba(20, 20, 20, 0.7);
+    }
+
+    /* Light Mode Theme */
+    :root.light-mode {
+      --bg: #ffffff;
+      --bg-gradient: linear-gradient(145deg, #f5f5f5, #ffffff);
+      --card: #f5f5f5;
+      --accent: #007acc; /* Darker blue for better contrast on light backgrounds */
+      --text: #121212;
+      --text-secondary: #555;
+      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+      --header-border: #ddd;
+      --accent-glow: rgba(0, 122, 204, 0.3);
+      --footer-bg: rgba(245, 245, 245, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      line-height: 1.6;
+      letter-spacing: 0.2px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Skip Link for Accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      padding: 8px;
+      background-color: var(--accent);
+      color: #000;
+      z-index: 100;
+      transition: top 0.3s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Navigation */
+    nav {
+      background-color: rgba(24, 24, 24, 0.98);
+      padding: var(--spacing-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      height: 80px; /* Initial height */
+      transition: all 0.3s ease;
+    }
+    
+    nav.shrink {
+      height: 60px;
+      background-color: rgba(24, 24, 24, 0.9); /* Slightly transparent when shrunk */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Enhanced shadow when shrunk */
+      padding: 10px var(--spacing-md);
+    }
+    
+    nav.shrink .logo {
+      font-size: 1.3rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition-standard);
+    }
+
+    .logo:hover, .logo:focus {
+      color: #fff;
+      text-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: var(--spacing-md);
+      padding: 6px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-standard);
+    }
+
+    .theme-toggle:hover, .theme-toggle:focus {
+      background-color: rgba(0, 188, 212, 0.1);
+      transform: scale(1.1);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Icon changes based on theme */
+    :root.light-mode .theme-toggle .fa-moon {
+      display: none;
+    }
+
+    :root.light-mode .theme-toggle .fa-sun {
+      display: inline-block;
+    }
+
+    .theme-toggle .fa-sun {
+      display: none;
+    }
+
+    .theme-toggle .fa-moon {
+      display: inline-block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      margin-left: var(--spacing-md);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      padding: 6px 0;
+      transition: var(--transition-standard);
+      z-index: 20;
+      pointer-events: auto;
+    }
+
+    .nav-links a:hover, .nav-links a:focus {
+      color: var(--accent);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a:focus::after {
+      width: 100%;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 15;
+      position: relative;
+      width: 46px;
+      height: 46px;
+      margin-right: 10px;
+    }
+
+    .hamburger-icon {
+      position: absolute;
+      display: block;
+      width: 30px;
+      height: 3px;
+      background-color: var(--accent);
+      transition: var(--transition-standard);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hamburger-icon::before, .hamburger-icon::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 3px;
+      background-color: var(--accent);
+      transition: var(--transition-standard);
+      left: 0;
+    }
+
+    .hamburger-icon::before {
+      transform: translateY(-8px);
+    }
+
+    .hamburger-icon::after {
+      transform: translateY(8px);
+    }
+
+    .mobile-menu-btn.open .hamburger-icon {
+      background-color: transparent;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::before {
+      transform: rotate(45deg);
+      top: 0;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::after {
+      transform: rotate(-45deg);
+      top: 0;
+    }
+
+    /* Hero Section with SVG Animation Background */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 30vh; /* Increased height for better visibility */
+      min-height: 200px; /* Ensure minimum height on small screens */
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(18, 18, 18, 0.9); /* Better background for the animation */
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: var(--spacing-md);
+      width: 100%;
+      max-width: 800px;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    
+    .hero-content h1 {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--accent);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    
+    .hero-content p {
+      font-size: 1.4rem;
+      color: var(--text);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      line-height: 1.5;
+    }
+    
+    /* Parallax Effect */
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 120%;
+      background: inherit;
+      transform: translateY(-10%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Gallery Grid */
+    .gallery-menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      padding: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .gallery-item {
+      text-decoration: none;
+      color: var(--text);
+      width: 260px;
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-standard);
+      transition: var(--transition-standard);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .gallery-item:nth-child(1) { animation-delay: 0.1s; }
+    .gallery-item:nth-child(2) { animation-delay: 0.2s; }
+    .gallery-item:nth-child(3) { animation-delay: 0.3s; }
+    .gallery-item:nth-child(4) { animation-delay: 0.4s; }
+    .gallery-item:nth-child(5) { animation-delay: 0.5s; }
+
+    .gallery-item:hover, .gallery-item:focus {
+      transform: scale(var(--hover-scale));
+      box-shadow: 0 0 20px var(--accent);
+      outline: none;
+    }
+
+    .gallery-item:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .thumbnail {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border: none;
+      pointer-events: none;
+      display: block;
+    }
+
+    .caption {
+      padding: 15px 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+      border-top: 1px solid #333;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: var(--spacing-lg) var(--spacing-md);
+      color: #777;
+      font-size: 0.95rem;
+      border-top: 1px solid #2a2a2a;
+      background-color: rgba(20, 20, 20, 0.7);
+    }
+
+    .footer-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .footer-social {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--spacing-md);
+      gap: var(--spacing-md);
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #2a2a2a;
+      color: var(--text);
+      font-size: 1.2rem;
+      transition: var(--transition-standard);
+    }
+
+    .footer-social a:hover, .footer-social a:focus {
+      background-color: var(--accent);
+      color: #000;
+      transform: translateY(-3px);
+    }
+
+    .footer-social a:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .footer-info {
+      margin-top: var(--spacing-sm);
+    }
+
+    .footer-info a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition-standard);
+    }
+
+    .footer-info a:hover, .footer-info a:focus {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* Command Palette */
+    .command-palette {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      padding-top: 10vh;
+    }
+
+    .command-palette.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .command-palette-container {
+      width: 90%;
+      max-width: 600px;
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-hover);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .command-palette-search {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid var(--header-border);
+    }
+
+    .command-palette-search i {
+      color: var(--accent);
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .command-palette-input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.1rem;
+      padding: 8px 0;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .command-palette-input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    .command-palette-results {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .command-palette-no-results {
+      padding: 16px;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    .command-palette-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      color: var(--text);
+      transition: background-color 0.2s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .command-palette-item:hover, 
+    .command-palette-item:focus, 
+    .command-palette-item.selected {
+      background-color: rgba(0, 188, 212, 0.1);
+      border-left-color: var(--accent);
+    }
+
+    .command-palette-item i {
+      margin-right: 10px;
+      color: var(--accent);
+      width: 20px;
+      text-align: center;
+    }
+
+    .command-palette-item span {
+      flex: 1;
+    }
+
+    .command-palette-shortcut {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-left: 10px;
+      opacity: 0.8;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .gallery-item {
+        width: 85%;
+        max-width: 340px;
+      }
+
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Back to Top Button */
+    #back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--card);
+      color: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: var(--shadow-standard);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 9;
+    }
+
+    #back-to-top:hover, #back-to-top:focus {
+      background-color: var(--accent);
+      color: #000;
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    #back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    @media (max-width: 600px) {
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 75%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: rgba(25, 25, 25, 0.98);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 70px var(--spacing-md) var(--spacing-md);
+        transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-links.open {
+        right: 0;
+      }
+
+      .nav-links a {
+        margin: 10px 0;
+        font-size: 1.2rem;
+        width: 100%;
+        padding: 8px 0;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+        z-index: 5;
+        pointer-events: none;
+      }
+      
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (implemented directly) -->
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <img src="./images/website-icon.png" alt="R." style="height: 40px; width: auto; vertical-align: middle;" />
+      </a>
+      
+      <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+        <span class="hamburger-icon"></span>
+      </button>
+      
+      <div class="nav-links" id="nav-links" aria-hidden="true">
+        <a href="./index.html" aria-label="Home">Home</a>
+        <a href="./projects.html" aria-label="Projects">Projects</a>
+        <a href="./about.html" aria-label="About">About</a>
+        <a href="./connect.html" aria-label="Connect">Connect</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="true">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+        </button>
+      </div>
+      
+      <div class="overlay" id="overlay"></div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <!-- Hero Section with SVG Animation -->
+    <section class="hero" id="hero">
+      <!-- SVG for morphing background -->
+      <svg id="heroSVG" viewBox="0 0 200 300" preserveAspectRatio="none" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;" aria-hidden="true" role="presentation">
+        <title>Decorative wave animation</title>
+        <desc>A gently morphing wave shape that adds visual interest to the hero section</desc>
+        <path fill="#00bcd4" opacity="0.3">
+          <animate attributeName="d" dur="10s" repeatCount="indefinite"
+            values="
+              M0,300 C200,100 600,500 800,300 L800,600 L0,600 Z;
+              M0,300 C200,500 600,100 800,300 L800,600 L0,600 Z;
+              M0,300 C200,100 600,500 800,300 L800,600 L0,600 Z
+            " />
+        </path>
+        <path fill="#ff4081" opacity="0.3">
+          <animate attributeName="d" dur="12s" repeatCount="indefinite"
+            values="
+              M0,320 C220,120 620,520 820,320 L820,620 L0,620 Z;
+              M0,320 C220,520 620,120 820,320 L820,620 L0,620 Z;
+              M0,320 C220,120 620,520 820,320 L820,620 L0,620 Z
+            " />
+        </path>
+      </svg>
+      
+      <!-- Hero content overlays the SVG -->
+      <div class="hero-content">
+        <h1 id="animated-welcome">💗💜💙</h1>
+        <p id="quote-display">Loading quote...</p>
+      </div>
+    </section>
+
+    <!-- Gallery Grid - Dynamically populated from albums.json -->
+    <div class="gallery-menu" id="gallery-menu"></div>
+  </main>
+
+  <!-- User Feedback Section -->
+  <section id="feedback" style="padding: 40px; background-color: var(--card); border-top: 1px solid var(--header-border);">
+    <h2 style="color: var(--accent); text-align: center; margin-bottom: 20px;">Leave Your Feedback</h2>
+    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 30px;">Share your thoughts or testimonials below:</p>
+    <script src="https://utteranc.es/client.js"
+            repo="rocordov/site-feedback"
+            issue-term="pathname"
+            theme="github-dark"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-social">
+        <a href="https://instagram.com/rois_cordova" aria-label="Follow me on Instagram" target="_blank" rel="noopener">
+          <i class="fab fa-instagram" aria-hidden="true"></i>
+        </a>
+        <a href="https://tiktok.com/@rois.c" aria-label="Follow me on TikTok" target="_blank" rel="noopener">
+          <i class="fab fa-tiktok" aria-hidden="true"></i>
+        </a>
+        <a href="mailto:rocordov@gmail.com" aria-label="Email me">
+          <i class="far fa-envelope" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="footer-info">
+        <p>&copy; 2025 R Cordova. All rights reserved.</p>
+        <p><a href="connect.html">Connect with me</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button id="back-to-top" aria-label="Back to top">
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <!-- Command Palette -->
+  <div class="command-palette" id="command-palette" role="dialog" aria-label="Command palette">
+    <div class="command-palette-container">
+      <div class="command-palette-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="text" id="command-palette-input" class="command-palette-input" placeholder="Type a command or search..." aria-label="Search commands">
+      </div>
+      <div class="command-palette-results" id="command-palette-results"></div>
+    </div>
+  </div>
+
+  <script>
+    // Command Palette Functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const commandPalette = document.getElementById('command-palette');
+      const commandInput = document.getElementById('command-palette-input');
+      const commandResults = document.getElementById('command-palette-results');
+      let selectedIndex = -1;
+      
+      // Define navigation options
+      const navigationOptions = [
+        { name: 'Home', icon: 'fa-home', url: './index.html', shortcut: 'G H' },
+        { name: 'Projects', icon: 'fa-briefcase', url: './projects.html', shortcut: 'G P' },
+        { name: 'About', icon: 'fa-user', url: './about.html', shortcut: 'G A' },
+        { name: 'Connect', icon: 'fa-envelope', url: './connect.html', shortcut: 'G C' },
+        { name: 'Feedback', icon: 'fa-comment', url: '#feedback', shortcut: 'G F' },
+        { name: 'Toggle Dark/Light Mode', icon: 'fa-moon', action: 'toggleTheme', shortcut: 'G T' }
+      ];
+      
+      // Function to toggle command palette visibility
+      function toggleCommandPalette() {
+        commandPalette.classList.toggle('active');
+        if (commandPalette.classList.contains('active')) {
+          commandInput.focus();
+          renderResults(navigationOptions);
+        } else {
+          commandInput.value = '';
+          selectedIndex = -1;
+        }
+      }
+      
+      // Function to render filtered results
+      function renderResults(results) {
+        if (results.length === 0) {
+          commandResults.innerHTML = '<div class="command-palette-no-results">No matching commands found</div>';
+          return;
+        }
+        
+        let resultsHTML = '';
+        results.forEach((option, index) => {
+          const selectedClass = index === selectedIndex ? 'selected' : '';
+          resultsHTML += `
+            <div class="command-palette-item ${selectedClass}" data-index="${index}" tabindex="0" role="option" aria-selected="${index === selectedIndex}">
+              <i class="fas ${option.icon}"></i>
+              <span>${option.name}</span>
+              <div class="command-palette-shortcut">${option.shortcut}</div>
+            </div>
+          `;
+        });
+        
+        commandResults.innerHTML = resultsHTML;
+        
+        // Add click event listeners to items
+        document.querySelectorAll('.command-palette-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const index = parseInt(item.dataset.index);
+            executeCommand(results[index]);
+          });
+          
+          item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              const index = parseInt(item.dataset.index);
+              executeCommand(results[index]);
+            }
+          });
+        });
+      }
+      
+      // Function to execute a command
+      function executeCommand(option) {
+        if (option.action === 'toggleTheme') {
+          const themeToggle = document.getElementById('theme-toggle');
+          if (themeToggle) themeToggle.click();
+        } else if (option.url) {
+          if (option.url.startsWith('#')) {
+            // Scroll to the element if it's an anchor
+            const element = document.querySelector(option.url);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          } else {
+            // Navigate to the URL
+            window.location.href = option.url;
+          }
+        }
+        
+        toggleCommandPalette();
+      }
+      
+      // Filter results based on input
+      commandInput.addEventListener('input', () => {
+        const query = commandInput.value.toLowerCase();
+        selectedIndex = -1;
+        
+        const filteredOptions = navigationOptions.filter(option => 
+          option.name.toLowerCase().includes(query)
+        );
+        
+        renderResults(filteredOptions);
+      });
+      
+      // Keyboard navigation for command palette
+      commandInput.addEventListener('keydown', (e) => {
+        const items = document.querySelectorAll('.command-palette-item');
+        const filteredOptions = navigationOptions.filter(option => 
+          option.name.toLowerCase().includes(commandInput.value.toLowerCase())
+        );
+        
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault();
+            selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+            break;
+            
+          case 'ArrowUp':
+            e.preventDefault();
+            selectedIndex = Math.max(selectedIndex - 1, 0);
+            break;
+            
+          case 'Enter':
+            e.preventDefault();
+            if (selectedIndex >= 0 && selectedIndex < filteredOptions.length) {
+              executeCommand(filteredOptions[selectedIndex]);
+            }
+            break;
+            
+          case 'Escape':
+            e.preventDefault();
+            toggleCommandPalette();
+            break;
+            
+          default:
+            return;
+        }
+        
+        // Update selected item visually
+        renderResults(filteredOptions);
+      });
+      
+      // Close palette when clicking outside
+      commandPalette.addEventListener('click', (e) => {
+        if (e.target === commandPalette) {
+          toggleCommandPalette();
+        }
+      });
+      
+      // Keyboard shortcut to open command palette (Cmd+K / Ctrl+K)
+      document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          toggleCommandPalette();
+        }
+        
+        // Handle Escape key if palette is open
+        if (e.key === 'Escape' && commandPalette.classList.contains('active')) {
+          e.preventDefault();
+          toggleCommandPalette();
+        }
+      });
+    });
+    
+    // Sticky & Shrinking Navigation
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 100) {
+        nav.classList.add('shrink');
+      } else {
+        nav.classList.remove('shrink');
+      }
+    });
+    
+    // Back to Top Button functionality
+    const backToTopBtn = document.getElementById('back-to-top');
+    
+    // Show/hide back-to-top button based on scroll position
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    });
+    
+    // Smooth scroll to top when button is clicked
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // Mobile Menu Toggle - Simplified and Direct Implementation
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("DOM Content Loaded - Setting up mobile menu");
+      
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      const overlay = document.querySelector('.overlay');
+      
+      if (mobileMenuBtn && navLinks) {
+        console.log("Found mobile menu elements");
+        
+        // Handle hamburger button click
+        mobileMenuBtn.addEventListener('click', function(e) {
+          console.log("Mobile menu button clicked");
+          const isOpen = mobileMenuBtn.classList.contains('open');
+          
+          if (!isOpen) {
+            // Opening the menu
+            mobileMenuBtn.classList.add('open');
+            navLinks.classList.add('open');
+            
+            if (overlay) {
+              overlay.classList.add('active');
+              // Force overlay to not block clicks with inline style
+              overlay.style.pointerEvents = "none";
+              
+              // Debug: Check computed pointer-events value
+              console.log('Overlay pointer-events after opening:', 
+                window.getComputedStyle(overlay).getPropertyValue('pointer-events'));
+              console.log('Overlay z-index:', 
+                window.getComputedStyle(overlay).getPropertyValue('z-index'));
+              console.log('Nav links z-index:', 
+                window.getComputedStyle(navLinks).getPropertyValue('z-index'));
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            navLinks.setAttribute('aria-hidden', 'false');
+            console.log("Menu opened");
+          } else {
+            // Closing the menu
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            
+            if (overlay) {
+              overlay.classList.remove('active');
+              // Reset overlay styles
+              overlay.style.pointerEvents = "";
+              
+              // Debug: Check computed pointer-events value
+              console.log('Overlay pointer-events after closing:', 
+                window.getComputedStyle(overlay).getPropertyValue('pointer-events'));
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+            console.log("Menu closed");
+          }
+        });
+        
+        // Make nav links navigate to their targets
+        // Intentionally NOT adding click event listeners to the links to allow natural navigation
+        // Instead, we'll just log when they're clicked for debugging
+        document.querySelectorAll('.nav-links a').forEach(link => {
+          // Make sure href attribute is set properly
+          console.log(`Link found: ${link.textContent.trim()} -> ${link.getAttribute('href')}`);
+          
+          // Only add a minimal listener for debugging - doesn't interfere with navigation
+          link.onclick = function() {
+            console.log("Navigating to: " + this.getAttribute('href'));
+            // No preventDefault() - let the browser handle navigation naturally
+            
+            // Just log that we're closing the menu
+            console.log("Menu will close as navigation occurs");
+            
+            // Don't manually close the menu here - let the navigation happen
+            // The page will reload so we don't need to worry about state cleanup
+            return true; // explicitly allow the default action
+          };
+        });
+        
+        // Close menu when clicking overlay
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            overlay.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+            console.log("Overlay clicked - menu closed");
+          });
+        }
+      } else {
+        console.error("Could not find mobile menu elements");
+      }
+      
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or use default (dark)
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        // Apply the saved theme on page load
+        if (savedTheme === 'light') {
+          htmlElement.classList.add('light-mode');
+          themeToggle.setAttribute('aria-pressed', 'false');
+        } else {
+          themeToggle.setAttribute('aria-pressed', 'true');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+          // Toggle light-mode class on html element
+          htmlElement.classList.toggle('light-mode');
+          
+          // Update button aria-pressed state
+          const isLightMode = htmlElement.classList.contains('light-mode');
+          themeToggle.setAttribute('aria-pressed', !isLightMode);
+          
+          // Save preference to localStorage
+          localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+          console.log("Theme toggled to: " + (isLightMode ? 'light' : 'dark'));
+        });
+      }
+    });
+  </script>
+  <script>
+    
+    const welcomeMessages = [
+    { text: "Welcome", flag: "🏳️‍🌈" },
+    { text: "Bienvenue", flag: "🇫🇷" },
+    { text: "Willkommen", flag: "🇩🇪" },
+    { text: "Benvenuto", flag: "🇮🇹" },
+    { text: "ยินดีต้อนรับ", flag: "🇹🇭" },
+    { text: "ようこそ", flag: "🇯🇵" },
+    { text: "환영합니다", flag: "🇰🇷" },
+    { text: "欢迎", flag: "🇨🇳" },
+    { text: "स्वागत है", flag: "🇮🇳" },
+    { text: "Добро пожаловать", flag: "🇷🇺" },
+    { text: "Bem-vindo", flag: "🇵🇹" },
+    { text: "Välkommen", flag: "🇸🇪" },
+    { text: "Aloha", flag: "🇺🇸" },
+    { text: "مرحبا", flag: "🇸🇦" },
+    { text: "שלום", flag: "🇮🇱" },
+    { text: "Welkom", flag: "🇳🇱" },
+    { text: "Tervetuloa", flag: "🇫🇮" },
+    { text: "Velkommen", flag: "🇳🇴" },
+    { text: "Bem-vindo", flag: "🇧🇷" },
+    { text: "Selamat datang", flag: "🇮🇩" },
+    { text: "Kia ora", flag: "🇳🇿" },
+    { text: "Soo dhowow", flag: "🇸🇴" },
+    { text: "Bula", flag: "🇫🇯" },
+    { text: "Mabuhay", flag: "🇵🇭" },
+    { text: "Merhaba", flag: "🇹🇷" },
+    { text: "Sawubona", flag: "🇿🇦" },
+    { text: "Konnichiwa", flag: "🇯🇵" },
+    { text: "Ciao", flag: "🇮🇹" },
+    { text: "Hola", flag: "🇪🇸" },
+    { text: "Hej", flag: "🇩🇰" },
+    { text: "Hallo", flag: "🇩🇪" },
+    { text: "Salut", flag: "🇷🇴" },
+    { text: "Zdravstvuyte", flag: "🇷🇺" },
+    { text: "Nǐ hǎo", flag: "🇨🇳" },
+    { text: "Anyoung haseyo", flag: "🇰🇷" },
+    { text: "Xin chào", flag: "🇻🇳" },
+    { text: "Sawasdee", flag: "🇹🇭" },
+    { text: "God dag", flag: "🇳🇴" },
+    { text: "Dzień dobry", flag: "🇵🇱" },
+    { text: "Olá", flag: "🇵🇹" },
+    { text: "Shalom", flag: "🇮🇱" },
+    { text: "Marhaba", flag: "🇸🇦" },
+    { text: "Namaste", flag: "🇮🇳" },
+    { text: "Kamusta", flag: "🇵🇭" },
+    { text: "Selamat pagi", flag: "🇲🇾" },
+    { text: "Bongu", flag: "🇲🇹" },
+    { text: "Tere", flag: "🇪🇪" },
+    { text: "Sveiki", flag: "🇱🇻" },
+    { text: "Labas", flag: "🇱🇹" },
+    { text: "Dia dhuit", flag: "🇮🇪" },
+    { text: "Sain baina uu", flag: "🇲🇳" },
+    { text: "Ahoj", flag: "🇨🇿" },
+    { text: "Zdravo", flag: "🇷🇸" },
+    { text: "Dobrý den", flag: "🇸🇰" },
+    { text: "Zdravo", flag: "🇲🇰" },
+    { text: "Bok", flag: "🇭🇷" },
+    { text: "Cześć", flag: "🇵🇱" },
+    { text: "Szia", flag: "🇭🇺" },
+    { text: "Tere", flag: "🇪🇪" },
+    { text: "Sveiki", flag: "🇱🇻" },
+    { text: "Labas", flag: "🇱🇹" },
+    { text: "Dia dhuit", flag: "🇮🇪" },
+    { text: "Sain baina uu", flag: "🇲🇳" },
+    { text: "Ahoj", flag: "🇨🇿" },
+    { text: "Zdravo", flag: "🇷🇸" },
+    { text: "Dobrý den", flag: "🇸🇰" },
+    { text: "Zdravo", flag: "🇲🇰" },
+    { text: "Bok", flag: "🇭🇷" },
+    { text: "Cześć", flag: "🇵🇱" },
+    { text: "Szia", flag: "🇭🇺" },
+    { text: "Tere", flag: "🇪🇪" },
+    { text: "Sveiki", flag: "🇱🇻" },
+    { text: "Labas", flag: "🇱🇹" },
+    { text: "Dia dhuit", flag: "🇮🇪" },
+    { text: "Sain baina uu", flag: "🇲🇳" },
+    { text: "Ahoj", flag: "🇨🇿" },
+    { text: "Zdravo", flag: "🇷🇸" },
+    { text: "Dobrý den", flag: "🇸🇰" },
+    { text: "Zdravo", flag: "🇲🇰" },
+    { text: "Bok", flag: "🇭🇷" },
+    { text: "Cześć", flag: "🇵🇱" },
+    { text: "Szia", flag: "🇭🇺" },
+    { text: "Tere", flag: "🇪🇪" }
+  ];
+    
+    let currentIndex = 0;
+    const welcomeEl = document.getElementById('animated-welcome');
+    
+  function cycleWelcomeMessages() {
+    welcomeEl.classList.remove('fade-in');
+    void welcomeEl.offsetWidth; // Trigger reflow
+    welcomeEl.classList.add('fade-in');
+    const { text, flag } = welcomeMessages[currentIndex];
+    welcomeEl.textContent = `${flag} ${text}`;
+    currentIndex = (currentIndex + 1) % welcomeMessages.length;
+  }
+    
+    setInterval(cycleWelcomeMessages, 5000); // Change message every 5 seconds
+    
+    document.addEventListener("DOMContentLoaded", () => {
+      welcomeEl.classList.add('fade-in');
+    });
+  </script>
+  <style>
+    #animated-welcome.fade-in {
+      animation: fadeInText 1s ease-in-out;
+    }
+    
+    @keyframes fadeInText {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  <script>
+    const quotes = [
+      "Trying to define yourself is like trying to bite your own teeth.",
+      "Man suffers only because he takes seriously what the gods made for fun.",
+      "We seldom realize, for example, that our most private thoughts and emotions are not actually our own.",
+      "The meaning of life is just to be alive. It is so plain and so obvious and so simple.",
+      "This is the real secret of life — to be completely engaged with what you are doing in the here and now.",
+      "You are the universe experiencing itself.",
+      "You didn't come into this world. You came out of it, like a wave from the ocean.",
+      "Things are as they are. Looking out into the universe at night, we make no comparisons between right and wrong stars.",
+      "To have faith is to trust yourself to the water.",
+      "The only way to make sense out of change is to plunge into it, move with it, and join the dance!",
+      "Muddy water is best cleared by leaving it alone.",
+      "You are an aperture through which the universe is looking at and exploring itself.",
+      "The menu is not the meal.",
+      "We do not 'come into' this world; we come out of it, as leaves from a tree.",
+      "No valid plans for the future can be made by those who have no capacity for living now.",
+      "A scholar tries to learn something every day; a student of Buddhism tries to unlearn something daily.",
+      "You are a function of what the whole universe is doing in the same way that a wave is a function of what the whole ocean is doing.",
+      "The more a thing tends to be permanent, the more it tends to be lifeless.",
+      "Faith is, above all, openness; an act of trust in the unknown.",
+      "The art of living is neither careless drifting on the one hand nor fearful clinging to the past on the other.",
+      "We cannot be more sensitive to pleasure without being more sensitive to pain.",
+      "The ego is nothing other than the focus of conscious attention.",
+      "To have faith is to trust yourself to the water. When you swim you don't grab hold of the water, because if you do you will sink and drown.",
+      "You are that vast thing that you see far, far off with great telescopes.",
+      "No amount of anxiety makes any difference to anything that is going to happen.",
+      "The only Zen you find on the tops of mountains is the Zen you bring up there.",
+      "You and I are all as much continuous with the physical universe as a wave is continuous with the ocean.",
+      "The reason we want to go on and on is because we live in an impoverished present.",
+      "The more we struggle for life (as pleasure), the more we are actually killing what we love.",
+      "The past and future are real illusions that they exist in the present, which is what there is and all there is.",
+      "To be free from convention is not to spurn it but not to be deceived by it.",
+      "The greater part of human activity is designed to make permanent those experiences and joys which are only lovable because they are changing.",
+      "The world is filled with love-play, from animal lust to sublime compassion.",
+      "The more we try to wrest life from death, the more we try to separate, the more we fall into death.",
+      "The future is a concept, it doesn't exist. There is no such thing as tomorrow. There never will be, because time is always now.",
+      "The best way to convince someone is by making him realize that what you speak came from his own mind.",
+      "The only thing that is ultimately real about your journey is the step that you are taking at this moment."
+    ];
+ 
+    function displayRandomQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      document.getElementById('quote-display').textContent = quotes[randomIndex];
+    }
+ 
+    document.addEventListener('DOMContentLoaded', displayRandomQuote);
+  </script>
+  
+  <!-- P5.js script removed to avoid conflict with SVG animation -->
+  
+  <!-- Dynamic Gallery Generation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Fetch the albums data from the JSON file
+        const response = await fetch('albums.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const albums = await response.json();
+        
+        // Shuffle the albums array using Fisher-Yates algorithm
+        function shuffleArray(array) {
+          for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+          return array;
+        }
+        const shuffledAlbums = shuffleArray(albums);
+        
+        const galleryContainer = document.getElementById('gallery-menu');
+        // Clear any existing content
+        galleryContainer.innerHTML = '';
+        
+        // Create and append gallery items in randomized order
+        shuffledAlbums.forEach((album, index) => {
+          const galleryItem = document.createElement('a');
+          galleryItem.className = 'gallery-item';
+          galleryItem.href = album.link;
+          galleryItem.setAttribute('aria-label', `View ${album.title} photo gallery`);
+          galleryItem.style.animationDelay = `${0.1 * (index + 1)}s`;
+          
+          const thumbnail = document.createElement('img');
+          thumbnail.className = 'thumbnail';
+          thumbnail.src = album.thumbnail;
+          thumbnail.alt = `${album.title} photography collection - thumbnail preview`;
+          thumbnail.loading = 'lazy';
+          
+          const caption = document.createElement('div');
+          caption.className = 'caption';
+          caption.textContent = album.title;
+          
+          galleryItem.appendChild(thumbnail);
+          galleryItem.appendChild(caption);
+          galleryContainer.appendChild(galleryItem);
+        });
+      } catch (error) {
+        console.error('Error loading albums:', error);
+        document.getElementById('gallery-menu').innerHTML = 
+          `<div style="color: var(--text); text-align: center; width: 100%;">
+            <p>Unable to load gallery albums. Please try again later.</p>
+          </div>`;
+      }
+    });
+  </script>
+  <script>
+    document.addEventListener('mousemove', function(event) {
+      var svg = document.getElementById('heroSVG');
+      var wave = svg.querySelector('path');
+      var mouseX = event.clientX / window.innerWidth;
+      var newColor = `rgb(${Math.floor(255 * mouseX)}, 188, 212)`;
+      wave.setAttribute('fill', newColor);
+    });
+  </script>
+</body>
+</html>
