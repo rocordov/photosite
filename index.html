@@ -821,7 +821,7 @@
   </div>
 
   <script>
-    // Command Palette Functionality
+    /* Command Palette Functionality */
     document.addEventListener('DOMContentLoaded', () => {
       const commandPalette = document.getElementById('command-palette');
       const commandInput = document.getElementById('command-palette-input');
@@ -882,3 +882,12 @@
             if (e.key === 'Enter') {
               const index = parseInt(item.dataset.index);
               executeCommand(results[index]);
+            }
+          });
+        });
+      }
+      
+      // Function to execute a command
+      function executeCommand(option) {
+        if (option.action === 'toggleTheme') {
+          const themeToggle =
