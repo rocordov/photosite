@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
 				enableAutoPlay="true"
-					displayTime="0.007"
+					displayTime="7"
 					maxThumbRows="2"
 					imageScaleMode="SCALE"
 					randomizeImages="true"
 					autoPlayOnLoad="true"
+					enablePreloading="true"
 					galleryTitle="Chiang Mai"
 					imageTransitionType="CROSS_FADE"
 		>
