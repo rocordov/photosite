@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
 				enableAutoPlay="true"
-					displayTime="0.007"
-					shareFacebook="true"
-					maxThumbRows="2"
-					imageScaleMode="SCALE"
-					randomizeImages="true"
-					autoPlayOnLoad="true"
-					galleryTitle="Chiang Mai"
-					imageTransitionType="CROSS_FADE"
+				displayTime="7"
+				maxThumbRows="2"
+				imageScaleMode="SCALE"
+				randomizeImages="true"
+				autoPlayOnLoad="true"
+				enablePreloading="true"
+				galleryTitle="Chiang Mai"
+				imageTransitionType="CROSS_FADE"
+				enableFullscreen="true"
+				showCaptions="true"
+				captionTextColor="#ffffff"
+				captionBackgroundColor="#000000"
+				backgroundColor="#121212"
+				borderColor="#00bcd4" 
+				imageTransitionType="CROSS_FADE"
 		>
 			<image imageURL="images/IMG_0925.jpg" thumbURL="thumbs/IMG_0925.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
