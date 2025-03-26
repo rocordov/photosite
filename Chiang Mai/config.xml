@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<juiceboxgallery
+				enableAutoPlay="true"
+					displayTime="0.007"
+					shareFacebook="true"
+					maxThumbRows="2"
+					imageScaleMode="SCALE"
+					randomizeImages="true"
+					autoPlayOnLoad="true"
+					galleryTitle="Chiang Mai"
+					imageTransitionType="CROSS_FADE"
+		>
+			<image imageURL="images/IMG_0925.jpg" thumbURL="thumbs/IMG_0925.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0933.jpg" thumbURL="thumbs/IMG_0933.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0937.jpg" thumbURL="thumbs/IMG_0937.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0940.jpg" thumbURL="thumbs/IMG_0940.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0941.jpg" thumbURL="thumbs/IMG_0941.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0943.jpg" thumbURL="thumbs/IMG_0943.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0945.jpg" thumbURL="thumbs/IMG_0945.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0957.jpg" thumbURL="thumbs/IMG_0957.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+	</juiceboxgallery>
