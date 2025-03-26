@@ -241,22 +241,25 @@
       transform: rotate(-45deg);
     }
 
-    /* Hero Section with Interactive Canvas Background */
+    /* Hero Section with SVG Animation Background */
     .hero {
       position: relative;
       width: 100%;
-      height: 20vh;
+      height: 30vh; /* Increased height for better visibility */
+      min-height: 200px; /* Ensure minimum height on small screens */
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+      background-color: rgba(18, 18, 18, 0.9); /* Better background for the animation */
     }
     
     .hero-content {
       position: relative;
       z-index: 2;
       text-align: center;
-      padding: 0 var(--spacing-md);
+      padding: var(--spacing-md);
+      width: 100%;
       max-width: 800px;
       opacity: 0;
       animation: fadeInUp 0.8s ease-out forwards;
@@ -531,9 +534,21 @@
   <script src="header.js"></script>
 
   <main id="main-content">
-    <!-- Hero Section with Interactive Blob Animation -->
+    <!-- Hero Section with SVG Animation -->
     <section class="hero" id="hero">
-      <!-- Hero content overlays the canvas -->
+      <!-- SVG for morphing background -->
+      <svg id="heroSVG" viewBox="0 0 800 600" preserveAspectRatio="none" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+        <path fill="#00bcd4" opacity="0.3">
+          <animate attributeName="d" dur="10s" repeatCount="indefinite"
+            values="
+              M0,300 C200,100 600,500 800,300 L800,600 L0,600 Z;
+              M0,300 C200,500 600,100 800,300 L800,600 L0,600 Z;
+              M0,300 C200,100 600,500 800,300 L800,600 L0,600 Z
+            " />
+        </path>
+      </svg>
+      
+      <!-- Hero content overlays the SVG -->
       <div class="hero-content">
         <h1 id="animated-welcome">💗💜💙</h1>
         <p id="quote-display">Loading quote...</p>
@@ -696,39 +711,6 @@
     document.addEventListener('DOMContentLoaded', displayRandomQuote);
   </script>
   
-  <!-- P5.js Perlin Noise Blob Animation -->
-  <script>
-    function setup() {
-      // Create a canvas that fills the window and attach it to the hero section
-      let canvas = createCanvas(windowWidth, windowHeight);
-      canvas.parent('hero');
-      canvas.style('z-index', '1'); // Position behind the content but visible
-      noStroke();
-    }
-    
-    function draw() {
-      // Set a dark background to match the theme
-      background(18);
-      // Set fill color with transparency for the blob
-      fill(0, 188, 212, 150);
-      beginShape();
-      let noiseScale = 0.005;
-      // Generate a Perlin noise blob shape around the center of the canvas
-      for (let a = 0; a < TWO_PI; a += 0.1) {
-        let xoff = map(cos(a), -1, 1, 0, width);
-        let yoff = map(sin(a), -1, 1, 0, height);
-        let r = map(noise(xoff * noiseScale, yoff * noiseScale, frameCount * 0.01), 0, 1, 200, 300);
-        let x = width / 2 + r * cos(a);
-        let y = height / 2 + r * sin(a);
-        vertex(x, y);
-      }
-      endShape(CLOSE);
-    }
-    
-    function windowResized() {
-      // Ensure the canvas resizes with the window
-      resizeCanvas(windowWidth, windowHeight);
-    }
-  </script>
+  <!-- P5.js script removed to avoid conflict with SVG animation -->
 </body>
 </html>
