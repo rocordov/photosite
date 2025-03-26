@@ -689,5 +689,61 @@
   </script>
   
   <!-- P5.js script removed to avoid conflict with SVG animation -->
+  
+  <!-- Dynamic Gallery Generation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Fetch the albums data from the JSON file
+        const response = await fetch('albums.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const albums = await response.json();
+        const galleryContainer = document.getElementById('gallery-menu');
+        
+        // Clear any existing content
+        galleryContainer.innerHTML = '';
+        
+        // Create and append gallery items
+        albums.forEach((album, index) => {
+          // Create gallery item elements
+          const galleryItem = document.createElement('a');
+          galleryItem.className = 'gallery-item';
+          galleryItem.href = album.link;
+          galleryItem.setAttribute('aria-label', `View ${album.title} photo gallery`);
+          
+          // Apply animation delay based on index
+          galleryItem.style.animationDelay = `${0.1 * (index + 1)}s`;
+          
+          // Create thumbnail image
+          const thumbnail = document.createElement('img');
+          thumbnail.className = 'thumbnail';
+          thumbnail.src = album.thumbnail;
+          thumbnail.alt = `Gallery Preview - ${album.title}`;
+          thumbnail.loading = 'lazy';
+          
+          // Create caption
+          const caption = document.createElement('div');
+          caption.className = 'caption';
+          caption.textContent = album.title;
+          
+          // Assemble the gallery item
+          galleryItem.appendChild(thumbnail);
+          galleryItem.appendChild(caption);
+          
+          // Add to gallery container
+          galleryContainer.appendChild(galleryItem);
+        });
+      } catch (error) {
+        console.error('Error loading albums:', error);
+        document.getElementById('gallery-menu').innerHTML = 
+          `<div style="color: var(--text); text-align: center; width: 100%;">
+            <p>Unable to load gallery albums. Please try again later.</p>
+          </div>`;
+      }
+    });
+  </script>
 </body>
 </html>
