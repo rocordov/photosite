@@ -82,7 +82,7 @@
       background-color: rgba(24, 24, 24, 0.98);
       padding: var(--spacing-md);
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       position: sticky;
       top: 0;
@@ -90,6 +90,14 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.5);
       height: 80px; /* Initial height */
       transition: all 0.3s ease;
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
     }
     
     nav.shrink {
@@ -535,13 +543,14 @@
   <!-- Header with Navigation -->
   <header>
     <nav>
-      <a href="./index.html" class="logo">R.</a>
-      
-      <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
-        <span class="hamburger-icon"></span>
-      </button>
-      
-      <div class="nav-links" id="nav-links" aria-hidden="true">
+      <div class="nav-container">
+        <a href="./index.html" class="logo">R.</a>
+        
+        <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+          <span class="hamburger-icon"></span>
+        </button>
+        
+        <div class="nav-links" id="nav-links" aria-hidden="true">
         <a href="./index.html" aria-label="Home">Home</a>
         <a href="./projects.html" aria-label="Projects" aria-current="page">Projects</a>
         <a href="./about.html" aria-label="About">About</a>
@@ -550,9 +559,10 @@
           <i class="fas fa-moon"></i>
           <i class="fas fa-sun"></i>
         </button>
+        </div>
+        
+        <div class="overlay" id="overlay"></div>
       </div>
-      
-      <div class="overlay" id="overlay"></div>
     </nav>
   </header>
 
