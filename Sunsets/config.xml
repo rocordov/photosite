@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<juiceboxgallery
+				imageScaleMode="SCALE"
+					galleryTitle="Sunsets"
+		>
+			<image imageURL="images/IMG_1767.jpg" thumbURL="thumbs/IMG_1767.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_2008.jpg" thumbURL="thumbs/IMG_2008.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_2026.jpg" thumbURL="thumbs/IMG_2026.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_2107.jpg" thumbURL="thumbs/IMG_2107.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0906.jpg" thumbURL="thumbs/IMG_0906.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0917.jpg" thumbURL="thumbs/IMG_0917.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0921.jpg" thumbURL="thumbs/IMG_0921.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_0924.jpg" thumbURL="thumbs/IMG_0924.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/IMG_4685.jpg" thumbURL="thumbs/IMG_4685.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+	</juiceboxgallery>
