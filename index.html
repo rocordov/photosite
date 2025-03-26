@@ -821,73 +821,58 @@
   </div>
 
   <script>
-    /* Command Palette Functionality */
+    // Welcome messages and quotes
     document.addEventListener('DOMContentLoaded', () => {
-      const commandPalette = document.getElementById('command-palette');
-      const commandInput = document.getElementById('command-palette-input');
-      const commandResults = document.getElementById('command-palette-results');
-      let selectedIndex = -1;
-      
-      // Define navigation options
-      const navigationOptions = [
-        { name: 'Home', icon: 'fa-home', url: './index.html', shortcut: 'G H' },
-        { name: 'Projects', icon: 'fa-briefcase', url: './projects.html', shortcut: 'G P' },
-        { name: 'About', icon: 'fa-user', url: './about.html', shortcut: 'G A' },
-        { name: 'Connect', icon: 'fa-envelope', url: './connect.html', shortcut: 'G C' },
-        { name: 'Feedback', icon: 'fa-comment', url: '#feedback', shortcut: 'G F' },
-        { name: 'Toggle Dark/Light Mode', icon: 'fa-moon', action: 'toggleTheme', shortcut: 'G T' }
+      // Load and display a random quote
+      const quotes = [
+        "Trying to define yourself is like trying to bite your own teeth.",
+        "Man suffers only because he takes seriously what the gods made for fun.",
+        "We seldom realize that our most private thoughts and emotions are not actually our own.",
+        "The meaning of life is just to be alive. It is so plain and so obvious and so simple.",
+        "This is the real secret of life — to be completely engaged with what you are doing in the here and now.",
+        "You are the universe experiencing itself.",
+        "You didn't come into this world. You came out of it, like a wave from the ocean.",
+        "Things are as they are. Looking out into the universe at night, we make no comparisons between right and wrong stars.",
+        "To have faith is to trust yourself to the water.",
+        "The only way to make sense out of change is to plunge into it, move with it, and join the dance!"
       ];
       
-      // Function to toggle command palette visibility
-      function toggleCommandPalette() {
-        commandPalette.classList.toggle('active');
-        if (commandPalette.classList.contains('active')) {
-          commandInput.focus();
-          renderResults(navigationOptions);
-        } else {
-          commandInput.value = '';
-          selectedIndex = -1;
-        }
+      function displayRandomQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        document.getElementById('quote-display').textContent = quotes[randomIndex];
       }
       
-      // Function to render filtered results
-      function renderResults(results) {
-        if (results.length === 0) {
-          commandResults.innerHTML = '<div class="command-palette-no-results">No matching commands found</div>';
-          return;
-        }
-        
-        let resultsHTML = '';
-        results.forEach((option, index) => {
-          const selectedClass = index === selectedIndex ? 'selected' : '';
-          resultsHTML += `
-            <div class="command-palette-item ${selectedClass}" data-index="${index}" tabindex="0" role="option" aria-selected="${index === selectedIndex}">
-              <i class="fas ${option.icon}"></i>
-              <span>${option.name}</span>
-              <div class="command-palette-shortcut">${option.shortcut}</div>
-            </div>
-          `;
-        });
-        
-        commandResults.innerHTML = resultsHTML;
-        
-        // Add click event listeners to items
-        document.querySelectorAll('.command-palette-item').forEach(item => {
-          item.addEventListener('click', () => {
-            const index = parseInt(item.dataset.index);
-            executeCommand(results[index]);
-          });
-          
-          item.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-              const index = parseInt(item.dataset.index);
-              executeCommand(results[index]);
-            }
-          });
-        });
+      displayRandomQuote();
+      
+      // Welcome message animation
+      const welcomeMessages = [
+        { text: "Welcome", flag: "🏳️‍🌈" },
+        { text: "Bienvenido", flag: "🇪🇸" },
+        { text: "Bienvenue", flag: "🇫🇷" },
+        { text: "Willkommen", flag: "🇩🇪" },
+        { text: "Benvenuto", flag: "🇮🇹" },
+        { text: "ยินดีต้อนรับ", flag: "🇹🇭" },
+        { text: "ようこそ", flag: "🇯🇵" },
+        { text: "환영합니다", flag: "🇰🇷" },
+        { text: "欢迎", flag: "🇨🇳" },
+        { text: "स्वागत है", flag: "🇮🇳" },
+        { text: "Добро пожаловать", flag: "🇷🇺" },
+        { text: "Bem-vindo", flag: "🇵🇹" },
+        { text: "Välkommen", flag: "🇸🇪" },
+        { text: "Aloha", flag: "🇺🇸" }
+      ];
+      
+      let currentIndex = 0;
+      const welcomeEl = document.getElementById('animated-welcome');
+      
+      function cycleWelcomeMessages() {
+        const { text, flag } = welcomeMessages[currentIndex];
+        welcomeEl.textContent = `${flag} ${text}`;
+        currentIndex = (currentIndex + 1) % welcomeMessages.length;
       }
       
-      // Function to execute a command
-      function executeCommand(option) {
-        if (option.action === 'toggleTheme') {
-          const themeToggle =
+      // Initial welcome message
+      cycleWelcomeMessages();
+      
+      // Change message every 5 seconds
+      setInterval(
