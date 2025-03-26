@@ -22,6 +22,24 @@
       --border-radius: 12px;
       --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.3);
       --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --header-border: #333;
+      --accent-glow: rgba(0, 188, 212, 0.5);
+      --footer-bg: rgba(20, 20, 20, 0.7);
+    }
+
+    /* Light Mode Theme */
+    :root.light-mode {
+      --bg: #ffffff;
+      --bg-gradient: linear-gradient(145deg, #f5f5f5, #ffffff);
+      --card: #f5f5f5;
+      --accent: #007acc; /* Darker blue for better contrast on light backgrounds */
+      --text: #121212;
+      --text-secondary: #555;
+      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+      --header-border: #ddd;
+      --accent-glow: rgba(0, 122, 204, 0.3);
+      --footer-bg: rgba(245, 245, 245, 0.9);
     }
 
     * {
@@ -95,7 +113,50 @@
 
     .logo:hover, .logo:focus {
       color: #fff;
-      text-shadow: 0 0 8px rgba(0, 188, 212, 0.5);
+      text-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: var(--spacing-md);
+      padding: 6px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-standard);
+    }
+
+    .theme-toggle:hover, .theme-toggle:focus {
+      background-color: rgba(0, 188, 212, 0.1);
+      transform: scale(1.1);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Icon changes based on theme */
+    :root.light-mode .theme-toggle .fa-moon {
+      display: none;
+    }
+
+    :root.light-mode .theme-toggle .fa-sun {
+      display: inline-block;
+    }
+
+    .theme-toggle .fa-sun {
+      display: none;
+    }
+
+    .theme-toggle .fa-moon {
+      display: inline-block;
     }
 
     .nav-links {
@@ -491,6 +552,10 @@
         <i class="fas fa-moon"></i>
         <i class="fas fa-sun"></i>
       </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="true">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+      </button>
     </div>
     
     <div class="overlay" id="overlay"></div>
@@ -690,6 +755,34 @@
     // Start the animation
     initParticles();
     animate();
+    
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const htmlElement = document.documentElement;
+    
+    // Check for saved theme preference or use default (dark)
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    
+    // Apply the saved theme on page load
+    if (savedTheme === 'light') {
+      htmlElement.classList.add('light-mode');
+      themeToggle.setAttribute('aria-pressed', 'false');
+    } else {
+      themeToggle.setAttribute('aria-pressed', 'true');
+    }
+    
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', () => {
+      // Toggle light-mode class on html element
+      htmlElement.classList.toggle('light-mode');
+      
+      // Update button aria-pressed state
+      const isLightMode = htmlElement.classList.contains('light-mode');
+      themeToggle.setAttribute('aria-pressed', !isLightMode);
+      
+      // Save preference to localStorage
+      localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+    });
     
     // Sticky & Shrinking Navigation
     window.addEventListener('scroll', () => {
