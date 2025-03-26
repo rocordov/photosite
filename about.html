@@ -842,4 +842,6 @@
     });
     
     // Ensure all interactive elements can be focused
-    document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:
+    document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])').forEach(el => {
+      el.setAttribute('tabindex', el.getAttribute('tabindex') || '0');
+    });
