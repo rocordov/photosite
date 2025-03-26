@@ -6,8 +6,15 @@
 					imageScaleMode="SCALE"
 					randomizeImages="true"
 					autoPlayOnLoad="true"
+					enablePreloading="true"
 					galleryTitle="Mexico"
 					imageTransitionType="CROSS_FADE"
+					enableFullscreen="true"
+					showCaptions="true"
+					captionTextColor="#ffffff"
+					captionBackgroundColor="#000000"
+					backgroundColor="#121212"
+					borderColor="#00bcd4" 
 		>
 			<image imageURL="images/IMG_1974.jpg" thumbURL="thumbs/IMG_1974.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
