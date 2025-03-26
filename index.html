@@ -882,28 +882,3 @@
             if (e.key === 'Enter') {
               const index = parseInt(item.dataset.index);
               executeCommand(results[index]);
-            }
-          });
-        });
-      }
-      
-      // Function to execute a command
-      function executeCommand(option) {
-        if (option.action === 'toggleTheme') {
-          const themeToggle = document.getElementById('theme-toggle');
-          if (themeToggle) themeToggle.click();
-        } else if (option.url) {
-          if (option.url.startsWith('#')) {
-            // Scroll to the element if it's an anchor
-            const element = document.querySelector(option.url);
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth' });
-            }
-          } else {
-            // Navigate to the URL
-            window.location.href = option.url;
-          }
-        }
-        
-        toggleCommandPalette();
-      }
