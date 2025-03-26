@@ -6,39 +6,65 @@
   <style>
     body {
       font-family: 'Helvetica Neue', sans-serif;
-      background-color: #f4f4f4;
+      background-color: #f9f9f9;
       color: #333;
       text-align: center;
-      padding-top: 100px;
+      padding-top: 60px;
     }
+
     h1 {
       font-size: 2rem;
       margin-bottom: 40px;
     }
-    .menu {
+
+    .gallery-menu {
       display: flex;
       justify-content: center;
       gap: 50px;
+      flex-wrap: wrap;
+      padding: 20px;
     }
-    .menu a {
-      padding: 20px 30px;
-      background-color: #007acc;
-      color: #fff;
+
+    .gallery-item {
       text-decoration: none;
-      border-radius: 8px;
-      font-size: 1.2rem;
-      transition: background-color 0.3s ease;
+      color: #333;
+      width: 200px;
+      transition: transform 0.3s ease;
     }
-    .menu a:hover {
-      background-color: #005a99;
+
+    .gallery-item:hover {
+      transform: scale(1.05);
+    }
+
+    .thumbnail {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .caption {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>📸 Welcome to My Photo Galleries</h1>
-  <div class="menu">
-    <a href="March/Phx/index.html">March</a>
-    <a href="Me/index.html">Me</a>
+
+  <h1>📸 Select a Gallery</h1>
+
+  <div class="gallery-menu">
+    <a class="gallery-item" href="March/Phx/index.html">
+      <img class="thumbnail" src="March/Phx/thumbs/_7RV1983.jpg" alt="March Gallery Thumbnail">
+      <div class="caption">March</div>
+    </a>
+
+    <a class="gallery-item" href="Me/index.html">
+      <img class="thumbnail" src="Me/thumbs/your-thumbnail.jpg" alt="Me Gallery Thumbnail">
+      <div class="caption">Me</div>
+    </a>
   </div>
+
 </body>
 </html>
