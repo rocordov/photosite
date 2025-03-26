@@ -8,13 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <!-- Navigation -->
     <nav>
-      <a href="index.html" class="logo">R.</a>
-      
-      <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
-        <span class="hamburger-icon"></span>
-      </button>
-      
-      <div class="nav-links" id="nav-links" aria-hidden="true">
+      <div class="nav-container">
+        <a href="index.html" class="logo">R.</a>
+        
+        <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+          <span class="hamburger-icon"></span>
+        </button>
+        
+        <div class="nav-links" id="nav-links" aria-hidden="true">
         <a href="index.html#photography" aria-label="View photography galleries">Photography</a>
         <a href="index.html#projects" aria-label="View projects">Projects</a>
         <a href="about.html" aria-label="About Royce">About</a>
@@ -23,9 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
           <i class="fas fa-moon"></i>
           <i class="fas fa-sun"></i>
         </button>
+        </div>
+        
+        <div class="overlay" id="overlay"></div>
       </div>
-      
-      <div class="overlay" id="overlay"></div>
     </nav>
   `;
 
