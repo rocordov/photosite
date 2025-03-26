@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     <!-- Navigation -->
     <nav>
       <div class="nav-container">
-        <a href="index.html" class="logo">R.</a>
+        <a href="index.html" class="logo">
+        <img src="./images/website-icon.png" alt="R." style="height: 40px; width: auto; vertical-align: middle;" /></a>
         
         <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
           <span class="hamburger-icon"></span>
