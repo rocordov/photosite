@@ -701,19 +701,25 @@
           }
         });
         
-        // Make nav links close the menu when clicked
+        // Make nav links navigate to their targets
+        // Intentionally NOT adding click event listeners to the links to allow natural navigation
+        // Instead, we'll just log when they're clicked for debugging
         document.querySelectorAll('.nav-links a').forEach(link => {
-          link.addEventListener('click', function(e) {
-            // Allow default navigation
-            console.log("Nav link clicked: " + this.getAttribute('href'));
+          // Make sure href attribute is set properly
+          console.log(`Link found: ${link.textContent.trim()} -> ${link.getAttribute('href')}`);
+          
+          // Only add a minimal listener for debugging - doesn't interfere with navigation
+          link.onclick = function() {
+            console.log("Navigating to: " + this.getAttribute('href'));
+            // No preventDefault() - let the browser handle navigation naturally
             
-            // Close the menu
-            mobileMenuBtn.classList.remove('open');
-            navLinks.classList.remove('open');
-            if (overlay) overlay.classList.remove('active');
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
-            navLinks.setAttribute('aria-hidden', 'true');
-          });
+            // Just log that we're closing the menu
+            console.log("Menu will close as navigation occurs");
+            
+            // Don't manually close the menu here - let the navigation happen
+            // The page will reload so we don't need to worry about state cleanup
+            return true; // explicitly allow the default action
+          };
         });
         
         // Close menu when clicking overlay
