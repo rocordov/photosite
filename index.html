@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Photo Gallery Menu</title>
+  <title>Live Preview Gallery Menu</title>
   <style>
     body {
       font-family: 'Helvetica Neue', sans-serif;
       background-color: #f9f9f9;
       color: #333;
       text-align: center;
-      padding-top: 60px;
+      padding: 60px 20px;
     }
 
     h1 {
@@ -19,16 +19,18 @@
 
     .gallery-menu {
       display: flex;
-      justify-content: center;
-      gap: 50px;
       flex-wrap: wrap;
-      padding: 20px;
+      justify-content: center;
+      gap: 40px;
     }
 
     .gallery-item {
       text-decoration: none;
       color: #333;
-      width: 200px;
+      width: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       transition: transform 0.3s ease;
     }
 
@@ -36,11 +38,13 @@
       transform: scale(1.05);
     }
 
-    .thumbnail {
-      width: 100%;
-      height: auto;
+    .iframe-thumb {
+      width: 220px;
+      height: 140px;
+      border: 1px solid #ccc;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      pointer-events: none; /* prevents clicking inside iframe */
     }
 
     .caption {
@@ -52,16 +56,16 @@
 </head>
 <body>
 
-  <h1>📸 Select a Gallery</h1>
+  <h1>📸 Choose a Photo Gallery</h1>
 
   <div class="gallery-menu">
     <a class="gallery-item" href="March/Phx/index.html">
-      <img class="thumbnail" src="March/Phx/thumbs/_7RV1983.jpg" alt="March Gallery Thumbnail">
+      <iframe class="iframe-thumb" src="March/Phx/index.html" loading="lazy"></iframe>
       <div class="caption">March</div>
     </a>
 
     <a class="gallery-item" href="Me/index.html">
-      <img class="thumbnail" src="Me/thumbs/your-thumbnail.jpg" alt="Me Gallery Thumbnail">
+      <iframe class="iframe-thumb" src="Me/index.html" loading="lazy"></iframe>
       <div class="caption">Me</div>
     </a>
   </div>
