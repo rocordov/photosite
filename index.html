@@ -2,19 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Live Preview Gallery Menu</title>
+  <title>Photo Galleries</title>
   <style>
+    :root {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --accent: #00bcd4;
+      --text-color: #e0e0e0;
+      --hover-scale: 1.05;
+    }
+
     body {
+      margin: 0;
       font-family: 'Helvetica Neue', sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       text-align: center;
       padding: 60px 20px;
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 40px;
+      font-size: 2.2rem;
+      color: var(--accent);
+      margin-bottom: 50px;
+      letter-spacing: 1px;
     }
 
     .gallery-menu {
@@ -26,37 +37,46 @@
 
     .gallery-item {
       text-decoration: none;
-      color: #333;
-      width: 220px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: transform 0.3s ease;
+      color: var(--text-color);
+      width: 240px;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .gallery-item:hover {
-      transform: scale(1.05);
+      transform: scale(var(--hover-scale));
+      box-shadow: 0 0 20px var(--accent);
     }
 
     .iframe-thumb {
-      width: 220px;
-      height: 140px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      pointer-events: none; /* prevents clicking inside iframe */
+      width: 100%;
+      height: 160px;
+      border: none;
+      pointer-events: none;
     }
 
     .caption {
-      margin-top: 10px;
+      padding: 15px 10px;
       font-size: 1.1rem;
-      font-weight: bold;
+      font-weight: 600;
+      color: var(--text-color);
+      background-color: var(--card-bg);
+      border-top: 1px solid #333;
+    }
+
+    @media (max-width: 600px) {
+      .gallery-item {
+        width: 90%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>📸 Choose a Photo Gallery</h1>
+  <h1>📷 My Photo Galleries</h1>
 
   <div class="gallery-menu">
     <a class="gallery-item" href="March/Phx/index.html">
