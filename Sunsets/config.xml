@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
-				imageScaleMode="SCALE"
+				enableAutoPlay="true"
+					imageScaleMode="SCALE"
+					autoPlayOnLoad="true"
 					galleryTitle="Sunsets"
 		>
 			<image imageURL="images/IMG_1767.jpg" thumbURL="thumbs/IMG_1767.jpg" linkURL="" linkTarget="_blank">
@@ -32,10 +34,6 @@
 			<caption><![CDATA[]]></caption>
 		</image>
 			<image imageURL="images/IMG_0924.jpg" thumbURL="thumbs/IMG_0924.jpg" linkURL="" linkTarget="_blank">
-			<title><![CDATA[]]></title>
-			<caption><![CDATA[]]></caption>
-		</image>
-			<image imageURL="images/IMG_4685.jpg" thumbURL="thumbs/IMG_4685.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
 		</image>
