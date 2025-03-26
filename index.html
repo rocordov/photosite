@@ -779,19 +779,25 @@
     }
   </style>
   <script>
-    async function fetchQuotes() {
-      try {
-        const response = await fetch('quotes.txt');
-        const text = await response.text();
-        const quotes = text.split('\n').filter(q => q.trim().length > 0);
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        document.getElementById('quote-display').textContent = quotes[randomIndex];
-      } catch (error) {
-        console.error('Could not load quotes:', error);
-      }
+    const quotes = [
+      "Trying to define yourself is like trying to bite your own teeth.",
+      "Man suffers only because he takes seriously what the gods made for fun.",
+      "We seldom realize, for example, that our most private thoughts and emotions are not actually our own.",
+      "The meaning of life is just to be alive. It is so plain and so obvious and so simple.",
+      "This is the real secret of life — to be completely engaged with what you are doing in the here and now.",
+      "You are the universe experiencing itself.",
+      "You didn't come into this world. You came out of it, like a wave from the ocean.",
+      "Things are as they are. Looking out into the universe at night, we make no comparisons between right and wrong stars.",
+      "To have faith is to trust yourself to the water.",
+      "The only way to make sense out of change is to plunge into it, move with it, and join the dance!"
+    ];
+ 
+    function displayRandomQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      document.getElementById('quote-display').textContent = quotes[randomIndex];
     }
  
-    document.addEventListener('DOMContentLoaded', fetchQuotes);
+    document.addEventListener('DOMContentLoaded', displayRandomQuote);
   </script>
   </body>
 </html>
