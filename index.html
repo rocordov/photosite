@@ -1339,5 +1339,14 @@
       }
     });
   </script>
+  <script>
+    document.addEventListener('mousemove', function(event) {
+      var svg = document.getElementById('heroSVG');
+      var wave = svg.querySelector('path');
+      var mouseX = event.clientX / window.innerWidth;
+      var newColor = `rgb(${Math.floor(255 * mouseX)}, 188, 212)`;
+      wave.setAttribute('fill', newColor);
+    });
+  </script>
 </body>
 </html>
