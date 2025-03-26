@@ -166,7 +166,7 @@
       transform: rotate(-45deg);
     }
 
-    /* Hero Section with Video Background */
+    /* Hero Section with Interactive Canvas Background */
     .hero {
       position: relative;
       width: 100%;
@@ -177,32 +177,14 @@
       justify-content: center;
     }
     
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(18, 18, 18, 0.7); /* Semi-transparent overlay */
-      z-index: 1;
-    }
-    
-    .hero-bg {
+    #heroCanvas {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       z-index: 0;
-    }
-    
-    .hero-bg iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      pointer-events: none;
-      object-fit: cover;
+      background-color: var(--bg);
     }
     
     .hero-content {
