@@ -2,7 +2,6 @@
 <juiceboxgallery
 				enableAutoPlay="true"
 					displayTime="7"
-					shareFacebook="true"
 					maxThumbRows="2"
 					imageScaleMode="SCALE"
 					randomizeImages="true"
