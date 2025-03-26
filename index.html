@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Royce</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
   <style>
     :root {
       --bg: #121212;
@@ -249,16 +250,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    
-    #heroCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      background-color: var(--bg);
     }
     
     .hero-content {
@@ -540,10 +531,8 @@
   <script src="header.js"></script>
 
   <main id="main-content">
-    <!-- Hero Section with Interactive Particle Animation -->
+    <!-- Hero Section with Interactive Blob Animation -->
     <section class="hero" id="hero">
-      <!-- Canvas for interactive particles -->
-      <canvas id="heroCanvas"></canvas>
       <!-- Hero content overlays the canvas -->
       <div class="hero-content">
         <h1 id="animated-welcome">💗💜💙</h1>
@@ -607,99 +596,6 @@
   </button>
 
   <script>
-    
-    // Get canvas and context
-    const canvas = document.getElementById('heroCanvas');
-    const ctx = canvas.getContext('2d');
-
-    // Resize canvas to cover the hero section (full window in this example)
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // Particle settings
-    const particleCount = 100;
-    const particles = [];
-    let mouse = { x: undefined, y: undefined };
-
-    // Track mouse movement
-    window.addEventListener('mousemove', (event) => {
-      mouse.x = event.x;
-      mouse.y = event.y;
-    });
-
-    // Particle constructor
-    function Particle(x, y, size, color, velocityX, velocityY) {
-      this.x = x;
-      this.y = y;
-      this.size = size;
-      this.color = color;
-      this.velocityX = velocityX;
-      this.velocityY = velocityY;
-    }
-
-    // Draw particle
-    Particle.prototype.draw = function() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-      ctx.fillStyle = this.color;
-      ctx.fill();
-    };
-
-    // Update particle position and behavior
-    Particle.prototype.update = function() {
-      this.x += this.velocityX;
-      this.y += this.velocityY;
-
-      // Bounce off canvas edges
-      if (this.x + this.size > canvas.width || this.x - this.size < 0) {
-        this.velocityX = -this.velocityX;
-      }
-      if (this.y + this.size > canvas.height || this.y - this.size < 0) {
-        this.velocityY = -this.velocityY;
-      }
-      
-      // Interaction: repel particles when mouse is close
-      const dx = this.x - mouse.x;
-      const dy = this.y - mouse.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      if (distance < 100) {
-        const angle = Math.atan2(dy, dx);
-        const repulseForce = 2;
-        this.x += Math.cos(angle) * repulseForce;
-        this.y += Math.sin(angle) * repulseForce;
-      }
-      
-      this.draw();
-    };
-
-    // Initialize particles
-    function initParticles() {
-      for (let i = 0; i < particleCount; i++) {
-        const size = Math.random() * 3 + 1;
-        const x = Math.random() * (canvas.width - size * 2) + size;
-        const y = Math.random() * (canvas.height - size * 2) + size;
-        const color = "rgba(0, 188, 212, 0.8)"; // Teal accent color
-        const velocityX = (Math.random() - 0.5) * 2;
-        const velocityY = (Math.random() - 0.5) * 2;
-        particles.push(new Particle(x, y, size, color, velocityX, velocityY));
-      }
-    }
-
-    // Animation loop
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(particle => particle.update());
-      requestAnimationFrame(animate);
-    }
-
-    // Start the animation
-    initParticles();
-    animate();
-    
     // Sticky & Shrinking Navigation
     window.addEventListener('scroll', () => {
       const nav = document.querySelector('nav');
@@ -799,5 +695,40 @@
  
     document.addEventListener('DOMContentLoaded', displayRandomQuote);
   </script>
-  </body>
+  
+  <!-- P5.js Perlin Noise Blob Animation -->
+  <script>
+    function setup() {
+      // Create a canvas that fills the window and attach it to the hero section
+      let canvas = createCanvas(windowWidth, windowHeight);
+      canvas.parent('hero');
+      canvas.style('z-index', '1'); // Position behind the content but visible
+      noStroke();
+    }
+    
+    function draw() {
+      // Set a dark background to match the theme
+      background(18);
+      // Set fill color with transparency for the blob
+      fill(0, 188, 212, 150);
+      beginShape();
+      let noiseScale = 0.005;
+      // Generate a Perlin noise blob shape around the center of the canvas
+      for (let a = 0; a < TWO_PI; a += 0.1) {
+        let xoff = map(cos(a), -1, 1, 0, width);
+        let yoff = map(sin(a), -1, 1, 0, height);
+        let r = map(noise(xoff * noiseScale, yoff * noiseScale, frameCount * 0.01), 0, 1, 200, 300);
+        let x = width / 2 + r * cos(a);
+        let y = height / 2 + r * sin(a);
+        vertex(x, y);
+      }
+      endShape(CLOSE);
+    }
+    
+    function windowResized() {
+      // Ensure the canvas resizes with the window
+      resizeCanvas(windowWidth, windowHeight);
+    }
+  </script>
+</body>
 </html>
