@@ -685,7 +685,21 @@
             // Opening the menu
             mobileMenuBtn.classList.add('open');
             navLinks.classList.add('open');
-            if (overlay) overlay.classList.add('active');
+            
+            if (overlay) {
+              overlay.classList.add('active');
+              // Force overlay to not block clicks with inline style
+              overlay.style.pointerEvents = "none";
+              
+              // Debug: Check computed pointer-events value
+              console.log('Overlay pointer-events after opening:', 
+                window.getComputedStyle(overlay).getPropertyValue('pointer-events'));
+              console.log('Overlay z-index:', 
+                window.getComputedStyle(overlay).getPropertyValue('z-index'));
+              console.log('Nav links z-index:', 
+                window.getComputedStyle(navLinks).getPropertyValue('z-index'));
+            }
+            
             mobileMenuBtn.setAttribute('aria-expanded', 'true');
             navLinks.setAttribute('aria-hidden', 'false');
             console.log("Menu opened");
@@ -693,7 +707,17 @@
             // Closing the menu
             mobileMenuBtn.classList.remove('open');
             navLinks.classList.remove('open');
-            if (overlay) overlay.classList.remove('active');
+            
+            if (overlay) {
+              overlay.classList.remove('active');
+              // Reset overlay styles
+              overlay.style.pointerEvents = "";
+              
+              // Debug: Check computed pointer-events value
+              console.log('Overlay pointer-events after closing:', 
+                window.getComputedStyle(overlay).getPropertyValue('pointer-events'));
+            }
+            
             mobileMenuBtn.setAttribute('aria-expanded', 'false');
             navLinks.setAttribute('aria-hidden', 'true');
             console.log("Menu closed");
