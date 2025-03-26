@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <!-- Navigation -->
     <nav>
-      <a href="index.html" class="logo">Royce</a>
+      <a href="index.html" class="logo">R.</a>
       
       <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
         <span class="hamburger-icon"></span>
