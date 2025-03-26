@@ -1,4 +1,8 @@
-[
+[{
+    "title": "Chiang Mai",
+    "link": "Thailand/Chiang Mai/index.html",
+    "thumbnail": "Thailand/Chiang Mai/images/IMG_0957.jpg"
+  },
   {
     "title": "March",
     "link": "March/Phx/index.html",
@@ -20,7 +24,7 @@
     "thumbnail": "Flowers/images/IMG_5013.jpg"
   },
   {
-    "title": "Thailand",
+    "title": "Kanchanaburi",
     "link": "Thailand/Kanchanaburi/index.html",
     "thumbnail": "Thailand/Kanchanaburi/images/_DSC2879_HDR.jpg"
   },
