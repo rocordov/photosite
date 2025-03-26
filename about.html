@@ -638,27 +638,15 @@
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- Navigation -->
-  <nav>
-    <a href="index.html" class="logo" aria-label="Rois Cordova Home">Rois Cordova</a>
-    
-    <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
-      <span class="hamburger-icon"></span>
-    </button>
-    
-    <div class="nav-links" id="nav-links" aria-hidden="true">
-      <a href="index.html#photography" aria-label="View photography galleries">Photography</a>
-      <a href="index.html#projects" aria-label="View projects">Projects</a>
-      <a href="about.html" aria-current="page" aria-label="About Rois Cordova">About</a>
-      <a href="connect.html" aria-label="Contact information">Connect</a>
-      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="true">
-        <i class="fas fa-moon"></i>
-        <i class="fas fa-sun"></i>
-      </button>
-    </div>
-    
-    <div class="overlay" id="overlay"></div>
-  </nav>
+  <!-- Header with Navigation (loaded dynamically) -->
+  <div id="site-header"></div>
+  <script>
+    fetch('header.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('site-header').innerHTML = html;
+      });
+  </script>
 
   <main id="main-content">
     <header class="page-header">
@@ -737,41 +725,6 @@
   </button>
 
   <script>
-    // Mobile navigation functionality
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-    const overlay = document.querySelector('.overlay');
-    
-    mobileMenuBtn.addEventListener('click', () => {
-      const isOpen = mobileMenuBtn.classList.toggle('open');
-      navLinks.classList.toggle('open');
-      overlay.classList.toggle('active');
-      
-      // Update ARIA attributes
-      mobileMenuBtn.setAttribute('aria-expanded', isOpen);
-      navLinks.setAttribute('aria-hidden', !isOpen);
-    });
-    
-    // Close menu when clicking outside
-    overlay.addEventListener('click', () => {
-      mobileMenuBtn.classList.remove('open');
-      navLinks.classList.remove('open');
-      overlay.classList.remove('active');
-      mobileMenuBtn.setAttribute('aria-expanded', 'false');
-      navLinks.setAttribute('aria-hidden', 'true');
-    });
-
-    // Close menu when pressing Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && navLinks.classList.contains('open')) {
-        mobileMenuBtn.classList.remove('open');
-        navLinks.classList.remove('open');
-        overlay.classList.remove('active');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        navLinks.setAttribute('aria-hidden', 'true');
-      }
-    });
-    
     // Sticky & Shrinking Navigation
     window.addEventListener('scroll', () => {
       const nav = document.querySelector('nav');
@@ -802,47 +755,21 @@
       });
     });
 
-    // Theme toggle functionality
-    const themeToggle = document.getElementById('theme-toggle');
-    const htmlElement = document.documentElement;
-    
-    // Check for saved theme preference or use default (dark)
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    
-    // Apply the saved theme on page load
-    if (savedTheme === 'light') {
-      htmlElement.classList.add('light-mode');
-      themeToggle.setAttribute('aria-pressed', 'false');
-    } else {
-      themeToggle.setAttribute('aria-pressed', 'true');
-    }
-    
-    // Toggle theme when button is clicked
-    themeToggle.addEventListener('click', () => {
-      // Toggle light-mode class on html element
-      htmlElement.classList.toggle('light-mode');
-      
-      // Update button aria-pressed state
-      const isLightMode = htmlElement.classList.contains('light-mode');
-      themeToggle.setAttribute('aria-pressed', !isLightMode);
-      
-      // Save preference to localStorage
-      localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
-    });
-
     // Keyboard navigation improvements
-    document.querySelectorAll('a, button').forEach(element => {
-      element.addEventListener('keydown', e => {
-        // Enter or Space activates the element
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          element.click();
-        }
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('a, button').forEach(element => {
+        element.addEventListener('keydown', e => {
+          // Enter or Space activates the element
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            element.click();
+          }
+        });
       });
-    });
-    
-    // Ensure all interactive elements can be focused
-    document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])').forEach(el => {
-      el.setAttribute('tabindex', el.getAttribute('tabindex') || '0');
+      
+      // Ensure all interactive elements can be focused
+      document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])').forEach(el => {
+        el.setAttribute('tabindex', el.getAttribute('tabindex') || '0');
+      });
     });
   </script>
