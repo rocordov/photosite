@@ -3,8 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const headerContainer = document.getElementById('site-header');
   if (!headerContainer) return;
 
-  // Insert the header HTML
+  // Insert the header HTML with Plausible Analytics
   headerContainer.innerHTML = `
+    <!-- Privacy-friendly analytics integration using Plausible Analytics (collects only aggregate, non-personal data without cookies) -->
+    <script async defer data-domain="rocordov.github.io/photosite" src="https://plausible.io/js/plausible.js"></script>
+    
     <!-- Navigation -->
     <nav>
       <a href="index.html" class="logo">Rois Cordova</a>
