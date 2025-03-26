@@ -630,6 +630,40 @@
         behavior: 'smooth'
       });
     });
+    
+    // Mobile Menu Toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      // Make sure we don't duplicate events if header.js already set them up
+      if (!window.mobileMenuInitialized) {
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const overlay = document.querySelector('.overlay');
+        
+        if (mobileMenuBtn && navLinks) {
+          mobileMenuBtn.addEventListener('click', () => {
+            const isOpen = mobileMenuBtn.classList.toggle('open');
+            navLinks.classList.toggle('open');
+            if (overlay) overlay.classList.toggle('active');
+            
+            // Update ARIA attributes
+            mobileMenuBtn.setAttribute('aria-expanded', isOpen);
+            navLinks.setAttribute('aria-hidden', !isOpen);
+          });
+          
+          if (overlay) {
+            overlay.addEventListener('click', () => {
+              mobileMenuBtn.classList.remove('open');
+              navLinks.classList.remove('open');
+              overlay.classList.remove('active');
+              mobileMenuBtn.setAttribute('aria-expanded', 'false');
+              navLinks.setAttribute('aria-hidden', 'true');
+            });
+          }
+          
+          window.mobileMenuInitialized = true;
+        }
+      }
+    });
   </script>
   <script>
   const welcomeMessages = [
