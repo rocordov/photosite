@@ -731,29 +731,30 @@
     });
   </script>
   <script>
-    const welcomeMessages = [
-      "Welcome",
-      "Bienvenido",
-      "Bienvenue",
-      "Willkommen",
-      "Benvenuto",
-      "ยินดีต้อนรับ",  // Thai
-      "ようこそ",       // Japanese
-      "환영합니다",      // Korean
-      "欢迎",          // Chinese
-      "स्वागत है",     // Hindi
-    ];
+  const welcomeMessages = [
+    { text: "Welcome", flag: "🇺🇸" },
+    { text: "Bienvenido", flag: "🇪🇸" },
+    { text: "Bienvenue", flag: "🇫🇷" },
+    { text: "Willkommen", flag: "🇩🇪" },
+    { text: "Benvenuto", flag: "🇮🇹" },
+    { text: "ยินดีต้อนรับ", flag: "🇹🇭" },
+    { text: "ようこそ", flag: "🇯🇵" },
+    { text: "환영합니다", flag: "🇰🇷" },
+    { text: "欢迎", flag: "🇨🇳" },
+    { text: "स्वागत है", flag: "🇮🇳" }
+  ];
     
     let currentIndex = 0;
     const welcomeEl = document.getElementById('animated-welcome');
     
-    function cycleWelcomeMessages() {
-      welcomeEl.classList.remove('fade-in');
-      void welcomeEl.offsetWidth; // Trigger reflow
-      welcomeEl.classList.add('fade-in');
-      welcomeEl.textContent = welcomeMessages[currentIndex];
-      currentIndex = (currentIndex + 1) % welcomeMessages.length;
-    }
+  function cycleWelcomeMessages() {
+    welcomeEl.classList.remove('fade-in');
+    void welcomeEl.offsetWidth; // Trigger reflow
+    welcomeEl.classList.add('fade-in');
+    const { text, flag } = welcomeMessages[currentIndex];
+    welcomeEl.textContent = `${flag} ${text}`;
+    currentIndex = (currentIndex + 1) % welcomeMessages.length;
+  }
     
     setInterval(cycleWelcomeMessages, 2500); // Change message every 2.5 seconds
     
