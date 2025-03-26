@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Insert the header HTML with Plausible Analytics
   headerContainer.innerHTML = `
-    <!-- Privacy-friendly analytics integration using Plausible Analytics (collects only aggregate, non-personal data without cookies) -->
-    <script async defer data-domain="rocordov.github.io/photosite" src="https://plausible.io/js/plausible.js"></script>
     
     <!-- Navigation -->
     <nav>
