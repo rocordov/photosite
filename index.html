@@ -547,7 +547,7 @@
       <!-- Hero content overlays the canvas -->
       <div class="hero-content">
         <h1 id="animated-welcome">💗💜💙</h1>
-        <p>Discover moments that transform</p>
+        <p id="quote-display">Loading quote...</p>
       </div>
     </section>
 
@@ -778,5 +778,20 @@
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
+  <script>
+    async function fetchQuotes() {
+      try {
+        const response = await fetch('quotes.txt');
+        const text = await response.text();
+        const quotes = text.split('\n').filter(q => q.trim().length > 0);
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        document.getElementById('quote-display').textContent = quotes[randomIndex];
+      } catch (error) {
+        console.error('Could not load quotes:', error);
+      }
+    }
+ 
+    document.addEventListener('DOMContentLoaded', fetchQuotes);
+  </script>
   </body>
 </html>
