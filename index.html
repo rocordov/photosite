@@ -70,6 +70,19 @@
       top: 0;
       z-index: 10;
       box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      height: 80px; /* Initial height */
+      transition: all 0.3s ease;
+    }
+    
+    nav.shrink {
+      height: 60px;
+      background-color: rgba(24, 24, 24, 0.9); /* Slightly transparent when shrunk */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Enhanced shadow when shrunk */
+      padding: 10px var(--spacing-md);
+    }
+    
+    nav.shrink .logo {
+      font-size: 1.3rem;
     }
 
     .logo {
