@@ -203,24 +203,32 @@
       cursor: pointer;
       padding: 8px;
       z-index: 15;
+      position: relative;
+      width: 46px;
+      height: 46px;
+      margin-right: 10px;
     }
 
     .hamburger-icon {
-      position: relative;
+      position: absolute;
       display: block;
       width: 30px;
-      height: 2px;
+      height: 3px;
       background-color: var(--accent);
       transition: var(--transition-standard);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
 
     .hamburger-icon::before, .hamburger-icon::after {
       content: '';
       position: absolute;
       width: 30px;
-      height: 2px;
+      height: 3px;
       background-color: var(--accent);
       transition: var(--transition-standard);
+      left: 0;
     }
 
     .hamburger-icon::before {
@@ -237,10 +245,12 @@
 
     .mobile-menu-btn.open .hamburger-icon::before {
       transform: rotate(45deg);
+      top: 0;
     }
 
     .mobile-menu-btn.open .hamburger-icon::after {
       transform: rotate(-45deg);
+      top: 0;
     }
 
     /* Hero Section with SVG Animation Background */
