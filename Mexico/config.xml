@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
 				enableAutoPlay="true"
-					displayTime="0.7"
+					displayTime="7"
 					shareFacebook="true"
 					maxThumbRows="2"
 					imageScaleMode="SCALE"
