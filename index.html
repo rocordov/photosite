@@ -542,8 +542,17 @@
   <main id="main-content">
     <!-- Hero Section with Interactive Particle Animation -->
     <section class="hero" id="hero">
-      <!-- Canvas for interactive particles -->
-      <canvas id="heroCanvas"></canvas>
+      <!-- SVG for morphing background -->
++      <svg id="heroSVG" viewBox="0 0 800 600" preserveAspectRatio="none" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;">
+  +        <path fill="#00bcd4">
+  +          <animate attributeName="d" dur="10s" repeatCount="indefinite"
+  +            values="
+  +              M0,300 C200,100 600,500 800,300 L800,600 L0,600 Z;
+  +              M0,300 C200,500 600,100 800,300 L800,600 L0,600 Z;
+  +              M0,300 C200,100 600,500 800,300 L800,600 L0,600 Z
+  +            " />
+  +        </path>
+  +      </svg>
       <!-- Hero content overlays the canvas -->
       <div class="hero-content">
         <h1 id="animated-welcome">💗💜💙</h1>
