@@ -656,51 +656,100 @@
       });
     });
     
-    // Mobile Menu Toggle
+    // Mobile Menu Toggle - Simplified and Direct Implementation
     document.addEventListener('DOMContentLoaded', () => {
-      // Make sure we don't duplicate events if header.js already set them up
-      if (!window.mobileMenuInitialized) {
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
-        const overlay = document.querySelector('.overlay');
+      console.log("DOM Content Loaded - Setting up mobile menu");
+      
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      const overlay = document.querySelector('.overlay');
+      
+      if (mobileMenuBtn && navLinks) {
+        console.log("Found mobile menu elements");
         
-        if (mobileMenuBtn && navLinks) {
-          mobileMenuBtn.addEventListener('click', (e) => {
-            // Don't prevent default behavior for the button
-            const isOpen = mobileMenuBtn.classList.toggle('open');
-            navLinks.classList.toggle('open');
-            if (overlay) overlay.classList.toggle('active');
-            
-            // Update ARIA attributes
-            mobileMenuBtn.setAttribute('aria-expanded', isOpen);
-            navLinks.setAttribute('aria-hidden', !isOpen);
-          });
+        // Handle hamburger button click
+        mobileMenuBtn.addEventListener('click', function(e) {
+          console.log("Mobile menu button clicked");
+          const isOpen = mobileMenuBtn.classList.contains('open');
           
-          // Ensure nav links are clickable
-          document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', (e) => {
-              // Let the default navigation happen
-              // Close the menu after clicking a link
-              mobileMenuBtn.classList.remove('open');
-              navLinks.classList.remove('open');
-              if (overlay) overlay.classList.remove('active');
-              mobileMenuBtn.setAttribute('aria-expanded', 'false');
-              navLinks.setAttribute('aria-hidden', 'true');
-            });
-          });
-          
-          if (overlay) {
-            overlay.addEventListener('click', () => {
-              mobileMenuBtn.classList.remove('open');
-              navLinks.classList.remove('open');
-              overlay.classList.remove('active');
-              mobileMenuBtn.setAttribute('aria-expanded', 'false');
-              navLinks.setAttribute('aria-hidden', 'true');
-            });
+          if (!isOpen) {
+            // Opening the menu
+            mobileMenuBtn.classList.add('open');
+            navLinks.classList.add('open');
+            if (overlay) overlay.classList.add('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            navLinks.setAttribute('aria-hidden', 'false');
+            console.log("Menu opened");
+          } else {
+            // Closing the menu
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+            console.log("Menu closed");
           }
-          
-          window.mobileMenuInitialized = true;
+        });
+        
+        // Make nav links close the menu when clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+          link.addEventListener('click', function(e) {
+            // Allow default navigation
+            console.log("Nav link clicked: " + this.getAttribute('href'));
+            
+            // Close the menu
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+          });
+        });
+        
+        // Close menu when clicking overlay
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            overlay.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+            console.log("Overlay clicked - menu closed");
+          });
         }
+      } else {
+        console.error("Could not find mobile menu elements");
+      }
+      
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or use default (dark)
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        // Apply the saved theme on page load
+        if (savedTheme === 'light') {
+          htmlElement.classList.add('light-mode');
+          themeToggle.setAttribute('aria-pressed', 'false');
+        } else {
+          themeToggle.setAttribute('aria-pressed', 'true');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+          // Toggle light-mode class on html element
+          htmlElement.classList.toggle('light-mode');
+          
+          // Update button aria-pressed state
+          const isLightMode = htmlElement.classList.contains('light-mode');
+          themeToggle.setAttribute('aria-pressed', !isLightMode);
+          
+          // Save preference to localStorage
+          localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+          console.log("Theme toggled to: " + (isLightMode ? 'light' : 'dark'));
+        });
       }
     });
   </script>
