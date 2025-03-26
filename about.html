@@ -2,96 +2,664 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>About Rois Cordova</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Rois Cordova – Photographer & Artist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background-color: #121212;
-      color: #e0e0e0;
-      line-height: 1.6;
+    :root {
+      --bg: #121212;
+      --bg-gradient: linear-gradient(145deg, #141414, #0f0f0f);
+      --card: #1e1e1e;
+      --accent: #00bcd4;
+      --text: #e0e0e0;
+      --text-secondary: #aaa;
+      --hover-scale: 1.05;
+      --transition-standard: all 0.3s ease;
+      --spacing-sm: 10px;
+      --spacing-md: 20px;
+      --spacing-lg: 30px;
+      --spacing-xl: 60px;
+      --border-radius: 12px;
+      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 20px;
+      padding: 0;
     }
-    header {
+
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      line-height: 1.6;
+      letter-spacing: 0.2px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Skip Link for Accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      padding: 8px;
+      background-color: var(--accent);
+      color: #000;
+      z-index: 100;
+      transition: top 0.3s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Navigation */
+    nav {
+      background-color: rgba(24, 24, 24, 0.98);
+      padding: var(--spacing-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      height: 80px; /* Initial height */
+      transition: all 0.3s ease;
+    }
+    
+    nav.shrink {
+      height: 60px;
+      background-color: rgba(24, 24, 24, 0.9); /* Slightly transparent when shrunk */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Enhanced shadow when shrunk */
+      padding: 10px var(--spacing-md);
+    }
+    
+    nav.shrink .logo {
+      font-size: 1.3rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition-standard);
+    }
+
+    .logo:hover, .logo:focus {
+      color: #fff;
+      text-shadow: 0 0 8px rgba(0, 188, 212, 0.5);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      margin-left: var(--spacing-md);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      padding: 6px 0;
+      transition: var(--transition-standard);
+    }
+
+    .nav-links a:hover, .nav-links a:focus {
+      color: var(--accent);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a:focus::after {
+      width: 100%;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 15;
+    }
+
+    .hamburger-icon {
+      position: relative;
+      display: block;
+      width: 30px;
+      height: 2px;
+      background-color: var(--accent);
+      transition: var(--transition-standard);
+    }
+
+    .hamburger-icon::before, .hamburger-icon::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 2px;
+      background-color: var(--accent);
+      transition: var(--transition-standard);
+    }
+
+    .hamburger-icon::before {
+      transform: translateY(-8px);
+    }
+
+    .hamburger-icon::after {
+      transform: translateY(8px);
+    }
+
+    .mobile-menu-btn.open .hamburger-icon {
+      background-color: transparent;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::before {
+      transform: rotate(45deg);
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::after {
+      transform: rotate(-45deg);
+    }
+
+    /* Main Content */
+    main {
+      padding: var(--spacing-lg) var(--spacing-md);
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: var(--spacing-xl);
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out forwards;
     }
-    header h1 {
+
+    .page-header h1 {
       font-size: 3rem;
-      color: #00bcd4;
-      margin-bottom: 10px;
+      color: var(--accent);
+      margin-bottom: var(--spacing-sm);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     }
-    .content {
+
+    .page-header p {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
       max-width: 800px;
       margin: 0 auto;
-      padding: 30px;
-      background-color: #1e1e1e;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
-    .content h2 {
-      font-size: 2rem;
-      color: #00bcd4;
-      margin-bottom: 20px;
+
+    .about-section {
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      box-shadow: var(--shadow-standard);
+      transition: var(--transition-standard);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .about-section:nth-child(1) { animation-delay: 0.1s; }
+    .about-section:nth-child(2) { animation-delay: 0.2s; }
+    .about-section:nth-child(3) { animation-delay: 0.3s; }
+
+    .about-section:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .about-section h2 {
+      font-size: 2.2rem;
+      color: var(--accent);
+      margin-bottom: var(--spacing-md);
       border-bottom: 1px solid #333;
-      padding-bottom: 10px;
+      padding-bottom: var(--spacing-sm);
+      position: relative;
     }
-    .content p {
+
+    .about-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100px;
+      height: 3px;
+      background-color: var(--accent);
+    }
+
+    .about-section p {
       font-size: 1.1rem;
-      margin-bottom: 20px;
+      margin-bottom: var(--spacing-md);
+      line-height: 1.7;
     }
-    .social {
-      text-align: center;
-      margin-top: 30px;
+
+    .about-section p:last-child {
+      margin-bottom: 0;
     }
-    .social a {
-      color: #00bcd4;
-      margin: 0 10px;
-      font-size: 1.8rem;
-      transition: transform 0.3s, color 0.3s;
+
+    .highlight {
+      color: var(--accent);
+      font-weight: 600;
     }
-    .social a:hover {
-      transform: scale(1.2);
+
+    .connect-social {
+      display: flex;
+      justify-content: center;
+      margin: var(--spacing-lg) 0;
+      gap: var(--spacing-lg);
+    }
+
+    .social-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .social-icon i {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: var(--spacing-sm);
+      transition: var(--transition-standard);
+    }
+
+    .social-icon span {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      transition: var(--transition-standard);
+    }
+
+    .social-icon:hover i, .social-icon:focus i {
+      transform: translateY(-5px) scale(1.1);
       color: #fff;
+      text-shadow: 0 0 10px var(--accent);
     }
+
+    .social-icon:hover span, .social-icon:focus span {
+      color: var(--accent);
+    }
+
+    .social-icon:focus {
+      outline: none;
+    }
+
+    .social-icon:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    /* Footer */
     footer {
+      margin-top: auto;
       text-align: center;
-      margin-top: 40px;
-      font-size: 0.9rem;
+      padding: var(--spacing-lg) var(--spacing-md);
       color: #777;
+      font-size: 0.95rem;
       border-top: 1px solid #2a2a2a;
-      padding-top: 20px;
+      background-color: rgba(20, 20, 20, 0.7);
+    }
+
+    .footer-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .footer-social {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--spacing-md);
+      gap: var(--spacing-md);
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #2a2a2a;
+      color: var(--text);
+      font-size: 1.2rem;
+      transition: var(--transition-standard);
+    }
+
+    .footer-social a:hover, .footer-social a:focus {
+      background-color: var(--accent);
+      color: #000;
+      transform: translateY(-3px);
+    }
+
+    .footer-social a:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .footer-info {
+      margin-top: var(--spacing-sm);
+    }
+
+    .footer-info a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition-standard);
+    }
+
+    .footer-info a:hover, .footer-info a:focus {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* Back to Top Button */
+    #back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--card);
+      color: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: var(--shadow-standard);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 9;
+    }
+
+    #back-to-top:hover, #back-to-top:focus {
+      background-color: var(--accent);
+      color: #000;
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    #back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .page-header h1 {
+        font-size: 2.5rem;
+      }
+
+      .about-section h2 {
+        font-size: 1.8rem;
+      }
+
+      .connect-social {
+        flex-wrap: wrap;
+        gap: var(--spacing-xl) var(--spacing-lg);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 75%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: rgba(25, 25, 25, 0.98);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 70px var(--spacing-md) var(--spacing-md);
+        transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-links.open {
+        right: 0;
+      }
+
+      .nav-links a {
+        margin: 10px 0;
+        font-size: 1.2rem;
+        width: 100%;
+        padding: 8px 0;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+        z-index: 5;
+      }
+
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>About Rois Cordova</h1>
-  </header>
-  <div class="content">
-    <h2>My Story & Vision</h2>
-    <p>
-      I’m Rois Cordova, a passionate photographer and creative professional dedicated to capturing the extraordinary in everyday moments. With years of experience behind the lens, I strive to transform light, shadow, and emotion into timeless art. My work is not just about photography; it’s about storytelling—connecting with people through images that speak a language beyond words.
-    </p>
-    <h2>Achievements & Projects</h2>
-    <p>
-      My journey has taken me through diverse projects, from intimate portrait sessions and dynamic event photography to breathtaking landscape exhibitions. I’ve been honored to have my work featured in various exhibitions and publications, and every project is a new opportunity to innovate and push creative boundaries. This portfolio is a curated collection of my most impactful work and a preview of what’s yet to come.
-    </p>
-    <h2>Connect With Me</h2>
-    <p>
-      Stay connected for the latest updates, behind-the-scenes insights, and exclusive content. Follow me on social media or drop me an email—I love hearing from fellow creatives and clients.
-    </p>
-    <div class="social">
-      <a href="https://instagram.com/rois_cordova" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="https://tiktok.com/@rois.c" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-      <a href="mailto:rocordov@gmail.com" aria-label="Email"><i class="far fa-envelope"></i></a>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="logo" aria-label="Rois Cordova Home">Rois Cordova</a>
+    
+    <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+      <span class="hamburger-icon"></span>
+    </button>
+    
+    <div class="nav-links" id="nav-links" aria-hidden="true">
+      <a href="index.html#photography">Photography</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="about.html" aria-current="page">About</a>
+      <a href="connect.html">Connect</a>
     </div>
-  </div>
+    
+    <div class="overlay" id="overlay"></div>
+  </nav>
+
+  <main id="main-content">
+    <header class="page-header">
+      <h1>About Rois Cordova</h1>
+      <p>Photographer, visual storyteller, and explorer of light</p>
+    </header>
+
+    <section class="about-section">
+      <h2>My Story & Vision</h2>
+      <p>
+        My journey into photography began as a simple fascination with capturing moments, but quickly evolved into a lifelong passion for visual storytelling. As a <span class="highlight">photographer based in Phoenix</span>, I've developed a distinctive style that balances technical precision with creative intuition, allowing me to capture the extraordinary within everyday scenes.
+      </p>
+      <p>
+        What drives my work is the belief that photography is more than documentation—it's a powerful medium for connection and emotion. Whether I'm photographing the vibrant urban landscapes of Thailand, the delicate details of a flower, or the breathtaking colors of a sunset, my vision remains consistent: to reveal the <span class="highlight">hidden beauty in ordinary moments</span> and transform the fleeting into the permanent.
+      </p>
+      <p>
+        My artistic approach is guided by a deep appreciation for natural light, authentic emotion, and thoughtful composition. Every image I create aims to tell a story, evoke feeling, and invite viewers to see the world through a different lens—one where beauty exists in unexpected places, waiting to be discovered.
+      </p>
+    </section>
+
+    <section class="about-section">
+      <h2>Achievements & Projects</h2>
+      <p>
+        Throughout my career, I've had the privilege of working on diverse projects that have challenged and expanded my creative vision. From <span class="highlight">capturing the bustling streets of Thailand</span> to documenting the subtle interplay of light during golden hour in the Arizona desert, each project has contributed to my growth as an artist.
+      </p>
+      <p>
+        My work has been featured in several local exhibitions, where my series on <span class="highlight">natural patterns and organic forms</span> received particular recognition. As a photographer who values both technical excellence and artistic expression, I continually push myself to explore new techniques, perspectives, and storytelling approaches.
+      </p>
+      <p>
+        Recent projects have included a photographic study of architectural geometry, an ongoing series documenting changing urban landscapes, and collaborative work with local artists. Each of these endeavors reflects my commitment to <span class="highlight">visual exploration and artistic growth</span>, while maintaining the authentic perspective that defines my work.
+      </p>
+    </section>
+
+    <section class="about-section">
+      <h2>Connect With Me</h2>
+      <p>
+        I believe that photography creates meaningful connections—between photographer and subject, between image and viewer, between moments in time. I'm always eager to engage with fellow creatives, potential clients, and photography enthusiasts who share my passion for visual storytelling.
+      </p>
+      <p>
+        Whether you're interested in collaborating on a project, commissioning work, or simply discussing photography, I'd love to hear from you. Follow me on social media for behind-the-scenes glimpses into my creative process, previews of upcoming work, and photography tips from my experiences.
+      </p>
+      
+      <div class="connect-social">
+        <a href="https://instagram.com/rois_cordova" class="social-icon" target="_blank" rel="noopener" aria-label="Follow me on Instagram">
+          <i class="fab fa-instagram"></i>
+          <span>Instagram</span>
+        </a>
+        <a href="https://tiktok.com/@rois.c" class="social-icon" target="_blank" rel="noopener" aria-label="Follow me on TikTok">
+          <i class="fab fa-tiktok"></i>
+          <span>TikTok</span>
+        </a>
+        <a href="mailto:rocordov@gmail.com" class="social-icon" aria-label="Email me">
+          <i class="far fa-envelope"></i>
+          <span>Email</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
   <footer>
-    <p>&copy; 2025 Rois Cordova. All rights reserved.</p>
+    <div class="footer-content">
+      <div class="footer-social">
+        <a href="https://instagram.com/rois_cordova" aria-label="Follow me on Instagram" target="_blank" rel="noopener">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://tiktok.com/@rois.c" aria-label="Follow me on TikTok" target="_blank" rel="noopener">
+          <i class="fab fa-tiktok"></i>
+        </a>
+        <a href="mailto:rocordov@gmail.com" aria-label="Email me">
+          <i class="far fa-envelope"></i>
+        </a>
+      </div>
+      <div class="footer-info">
+        <p>&copy; 2025 Rois Cordova. All rights reserved.</p>
+        <p><a href="connect.html">Connect with me</a></p>
+      </div>
+    </div>
   </footer>
+
+  <!-- Back to Top Button -->
+  <button id="back-to-top" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <script>
+    // Mobile navigation functionality
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    const overlay = document.querySelector('.overlay');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      const isOpen = mobileMenuBtn.classList.toggle('open');
+      navLinks.classList.toggle('open');
+      overlay.classList.toggle('active');
+      
+      // Update ARIA attributes
+      mobileMenuBtn.setAttribute('aria-expanded', isOpen);
+      navLinks.setAttribute('aria-hidden', !isOpen);
+    });
+    
+    // Close menu when clicking outside
+    overlay.addEventListener('click', () => {
+      mobileMenuBtn.classList.remove('open');
+      navLinks.classList.remove('open');
+      overlay.classList.remove('active');
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      navLinks.setAttribute('aria-hidden', 'true');
+    });
+
+    // Close menu when pressing Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+        mobileMenuBtn.classList.remove('open');
+        navLinks.classList.remove('open');
+        overlay.classList.remove('active');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        navLinks.setAttribute('aria-hidden', 'true');
+      }
+    });
+    
+    // Sticky & Shrinking Navigation
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 100) {
+        nav.classList.add('shrink');
+      } else {
+        nav.classList.remove('shrink');
+      }
+    });
+    
+    // Back to Top Button functionality
+    const backToTopBtn = document.getElementById('back-to-top');
+    
+    // Show/hide back-to-top button based on scroll position
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    });
+    
+    // Smooth scroll to top when button is clicked
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
 </body>
 </html>
