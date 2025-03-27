@@ -1,0 +1,126 @@
+/* 
+ * Global CSS Variables and Base Styles
+ * Contains: color scheme, typography, spacing, basic layout, and global animations
+ */
+
+:root {
+  /* Colors */
+  --bg: #121212;
+  --bg-gradient: linear-gradient(145deg, #141414, #0f0f0f);
+  --card: #1e1e1e;
+  --accent: #00bcd4;
+  --text: #e0e0e0;
+  --text-secondary: #aaa;
+  --header-border: #333;
+  --accent-glow: rgba(0, 188, 212, 0.5);
+  --footer-bg: rgba(20, 20, 20, 0.7);
+  
+  /* Sizes and Spacing */
+  --hover-scale: 1.05;
+  --spacing-sm: 10px;
+  --spacing-md: 20px;
+  --spacing-lg: 30px;
+  --spacing-xl: 60px;
+  --border-radius: 12px;
+  
+  /* Effects */
+  --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --transition-standard: all 0.3s ease;
+}
+
+/* Light Mode Theme */
+:root.light-mode {
+  --bg: #ffffff;
+  --bg-gradient: linear-gradient(145deg, #f5f5f5, #ffffff);
+  --card: #f5f5f5;
+  --accent: #007acc; /* Darker blue for better contrast on light backgrounds */
+  --text: #121212;
+  --text-secondary: #555;
+  --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --header-border: #ddd;
+  --accent-glow: rgba(0, 122, 204, 0.3);
+  --footer-bg: rgba(245, 245, 245, 0.9);
+}
+
+/* Basic Element Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: var(--bg);
+  background-image: var(--bg-gradient);
+  color: var(--text);
+  line-height: 1.6;
+  letter-spacing: 0.2px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Skip Link for Accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  padding: 8px;
+  background-color: var(--accent);
+  color: #000;
+  z-index: 100;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Global Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInText {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade-in animation for scroll */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Global Media Queries */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+  }
+}
