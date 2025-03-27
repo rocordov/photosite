@@ -71,10 +71,9 @@ function initMobileMenu() {
         if (overlay) {
           overlay.classList.add('active');
           
-          // Explicitly ensure nav-links is above the overlay
-          // This is crucial for mobile navigation
-          navLinks.style.position = 'relative';
-          navLinks.style.zIndex = '30'; // Higher than overlay's z-index of 5
+          // Make the overlay not block navigation links by placing it behind them
+          // The overlay only needs to darken the background
+          overlay.style.zIndex = '1';
         }
         
         mobileMenuBtn.setAttribute('aria-expanded', 'true');
