@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebGL Shader Demo | Rois Cordova</title>
+  <meta name="description" content="Interactive real-time graphics using WebGL and GLSL fragment shaders.">
+  
+  <!-- Open Graph tags for better social sharing -->
+  <meta property="og:title" content="WebGL Shader Demo | Rois Cordova">
+  <meta property="og:description" content="Real-time interactive graphics using WebGL and GLSL fragment shaders.">
+  <meta property="og:image" content="https://rocordov.github.io/photosite/Me/images/IMG_4685.jpg">
+  <meta property="og:url" content="https://rocordov.github.io/photosite/experiments/WebGLShader.html">
+  <meta property="og:type" content="website">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #121212;
+      --text: #e0e0e0;
+      --accent: #00bcd4;
+      --card: #1e1e1e;
+      --text-secondary: #aaa;
+      --transition-standard: all 0.3s ease;
+      --spacing-md: 20px;
+      --border-radius: 12px;
+    }
+
+    /* Light Mode Theme */
+    :root.light-mode {
+      --bg: #ffffff;
+      --text: #121212;
+      --accent: #007acc;
+      --card: #f5f5f5;
+      --text-secondary: #555;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Skip Link for Accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      padding: 8px;
+      background-color: var(--accent);
+      color: #000;
+      z-index: 100;
+      transition: top 0.3s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Canvas Container */
+    .canvas-container {
+      width: 100%;
+      height: calc(100vh - 160px); /* Full height minus header and some space */
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      margin: 0 auto;
+      margin-top: 20px;
+      margin-bottom: 40px;
+      border-radius: var(--border-radius);
+      background-color: #000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* UI Components */
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 10;
+      background-color: rgba(30, 30, 30, 0.8);
+      padding: 10px 15px;
+      border-radius: 8px;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .controls:hover {
+      opacity: 1;
+    }
+
+    .info-panel {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      background-color: rgba(30, 30, 30, 0.8);
+      padding: 15px;
+      border-radius: 8px;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      max-width: 300px;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .info-panel.visible {
+      opacity: 0.9;
+      transform: translateY(0);
+    }
+
+    .info-title {
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 5px;
+    }
+
+    .info-content {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .info-toggle {
+      background: none;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: var(--transition-standard);
+    }
+
+    .info-toggle:hover, .info-toggle:focus {
+      background-color: var(--accent);
+      color: #000;
+    }
+
+    /* Error Messages and Fallbacks */
+    .error-message {
+      padding: 20px;
+      text-align: center;
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      margin: 20px;
+      display: none;
+    }
+
+    .error-message h2 {
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    /* Content Container */
+    .content-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .canvas-container {
+        height: calc(100vh - 200px);
+        min-height: 300px;
+      }
+      
+      .info-panel {
+        max-width: 250px;
+      }
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 20px;
+      color: #777;
+      font-size: 0.95rem;
+      border-top: 1px solid #2a2a2a;
+      background-color: rgba(20, 20, 20, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+  <script src="../header.js"></script>
+
+  <main id="main-content" class="content-container">
+    <h1>WebGL Shader Demo</h1>
+    <p>Interactive real-time graphics using GLSL fragment shaders in a WebGL context.</p>
+    
+    <div class="canvas-container">
+      <canvas id="webgl-canvas"></canvas>
+      
+      <div class="controls">
+        <button id="info-button" class="info-toggle" aria-label="Toggle shader information">
+          <i class="fas fa-info"></i>
+        </button>
+      </div>
+      
+      <div id="info-panel" class="info-panel">
+        <h3 class="info-title">Shader Information</h3>
+        <div class="info-content">
+          <p>This demo showcases a plasma effect generated entirely in the GPU using GLSL shaders.</p>
+          <p>The animation responds to time and updates in real-time using the GPU for calculations.</p>
+          <p>Move your mouse across the canvas to interact with the effect.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div id="webgl-error" class="error-message">
+      <h2>WebGL Not Supported</h2>
+      <p>Your browser or device does not support WebGL, which is required for this demo.</p>
+      <p>Try using a modern browser like Chrome, Firefox, Safari, or Edge.</p>
+    </div>
+    
+    <noscript>
+      <div class="error-message" style="display: block;">
+        <h2>JavaScript Required</h2>
+        <p>This experiment requires JavaScript and WebGL to run.</p>
+        <p>Please enable JavaScript in your browser settings to experience this demo.</p>
+      </div>
+    </noscript>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 R Cordova. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Shader sources
+    const vertexShaderSource = `
+      attribute vec4 a_position;
+      void main() {
+        gl_Position = a_position;
+      }
+    `;
+
+    const fragmentShaderSource = `
+      precision mediump float;
+      
+      uniform float u_time;
+      uniform vec2 u_resolution;
+      uniform vec2 u_mouse;
+      
+      // A plasma effect using sine waves
+      vec3 plasma(vec2 uv, float time) {
+        // Generate plasma pattern using sine waves
+        float v1 = sin(uv.x * 10.0 + time);
+        float v2 = sin((uv.y * 10.0) + sin(time * 0.5) * 2.0);
+        float v3 = sin(sqrt(pow(uv.x * 4.0, 2.0) + pow(uv.y * 4.0, 2.0) + 1.0) + time);
+        
+        // Create a composite value and use it for coloring
+        float cx = uv.x + sin(time * 0.1);
+        float cy = uv.y + cos(time * 0.2);
+        float v4 = sin(sqrt(cx * cx + cy * cy) * 10.0 + time);
+        
+        float v = (v1 + v2 + v3 + v4) * 0.25;
+        
+        // Convert to color
+        float r = cos(v * 3.14159 + time * 0.5) * 0.5 + 0.5;
+        float g = sin(v * 3.14159 + time * 0.4) * 0.5 + 0.5;
+        float b = sin(v * 3.14159 + time * 0.3) * 0.5 + 0.5;
+        
+        return vec3(r, g, b);
+      }
+      
+      // Main function
+      void main() {
+        // Normalize coordinates to [0, 1]
+        vec2 uv = gl_FragCoord.xy / u_resolution;
+        
+        // Center coordinates to [-1, 1]
+        vec2 centered = uv * 2.0 - 1.0;
+        
+        // Maintain aspect ratio
+        centered.x *= u_resolution.x / u_resolution.y;
+        
+        // Get normalized mouse position in [-1, 1]
+        vec2 mouse = u_mouse / u_resolution * 2.0 - 1.0;
+        mouse.x *= u_resolution.x / u_resolution.y;
+        
+        // Calculate distance from mouse position
+        float distToMouse = length(centered - mouse) * 2.0;
+        
+        // Apply plasma effect with mouse influence
+        vec3 color = plasma(uv, u_time + distToMouse * 0.5);
+        
+        // Add a subtle glow around mouse position
+        float glow = 0.03 / (distToMouse + 0.1);
+        color += vec3(glow * 0.5, glow * 0.8, glow);
+        
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+
+    // UI Elements
+    const infoButton = document.getElementById('info-button');
+    const infoPanel = document.getElementById('info-panel');
+    const errorElement = document.getElementById('webgl-error');
+    
+    // Initialize WebGL
+    function initWebGL() {
+      const canvas = document.getElementById('webgl-canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      
+      if (!gl) {
+        errorElement.style.display = 'block';
+        return null;
+      }
+      
+      // Create shader program
+      const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+      const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+      const program = createProgram(gl, vertexShader, fragmentShader);
+      
+      // Look up attribute and uniform locations
+      const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
+      const timeUniformLocation = gl.getUniformLocation(program, 'u_time');
+      const resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution');
+      const mouseUniformLocation = gl.getUniformLocation(program, 'u_mouse');
+      
+      // Create a buffer for the position
+      const positionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      
+      // Set up the position buffer with a rectangle (2 triangles)
+      const positions = [
+        -1, -1,
+         1, -1,
+        -1,  1,
+        -1,  1,
+         1, -1,
+         1,  1,
+      ];
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+      
+      // Initialize mouse position at center
+      let mouseX = canvas.width / 2;
+      let mouseY = canvas.height / 2;
+      
+      // Set up mouse move event listener
+      canvas.addEventListener('mousemove', (event) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = event.clientX - rect.left;
+        mouseY = rect.height - (event.clientY - rect.top); // Flip Y to match WebGL coords
+      });
+      
+      // For touch devices
+      canvas.addEventListener('touchmove', (event) => {
+        event.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const touch = event.touches[0];
+        mouseX = touch.clientX - rect.left;
+        mouseY = rect.height - (touch.clientY - rect.top);
+      });
+      
+      // Animation state
+      let startTime = Date.now();
+      
+      // Function to resize canvas to full size of its container
+      function resizeCanvasToDisplaySize() {
+        // Get the canvas display size
+        const displayWidth = canvas.clientWidth;
+        const displayHeight = canvas.clientHeight;
+        
+        // Check if canvas is not already at the display size
+        if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+          // Set canvas size to match display size
+          canvas.width = displayWidth;
+          canvas.height = displayHeight;
+          
+          // Set WebGL viewport
+          gl.viewport(0, 0, canvas.width, canvas.height);
+        }
+      }
+      
+      // Render function
+      function render() {
+        // Resize canvas if needed
+        resizeCanvasToDisplaySize();
+        
+        // Compute time in seconds
+        const currentTime = Date.now();
+        const elapsedTime = (currentTime - startTime) / 1000;
+        
+        // Clear the canvas
+        gl.clearColor(0, 0, 0, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        
+        // Use our shader program
+        gl.useProgram(program);
+        
+        // Set up the position attribute
+        gl.enableVertexAttribArray(positionAttributeLocation);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+        
+        // Set uniforms
+        gl.uniform1f(timeUniformLocation, elapsedTime);
+        gl.uniform2f(resolutionUniformLocation, canvas.width, canvas.height);
+        gl.uniform2f(mouseUniformLocation, mouseX, mouseY);
+        
+        // Draw the rectangle (2 triangles, 6 vertices)
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        
+        // Request the next frame
+        requestAnimationFrame(render);
+      }
+      
+      // Start the animation loop
+      render();
+    }
+    
+    // Helper function to create a shader
+    function createShader(gl, type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      
+      // Check if compilation was successful
+      const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+      if (success) {
+        return shader;
+      }
+      
+      // If it failed, log the error and delete the shader
+      console.error(gl.getShaderInfoLog(shader));
+      gl.deleteShader(shader);
+      return null;
+    }
+    
+    // Helper function to create a program
+    function createProgram(gl, vertexShader, fragmentShader) {
+      const program = gl.createProgram();
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+      
+      // Check if linking was successful
+      const success = gl.getProgramParameter(program, gl.LINK_STATUS);
+      if (success) {
+        return program;
+      }
+      
+      // If it failed, log the error and delete the program
+      console.error(gl.getProgramInfoLog(program));
+      gl.deleteProgram(program);
+      return null;
+    }
+    
+    // UI Interactions
+    infoButton.addEventListener('click', () => {
+      infoPanel.classList.toggle('visible');
+    });
+    
+    // Initialize WebGL when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize WebGL
+      initWebGL();
+      
+      // Show info panel after a delay
+      setTimeout(() => {
+        infoPanel.classList.add('visible');
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          infoPanel.classList.remove('visible');
+        }, 5000);
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
