@@ -1312,6 +1312,7 @@
         }
         
         const albums = await response.json();
+        console.debug(`Number of albums loaded: ${albums.length}`);
         
         // Shuffle the albums array using Fisher-Yates algorithm
         function shuffleArray(array) {
