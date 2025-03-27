@@ -8,6 +8,12 @@
 					autoPlayOnLoad="true"
 					galleryTitle="River Kwai"
 					imageTransitionType="CROSS_FADE"
+					enableFullscreen="true"
+					showCaptions="true"
+					captionTextColor="#ffffff"
+					captionBackgroundColor="#000000"
+					backgroundColor="#121212"
+					borderColor="#00bcd4" 
 		>
 			<image imageURL="images/_DSC3529_HDR.jpg" thumbURL="thumbs/_DSC3529_HDR.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
