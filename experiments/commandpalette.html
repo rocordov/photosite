@@ -904,3 +904,361 @@
         <a href="mailto:rocordov@gmail.com" aria-label="Email me">
           <i class="far fa-envelope" aria-hidden="true"></i>
         </a>
+      </div>
+      <div class="footer-info">
+        <p>&copy; 2025 R Cordova. All rights reserved.</p>
+        <p><a href="../connect.html">Connect with me</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Command Palette Functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const commandPalette = document.getElementById('command-palette');
+      const commandInput = document.getElementById('command-palette-input');
+      const commandResults = document.getElementById('command-palette-results');
+      const triggerButton = document.getElementById('trigger-palette');
+      let selectedIndex = -1;
+      let lastFocusedElement = null;
+      
+      // Define navigation options
+      const navigationOptions = [
+        { name: 'Go to Home', icon: 'fa-home', url: '../index.html', shortcut: 'G H' },
+        { name: 'Go to Projects', icon: 'fa-briefcase', url: '../projects.html', shortcut: 'G P' },
+        { name: 'Go to About', icon: 'fa-user', url: '../about.html', shortcut: 'G A' },
+        { name: 'Go to Experiments', icon: 'fa-flask', url: '../experiments/', shortcut: 'G E' },
+        { name: 'Go to Connect', icon: 'fa-envelope', url: '../connect.html', shortcut: 'G C' },
+        { name: 'Toggle Dark/Light Mode', icon: 'fa-moon', action: 'toggleTheme', shortcut: 'G T' },
+        { name: 'View Dynamic SVG Demo', icon: 'fa-palette', url: './dynamic-svg.html', shortcut: 'E D' },
+        { name: 'View Command Palette Demo', icon: 'fa-keyboard', url: './commandpalette.html', shortcut: 'E C' }
+      ];
+      
+      // Function to toggle command palette visibility
+      function toggleCommandPalette() {
+        lastFocusedElement = document.activeElement;
+        commandPalette.classList.toggle('active');
+        
+        if (commandPalette.classList.contains('active')) {
+          // Focus the input element and render all available commands
+          setTimeout(() => commandInput.focus(), 50);
+          renderResults(navigationOptions);
+          
+          // Set aria attributes for accessibility
+          commandPalette.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
+        } else {
+          // Reset state and return focus
+          commandInput.value = '';
+          selectedIndex = -1;
+          commandPalette.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          
+          // Return focus to the element that was focused before opening
+          if (lastFocusedElement) {
+            setTimeout(() => lastFocusedElement.focus(), 50);
+          }
+        }
+      }
+      
+      // Function to render filtered results
+      function renderResults(results) {
+        if (results.length === 0) {
+          commandResults.innerHTML = '<div class="command-palette-no-results">No matching commands found</div>';
+          return;
+        }
+        
+        let resultsHTML = '';
+        results.forEach((option, index) => {
+          const selectedClass = index === selectedIndex ? 'selected' : '';
+          resultsHTML += `
+            <div class="command-palette-item ${selectedClass}" 
+                 data-index="${index}" 
+                 tabindex="0" 
+                 role="option" 
+                 aria-selected="${index === selectedIndex}">
+              <i class="fas ${option.icon}" aria-hidden="true"></i>
+              <span>${option.name}</span>
+              <div class="command-palette-shortcut">
+                ${option.shortcut.split(' ').map(key => `<kbd class="key">${key}</kbd>`).join(' ')}
+              </div>
+            </div>
+          `;
+        });
+        
+        commandResults.innerHTML = resultsHTML;
+        
+        // Focus the first item if selected
+        if (selectedIndex === 0) {
+          commandResults.querySelector('.command-palette-item').focus();
+        }
+        
+        // Add click and keydown event listeners to items
+        document.querySelectorAll('.command-palette-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const index = parseInt(item.dataset.index);
+            executeCommand(results[index]);
+          });
+          
+          item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              const index = parseInt(item.dataset.index);
+              executeCommand(results[index]);
+            }
+          });
+        });
+      }
+      
+      // Function to execute a command
+      function executeCommand(option) {
+        if (option.action === 'toggleTheme') {
+          // Close the command palette
+          toggleCommandPalette();
+          
+          // Toggle the theme
+          const themeToggle = document.getElementById('theme-toggle');
+          if (themeToggle) {
+            setTimeout(() => themeToggle.click(), 100);
+          }
+        } else if (option.url) {
+          // Navigate to the URL
+          window.location.href = option.url;
+        }
+      }
+      
+      // Filter results based on input
+      commandInput.addEventListener('input', () => {
+        const query = commandInput.value.toLowerCase();
+        selectedIndex = -1;
+        
+        // Perform fuzzy search to find matches
+        const filteredOptions = navigationOptions.filter(option => 
+          option.name.toLowerCase().includes(query)
+        );
+        
+        renderResults(filteredOptions);
+      });
+      
+      // Keyboard navigation for command palette
+      commandInput.addEventListener('keydown', (e) => {
+        const filteredOptions = navigationOptions.filter(option => 
+          option.name.toLowerCase().includes(commandInput.value.toLowerCase())
+        );
+        
+        const items = document.querySelectorAll('.command-palette-item');
+        
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault();
+            selectedIndex = (selectedIndex + 1) % items.length;
+            break;
+            
+          case 'ArrowUp':
+            e.preventDefault();
+            selectedIndex = selectedIndex <= 0 ? items.length - 1 : selectedIndex - 1;
+            break;
+            
+          case 'Enter':
+            e.preventDefault();
+            if (selectedIndex >= 0 && selectedIndex < filteredOptions.length) {
+              executeCommand(filteredOptions[selectedIndex]);
+            } else if (filteredOptions.length === 1) {
+              // Auto-select if there's only one option
+              executeCommand(filteredOptions[0]);
+            }
+            break;
+            
+          case 'Escape':
+            e.preventDefault();
+            toggleCommandPalette();
+            break;
+            
+          case 'Tab':
+            // Allow Tab to move focus to other elements within the palette
+            if (e.shiftKey && document.activeElement === commandInput) {
+              // Let the browser handle shift+tab from the input field
+              return;
+            } else if (!e.shiftKey && selectedIndex === items.length - 1) {
+              // Let the browser handle tab from the last item
+              return;
+            }
+            
+            // Otherwise prevent default tab behavior
+            e.preventDefault();
+            
+            if (e.shiftKey) {
+              // Move focus backward
+              selectedIndex = Math.max(selectedIndex - 1, -1);
+              if (selectedIndex === -1) {
+                commandInput.focus();
+              }
+            } else {
+              // Move focus forward
+              selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+            }
+            break;
+            
+          default:
+            return;
+        }
+        
+        // Update selected item visually
+        renderResults(filteredOptions);
+        
+        // Focus the selected item
+        if (selectedIndex >= 0) {
+          const items = document.querySelectorAll('.command-palette-item');
+          if (items[selectedIndex]) {
+            items[selectedIndex].focus();
+          }
+        }
+      });
+      
+      // Close palette when clicking outside
+      commandPalette.addEventListener('click', (e) => {
+        if (e.target === commandPalette) {
+          toggleCommandPalette();
+        }
+      });
+      
+      // Trigger button click handler
+      if (triggerButton) {
+        triggerButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          toggleCommandPalette();
+        });
+      }
+      
+      // Keyboard shortcut to open command palette (Cmd+K / Ctrl+K)
+      document.addEventListener('keydown', (e) => {
+        // Check for Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          toggleCommandPalette();
+        }
+        
+        // Handle Escape key if palette is open
+        if (e.key === 'Escape' && commandPalette.classList.contains('active')) {
+          e.preventDefault();
+          toggleCommandPalette();
+        }
+      });
+      
+      // Focus trap for accessibility
+      // Ensure focus stays within the palette when it's open
+      document.addEventListener('keydown', (e) => {
+        if (!commandPalette.classList.contains('active')) return;
+        
+        if (e.key === 'Tab') {
+          const focusableElements = commandPalette.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          
+          const firstElement = focusableElements[0];
+          const lastElement = focusableElements[focusableElements.length - 1];
+          
+          // If going backward (shift+tab) and focus is on first element, wrap to last
+          if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+          
+          // If going forward (tab) and focus is on last element, wrap to first
+          else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      });
+    });
+    
+    // Sticky & Shrinking Navigation
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 100) {
+        nav.classList.add('shrink');
+      } else {
+        nav.classList.remove('shrink');
+      }
+    });
+    
+    // Mobile Menu Toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      const overlay = document.querySelector('.overlay');
+      
+      if (mobileMenuBtn && navLinks) {
+        // Handle hamburger button click
+        mobileMenuBtn.addEventListener('click', function(e) {
+          const isOpen = mobileMenuBtn.classList.contains('open');
+          
+          if (!isOpen) {
+            // Opening the menu
+            mobileMenuBtn.classList.add('open');
+            navLinks.classList.add('open');
+            
+            if (overlay) {
+              overlay.classList.add('active');
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            navLinks.setAttribute('aria-hidden', 'false');
+          } else {
+            // Closing the menu
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            
+            if (overlay) {
+              overlay.classList.remove('active');
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+          }
+        });
+        
+        // Close menu when clicking overlay
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            overlay.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+          });
+        }
+      }
+      
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or use default (dark)
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        // Apply the saved theme on page load
+        if (savedTheme === 'light') {
+          htmlElement.classList.add('light-mode');
+          themeToggle.setAttribute('aria-pressed', 'false');
+        } else {
+          themeToggle.setAttribute('aria-pressed', 'true');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+          // Toggle light-mode class on html element
+          htmlElement.classList.toggle('light-mode');
+          
+          // Update button aria-pressed state
+          const isLightMode = htmlElement.classList.contains('light-mode');
+          themeToggle.setAttribute('aria-pressed', !isLightMode);
+          
+          // Save preference to localStorage
+          localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+        });
+      }
+    });
+  </script>
