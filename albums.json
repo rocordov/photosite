@@ -1,4 +1,5 @@
-[{
+[
+  {
     "title": "Chiang Mai",
     "link": "Thailand/Chiang Mai/index.html",
     "thumbnail": "Thailand/Chiang Mai/images/IMG_0957.jpg"
@@ -62,5 +63,10 @@
     "title": "Bangkok Cruise",
     "link": "Thailand/Bangkok Cruise/index.html",
     "thumbnail": "Thailand/Bangkok Cruise/images/462560511_588476680440101_7407339330188810572_n.jpg"
+  },
+  {
+    "title": "Wat Mettatham Phothiyan copy",
+    "link": "Thailand/Wat Mettatham Phothiyan copy/index.html",
+    "thumbnail": "Thailand/Wat Mettatham Phothiyan copy/images/_DSC1180_stack.jpg"
   }
 ]
