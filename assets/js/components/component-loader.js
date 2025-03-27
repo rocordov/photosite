@@ -60,26 +60,18 @@ function loadComponent(elementId, componentPath, replacements = {}) {
  * Load both header and footer components
  */
 function loadLayoutComponents() {
-  // Determine if we're in a subdirectory
-  const currentPath = window.location.pathname;
-  const inSubdirectory = currentPath.includes('/experiments/');
-  
-  // Set the root path based on directory level
+  const inSubdirectory = window.location.pathname.includes('/experiments/');
   const rootPath = inSubdirectory ? '../' : './';
   
-  // Load header first, then footer
   loadComponent('site-header', `${rootPath}components/header.html`, { ROOT_PATH: rootPath })
     .then(() => {
-      // Initialize mobile menu, etc. from header.js
       if (window.initMobileMenu) window.initMobileMenu();
-      if (window.initThemeToggle) window.initThemeToggle();
-      
-      // Once header is loaded, load footer
+      // Remove the window.initThemeToggle call since we're using the import
       return loadComponent('site-footer', `${rootPath}components/footer.html`, { ROOT_PATH: rootPath });
     })
     .then(() => {
-      // Initialize back-to-top button functionality
       initBackToTop();
+      initThemeToggle(); // Initialize theme toggle here
     })
     .catch(error => {
       console.error('Error loading layout components:', error);
@@ -113,10 +105,8 @@ function initBackToTop() {
 
 // Initialize components on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Component loader initialized'); // Debug log
-  loadLayoutComponents().then(() => {
-    initThemeToggle(); // Initialize theme toggle after components are loaded
-  });
+  console.log('Component loader initialized');
+  loadLayoutComponents();
 });
 
 // Export functions for potential reuse
