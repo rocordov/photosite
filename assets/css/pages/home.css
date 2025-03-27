@@ -1,0 +1,37 @@
+/* 
+ * Home Page Specific Styles
+ * Contains styles specific to the home page layout and components
+ */
+
+/* Home page specific adjustments */
+.home-hero {
+  background-color: rgba(18, 18, 18, 0.9);
+}
+
+/* User Feedback Section */
+#feedback {
+  padding: 40px;
+  background-color: var(--card);
+  border-top: 1px solid var(--header-border);
+}
+
+#feedback h2 {
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#feedback p {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+}
+
+/* Adjustments for home page gallery */
+.home-gallery .gallery-item {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-gallery .gallery-item:hover {
+  transform: translateY(-5px) scale(1.03);
+}
