@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gesture Recognition API | Experiments</title>
+  <meta name="description" content="Test gesture-based navigation patterns like swipe, tap, drag and more using both touch and mouse input for cross-device interactivity.">
+  
+  <!-- Open Graph tags for better social sharing -->
+  <meta property="og:title" content="Gesture Recognition API | Experiments">
+  <meta property="og:description" content="Touch and mouse gesture recognition for interactive control across devices.">
+  <meta property="og:image" content="https://rocordov.github.io/photosite/Me/images/IMG_4685.jpg">
+  <meta property="og:url" content="https://rocordov.github.io/photosite/experiments/gestures.html">
+  <meta property="og:type" content="website">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #121212;
+      --bg-gradient: linear-gradient(145deg, #141414, #0f0f0f);
+      --card: #1e1e1e;
+      --accent: #00bcd4;
+      --accent-secondary: #ff5722;
+      --accent-tertiary: #9c27b0;
+      --text: #e0e0e0;
+      --text-secondary: #aaa;
+      --hover-scale: 1.05;
+      --transition-standard: all 0.3s ease;
+      --spacing-sm: 10px;
+      --spacing-md: 20px;
+      --spacing-lg: 30px;
+      --spacing-xl: 60px;
+      --border-radius: 12px;
+      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --header-border: #333;
+      --accent-glow: rgba(0, 188, 212, 0.5);
+      --footer-bg: rgba(20, 20, 20, 0.7);
+      
+      /* Gesture specific colors */
+      --swipe-left: #00bcd4;  /* accent */
+      --swipe-right: #ff5722; /* accent-secondary */
+      --swipe-up: #9c27b0;    /* accent-tertiary */
+      --swipe-down: #4caf50;  /* green */
+      --tap: #ffc107;         /* amber */
+      --double-tap: #ff9800;  /* orange */
+      --hold: #9e9e9e;        /* gray */
+      --drag: #3f51b5;        /* indigo */
+    }
+
+    /* Light Mode Theme */
+    :root.light-mode {
+      --bg: #ffffff;
+      --bg-gradient: linear-gradient(145deg, #f5f5f5, #ffffff);
+      --card: #f5f5f5;
+      --accent: #007acc; /* Darker blue for better contrast on light backgrounds */
+      --accent-secondary: #e74c3c;
+      --accent-tertiary: #8e44ad;
+      --text: #121212;
+      --text-secondary: #555;
+      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+      --header-border: #ddd;
+      --accent-glow: rgba(0, 122, 204, 0.3);
+      --footer-bg: rgba(245, 245, 245, 0.9);
+      
+      /* Light mode gesture colors */
+      --swipe-left: #0288d1;
+      --swipe-right: #d32f2f;
+      --swipe-up: #7b1fa2;
+      --swipe-down: #388e3c;
+      --tap: #ffa000;
+      --double-tap: #f57c00;
+      --hold: #616161;
+      --drag: #303f9f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      line-height: 1.6;
+      letter-spacing: 0.2px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Skip Link for Accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      padding: 8px;
+      background-color: var(--accent);
+      color: #000;
+      z-index: 100;
+      transition: top 0.3s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Navigation */
+    nav {
+      background-color: rgba(24, 24, 24, 0.98);
+      padding: var(--spacing-md);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      height: 80px; /* Initial height */
+      transition: all 0.3s ease;
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+      position: relative;
+    }
+    
+    .logo {
+      position: absolute;
+      left: 0;
+    }
+    
+    .mobile-menu-btn {
+      position: absolute;
+      right: 0;
+    }
+    
+    nav.shrink {
+      height: 60px;
+      background-color: rgba(24, 24, 24, 0.9); /* Slightly transparent when shrunk */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Enhanced shadow when shrunk */
+      padding: 10px var(--spacing-md);
+    }
+    
+    nav.shrink .logo {
+      font-size: 1.3rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition-standard);
+    }
+
+    .logo:hover, .logo:focus {
+      color: #fff;
+      text-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: var(--spacing-md);
+      padding: 6px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-standard);
+    }
+
+    .theme-toggle:hover, .theme-toggle:focus {
+      background-color: rgba(0, 188, 212, 0.1);
+      transform: scale(1.1);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Icon changes based on theme */
+    :root.light-mode .theme-toggle .fa-moon {
+      display: none;
+    }
+
+    :root.light-mode .theme-toggle .fa-sun {
+      display: inline-block;
+    }
+
+    .theme-toggle .fa-sun {
+      display: none;
+    }
+
+    .theme-toggle .fa-moon {
+      display: inline-block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      margin-left: var(--spacing-md);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      padding: 6px 0;
+      transition: var(--transition-standard);
+      z-index: 20;
+      pointer-events: auto;
+    }
+
+    .nav-links a:hover, .nav-links a:focus {
+      color: var(--accent);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a:focus::after, .nav-links a[aria-current="page"]::after {
+      width: 100%;
+    }
+    
+    .nav-links a[aria-current="page"] {
+      color: var(--accent);
+    }
+
+    /* Experimental link styling */
+    .experimental-link {
+      position: relative;
+    }
+    
+    .beta-badge {
+      font-size: 0.6rem;
+      background-color: rgba(0, 188, 212, 0.2);
+      color: var(--accent);
+      padding: 2px 4px;
+      border-radius: 4px;
+      margin-left: 4px;
+      vertical-align: top;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(0, 188, 212, 0.3);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 15;
+      position: relative;
+      width: 46px;
+      height: 46px;
+      margin-right: 10px;
+    }
+
+    .hamburger-icon {
+      position: absolute;
+      display: block;
+      width: 30px;
+      height: 3px;
+      background-color: var(--accent);
+      transition: var(--transition-standard);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hamburger-icon::before, .hamburger-icon::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 3px;
+      background-color: var(--accent);
+      transition: var(--transition-standard);
+      left: 0;
+    }
+
+    .hamburger-icon::before {
+      transform: translateY(-8px);
+    }
+
+    .hamburger-icon::after {
+      transform: translateY(8px);
+    }
+
+    .mobile-menu-btn.open .hamburger-icon {
+      background-color: transparent;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::before {
+      transform: rotate(45deg);
+      top: 0;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::after {
+      transform: rotate(-45deg);
+      top: 0;
+    }
+    
+    /* Overlay for mobile menu */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+      pointer-events: none;
+    }
+    
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    /* Main Content Styles */
+    .page-title {
+      text-align: center;
+      margin: 40px 0 20px;
+      font-size: 2.5rem;
+      color: var(--accent);
+    }
+
+    .page-description {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      padding: 0 20px;
+      color: var(--text-secondary);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Back to experiments button */
+    .back-to-experiments {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: var(--card);
+      color: var(--accent);
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      margin-bottom: 20px;
+      transition: var(--transition-standard);
+      font-weight: 500;
+    }
+    
+    .back-to-experiments i {
+      margin-right: 5px;
+    }
+    
+    .back-to-experiments:hover, .back-to-experiments:focus {
+      background-color: var(--accent);
+      color: #000;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Gesture Styles */
+    .gesture-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .gesture-grid {
+        grid-template-columns: 3fr 2fr;
+      }
+    }
+
+    .gesture-demo {
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      padding: 30px;
+      box-shadow: var(--shadow-standard);
+      transition: var(--transition-standard);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .gesture-area {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      touch-action: none; /* Prevents default touch actions */
+      user-select: none; /* Prevents text selection */
+      cursor: grab;
+    }
+
+    .gesture-area:active {
+      cursor: grabbing;
+    }
+
+    .gesture-area-message {
+      font-size: 1.5rem;
+      color: var(--text);
+      opacity: 0.5;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .gesture-indicator {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: var(--text);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .gesture-feedback {
+      margin-top: 20px;
+      min-height: 50px;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    /* Controls and Info */
+    .gesture-info {
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      padding: 30px;
+      box-shadow: var(--shadow-standard);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-section {
+      margin-bottom: 20px;
+    }
+
+    .info-section-title {
+      font-size: 1.4rem;
+      color: var(--accent);
+      margin-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 5px;
+    }
+
+    .gesture-list {
+      list-style: none;
+    }
+
+    .gesture-list li {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+    }
+
+    .gesture-icon {
+      width: 30px;
+      margin-right: 10px;
+      text-align: center;
+      color: var(--accent);
+    }
+
+    .gesture-keyboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .keyboard-btn {
+      padding: 8px 12px;
+      background-color: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--text-secondary);
+      border-radius: 6px;
+      color: var(--text);
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .keyboard-btn:hover {
+      background-color: rgba(0, 188, 212, 0.2);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .keyboard-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* Animation Classes */
+    .gesture-animation {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Swipe Animations */
+    .swipe-left-animation,
+    .swipe-right-animation,
+    .swipe-up-animation,
+    .swipe-down-animation {
+      opacity: 0;
+      position: absolute;
+    }
+
+    .swipe-left-animation {
+      transform: translateX(100px);
+      color: var(--swipe-left);
+    }
+
+    .swipe-right-animation {
+      transform: translateX(-100px);
+      color: var(--swipe-right);
+    }
+
+    .swipe-up-animation {
+      transform: translateY(100px);
+      color: var(--swipe-up);
+    }
+
+    .swipe-down-animation {
+      transform: translateY(-100px);
+      color: var(--swipe-down);
+    }
+
+    /* Tap Animations */
+    .tap-animation,
+    .double-tap-animation {
+      transform: scale(0.5);
+    }
+
+    .tap-animation {
+      color: var(--tap);
+    }
+
+    .double-tap-animation {
+      color: var(--double-tap);
+    }
+
+    /* Hold Animation */
+    .hold-animation {
+      transform: scale(0.8);
+      color: var(--hold);
+    }
+
+    /* Drag Animation */
+    .drag-animation {
+      color: var(--drag);
+    }
+
+    /* Animation triggers */
+    .swipe-left-animation.active,
+    .swipe-right-animation.active,
+    .swipe-up-animation.active,
+    .swipe-down-animation.active {
+      opacity: 1;
+      transform: translateX(0) translateY(0);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .tap-animation.active,
+    .double-tap-animation.active,
+    .hold-animation.active {
+      opacity: 1;
+      transform: scale(1);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .drag-animation.active {
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Ripple effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* Pulse animations */
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Drag trail effect */
+    .drag-trail {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--drag);
+      opacity: 0.6;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    /* Fallback message */
+    .fallback-message {
+      display: none;
+      text-align: center;
+      padding: 30px;
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      margin: 40px auto;
+      max-width: 600px;
+    }
+
+    .fallback-message h2 {
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: var(--spacing-lg) var(--spacing-md);
+      color: #777;
+      font-size: 0.95rem;
+      border-top: 1px solid #2a2a2a;
+      background-color: rgba(20, 20, 20, 0.7);
+    }
+
+    .footer-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .footer-social {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--spacing-md);
+      gap: var(--spacing-md);
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #2a2a2a;
+      color: var(--text);
+      font-size: 1.2rem;
+      transition: var(--transition-standard);
+    }
+
+    .footer-social a:hover, .footer-social a:focus {
+      background-color: var(--accent);
+      color: #000;
+      transform: translateY(-3px);
+    }
+
+    .footer-social a:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .footer-info {
+      margin-top: var(--spacing-sm);
+    }
+
+    .footer-info a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition-standard);
+    }
+
+    .footer-info a:hover, .footer-info a:focus {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 2rem;
+      }
+      
+      .gesture-area {
+        min-height: 250px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gesture-area {
+        min-height: 200px;
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 75%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: rgba(25, 25, 25, 0.98);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 70px var(--spacing-md) var(--spacing-md);
+        transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-links.open {
+        right: 0;
+      }
+
+      .nav-links a {
+        margin: 10px 0;
+        font-size: 1.2rem;
+        width: 100%;
+        padding: 8px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+  <script src="../header.js"></script>
+
+  <main id="main-content">
+    <div class="container">
+      <a href="./" class="back-to-experiments"><i class="fas fa-arrow-left"></i> Back to Experiments</a>
+      
+      <h1 class="page-title">Gesture Recognition API</h1>
+      <p class="page-description">Test gesture-based navigation patterns using both touch and mouse input for cross-device interactivity. Try different gestures in the demo area or use keyboard shortcuts for accessibility testing.</p>
+      
+      <div class="gesture-grid">
+        <!-- Gesture Demo Area -->
+        <div class="gesture-demo">
+          <div id="gesture-area" class="gesture-area" tabindex="0" aria-label="Gesture testing area. Use touch, mouse or keyboard to test different gestures.">
+            <div class="gesture-area-message">Try gestures here<br><small>or use keyboard controls</small></div>
+            
+            <!-- Gesture Animation Elements -->
+            <div class="swipe-left-animation gesture-animation">
+              <i class="fas fa-arrow-left fa-5x"></i>
+            </div>
+            <div class="swipe-right-animation gesture-animation">
+              <i class="fas fa-arrow-right fa-5x"></i>
+            </div>
+            <div class="swipe-up-animation gesture-animation">
+              <i class="fas fa-arrow-up fa-5x"></i>
+            </div>
+            <div class="swipe-down-animation gesture-animation">
+              <i class="fas fa-arrow-down fa-5x"></i>
+            </div>
+            <div class="tap-animation gesture-animation">
+              <i class="fas fa-hand-pointer fa-5x"></i>
+            </div>
+            <div class="double-tap-animation gesture-animation">
+              <i class="fas fa-hand-point-up fa-5x"></i>
+            </div>
+            <div class="hold-animation gesture-animation">
+              <i class="fas fa-hand-paper fa-5x"></i>
+            </div>
+            <div class="drag-animation gesture-animation">
+              <i class="fas fa-arrows-alt fa-5x"></i>
+            </div>
+          </div>
+          
+          <div id="gesture-feedback" class="gesture-feedback">
+            Waiting for gesture...
+          </div>
+        </div>
+        
+        <!-- Gesture Info and Controls -->
+        <div class="gesture-info">
+          <div class="info-section">
+            <h2 class="info-section-title">Supported Gestures</h2>
+            <ul class="gesture-list">
+              <li><span class="gesture-icon"><i class="fas fa-arrow-left"></i></span> Swipe Left</li>
+              <li><span class="gesture-icon"><i class="fas fa-arrow-right"></i></span> Swipe Right</li>
+              <li><span class="gesture-icon"><i class="fas fa-arrow-up"></i></span> Swipe Up</li>
+              <li><span class="gesture-icon"><i class="fas fa-arrow-down"></i></span> Swipe Down</li>
+              <li><span class="gesture-icon"><i class="fas fa-hand-pointer"></i></span> Tap</li>
+              <li><span class="gesture-icon"><i class="fas fa-hand-point-up"></i></span> Double Tap</li>
+              <li><span class="gesture-icon"><i class="fas fa-hand-paper"></i></span> Press and Hold</li>
+              <li><span class="gesture-icon"><i class="fas fa-arrows-alt"></i></span> Drag / Pan</li>
+            </ul>
+          </div>
+          
+          <div class="info-section">
+            <h2 class="info-section-title">Keyboard Controls</h2>
+            <p>For accessibility testing, you can simulate gestures using these keys:</p>
+            <div class="gesture-keyboard">
+              <button class="keyboard-btn" data-gesture="swipe-left" aria-label="Simulate swipe left">←</button>
+              <button class="keyboard-btn" data-gesture="swipe-right" aria-label="Simulate swipe right">→</button>
+              <button class="keyboard-btn" data-gesture="swipe-up" aria-label="Simulate swipe up">↑</button>
+              <button class="keyboard-btn" data-gesture="swipe-down" aria-label="Simulate swipe down">↓</button>
+              <button class="keyboard-btn" data-gesture="tap" aria-label="Simulate tap">Space</button>
+              <button class="keyboard-btn" data-gesture="double-tap" aria-label="Simulate double tap">D</button>
+              <button class="keyboard-btn" data-gesture="hold" aria-label="Simulate hold">H</button>
+              <button class="keyboard-btn" data-gesture="drag" aria-label="Simulate drag">M</button>
+            </div>
+          </div>
+          
+          <div class="info-section">
+            <h2 class="info-section-title">Browser Compatibility</h2>
+            <p>This demo uses Pointer Events API that works on modern browsers. If you don't see the gestures working, your browser might not support this API.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Fallback for browsers that don't support gesture recognition -->
+      <div class="fallback-message" id="fallback">
+        <h2>Gesture Recognition Not Supported</h2>
+        <p>Your browser may not fully support the gesture recognition features used in this demo. Please try a modern browser like Chrome, Firefox, Safari, or Edge for the best experience.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-social">
+        <a href="https://instagram.com/rois_cordova" aria-label="Follow me on Instagram" target="_blank" rel="noopener">
