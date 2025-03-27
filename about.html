@@ -2,10 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Me – Scientist & Artist</title>
+  
+  <!-- External CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Global and Component CSS -->
+  <link rel="stylesheet" href="./assets/css/global.css">
+  <link rel="stylesheet" href="./assets/css/components/header.css">
+  <link rel="stylesheet" href="./assets/css/components/footer.css">
+  <link rel="stylesheet" href="./assets/css/components/theme-toggle.css">
+  <link rel="stylesheet" href="./assets/css/components/command-palette.css">
+  
   <!-- Structured Data for SEO -->
   <script type="application/ld+json">
     {
@@ -26,283 +36,13 @@
       }
     }
   </script>
+  
   <!-- Privacy-focused Analytics -->
   <script async defer data-website-id="your-website-id" src="https://analytics.example.com/script.js"></script>
+  
+  <!-- Page-specific CSS -->
   <style>
-    :root {
-      --bg: #121212;
-      --bg-gradient: linear-gradient(145deg, #141414, #0f0f0f);
-      --card: #1e1e1e;
-      --accent: #00bcd4;
-      --text: #e0e0e0;
-      --text-secondary: #aaa;
-      --hover-scale: 1.05;
-      --transition-standard: all 0.3s ease;
-      --transition-bounce: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      --spacing-sm: 10px;
-      --spacing-md: 20px;
-      --spacing-lg: 30px;
-      --spacing-xl: 60px;
-      --border-radius: 12px;
-      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.3);
-      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
-      --header-border: #333;
-      --accent-glow: rgba(0, 188, 212, 0.5);
-      --footer-bg: rgba(20, 20, 20, 0.7);
-    }
-
-    /* Light Mode Theme */
-    :root.light-mode {
-      --bg: #ffffff;
-      --bg-gradient: linear-gradient(145deg, #f5f5f5, #ffffff);
-      --card: #f5f5f5;
-      --accent: #007acc; /* Darker blue for better contrast on light backgrounds */
-      --text: #121212;
-      --text-secondary: #555;
-      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
-      --header-border: #ddd;
-      --accent-glow: rgba(0, 122, 204, 0.3);
-      --footer-bg: rgba(245, 245, 245, 0.9);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Montserrat', sans-serif;
-      background-color: var(--bg);
-      background-image: var(--bg-gradient);
-      color: var(--text);
-      line-height: 1.6;
-      letter-spacing: 0.2px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Skip Link for Accessibility */
-    .skip-link {
-      position: absolute;
-      top: -40px;
-      left: 0;
-      padding: 8px;
-      background-color: var(--accent);
-      color: #000;
-      z-index: 100;
-      transition: top 0.3s;
-    }
-
-    .skip-link:focus {
-      top: 0;
-    }
-
-    /* Navigation */
-    nav {
-      background-color: rgba(24, 24, 24, 0.98);
-      padding: var(--spacing-md);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-      height: 80px; /* Initial height */
-      transition: all 0.3s ease;
-    }
-    
-    .nav-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      max-width: 1200px;
-      position: relative;
-    }
-    
-    .logo {
-      position: absolute;
-      left: 0;
-    }
-    
-    .mobile-menu-btn {
-      position: absolute;
-      right: 0;
-    }
-    
-    nav.shrink {
-      height: 60px;
-      background-color: rgba(24, 24, 24, 0.9); /* Slightly transparent when shrunk */
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Enhanced shadow when shrunk */
-      padding: 10px var(--spacing-md);
-    }
-    
-    nav.shrink .logo {
-      font-size: 1.3rem;
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: var(--accent);
-      text-decoration: none;
-      transition: var(--transition-standard);
-    }
-
-    .logo:hover, .logo:focus {
-      color: #fff;
-      text-shadow: 0 0 8px rgba(0, 188, 212, 0.5);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      z-index: 10; /* Add this to ensure links are clickable */
-    }
-
-    .nav-links a {
-      color: var(--text);
-      margin-left: var(--spacing-md);
-      text-decoration: none;
-      font-weight: 500;
-      position: relative;
-      padding: 6px 0;
-      transition: var(--transition-standard);
-    }
-
-    .nav-links a:hover, .nav-links a:focus {
-      color: var(--accent);
-    }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
-
-    .nav-links a:hover::after, .nav-links a:focus::after {
-      width: 100%;
-    }
-    
-    /* Experimental link styling */
-    .experimental-link {
-      position: relative;
-    }
-    
-    .beta-badge {
-      font-size: 0.6rem;
-      background-color: rgba(0, 188, 212, 0.2);
-      color: var(--accent);
-      padding: 2px 4px;
-      border-radius: 4px;
-      margin-left: 4px;
-      vertical-align: top;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      border: 1px solid rgba(0, 188, 212, 0.3);
-    }
-
-    /* Theme Toggle Button */
-    .theme-toggle {
-      background: none;
-      border: none;
-      color: var(--accent);
-      font-size: 1.2rem;
-      cursor: pointer;
-      margin-left: var(--spacing-md);
-      padding: 6px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: var(--transition-standard);
-    }
-
-    .theme-toggle:hover, .theme-toggle:focus {
-      background-color: rgba(0, 188, 212, 0.1);
-      transform: scale(1.1);
-    }
-
-    .theme-toggle:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    /* Icon changes based on theme */
-    :root.light-mode .theme-toggle .fa-moon {
-      display: none;
-    }
-
-    :root.light-mode .theme-toggle .fa-sun {
-      display: inline-block;
-    }
-
-    .theme-toggle .fa-sun {
-      display: none;
-    }
-
-    .theme-toggle .fa-moon {
-      display: inline-block;
-    }
-
-    .mobile-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 8px;
-      z-index: 15;
-    }
-
-    .hamburger-icon {
-      position: relative;
-      display: block;
-      width: 30px;
-      height: 2px;
-      background-color: var(--accent);
-      transition: var(--transition-standard);
-    }
-
-    .hamburger-icon::before, .hamburger-icon::after {
-      content: '';
-      position: absolute;
-      width: 30px;
-      height: 2px;
-      background-color: var(--accent);
-      transition: var(--transition-standard);
-    }
-
-    .hamburger-icon::before {
-      transform: translateY(-8px);
-    }
-
-    .hamburger-icon::after {
-      transform: translateY(8px);
-    }
-
-    .mobile-menu-btn.open .hamburger-icon {
-      background-color: transparent;
-    }
-
-    .mobile-menu-btn.open .hamburger-icon::before {
-      transform: rotate(45deg);
-    }
-
-    .mobile-menu-btn.open .hamburger-icon::after {
-      transform: rotate(-45deg);
-    }
-
-    /* Main Content */
+    /* About Page Specific Styles */
     main {
       padding: var(--spacing-lg) var(--spacing-md);
       max-width: 1200px;
@@ -400,7 +140,7 @@
       align-items: center;
       text-decoration: none;
       color: var(--text);
-      transition: var(--transition-bounce);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       position: relative;
     }
 
@@ -408,7 +148,7 @@
       font-size: 2.5rem;
       color: var(--accent);
       margin-bottom: var(--spacing-sm);
-      transition: var(--transition-bounce);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .social-icon span {
@@ -495,116 +235,6 @@
       }
     }
 
-    /* Footer */
-    footer {
-      margin-top: auto;
-      text-align: center;
-      padding: var(--spacing-lg) var(--spacing-md);
-      color: #777;
-      font-size: 0.95rem;
-      border-top: 1px solid var(--header-border);
-      background-color: var(--footer-bg);
-    }
-
-    .footer-content {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .footer-social {
-      display: flex;
-      justify-content: center;
-      margin-bottom: var(--spacing-md);
-      gap: var(--spacing-md);
-    }
-
-    .footer-social a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: #2a2a2a;
-      color: var(--text);
-      font-size: 1.2rem;
-      transition: var(--transition-bounce);
-    }
-
-    .footer-social a:hover, .footer-social a:focus {
-      background-color: var(--accent);
-      color: #000;
-      transform: translateY(-3px) scale(1.1);
-      box-shadow: 0 5px 15px var(--accent-glow);
-    }
-
-    .footer-social a:focus-visible {
-      outline: 2px solid #fff;
-      outline-offset: 2px;
-    }
-
-    .footer-info {
-      margin-top: var(--spacing-sm);
-    }
-
-    .footer-info a {
-      color: var(--accent);
-      text-decoration: none;
-      transition: var(--transition-standard);
-    }
-
-    .footer-info a:hover, .footer-info a:focus {
-      color: #fff;
-      text-decoration: underline;
-    }
-
-    /* Back to Top Button */
-    #back-to-top {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background-color: var(--card);
-      color: var(--accent);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      box-shadow: var(--shadow-standard);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      z-index: 9;
-    }
-
-    #back-to-top:hover, #back-to-top:focus {
-      background-color: var(--accent);
-      color: #000;
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-hover);
-    }
-
-    #back-to-top.visible {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    /* Animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     /* Media Queries */
     @media (max-width: 768px) {
       .page-header h1 {
@@ -620,64 +250,14 @@
         gap: var(--spacing-xl) var(--spacing-lg);
       }
     }
-
-    @media (max-width: 600px) {
-      .mobile-menu-btn {
-        display: block;
-      }
-
-      .nav-links {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 75%;
-        max-width: 300px;
-        height: 100vh;
-        background-color: rgba(25, 25, 25, 0.98);
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 70px var(--spacing-md) var(--spacing-md);
-        transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
-      }
-
-      .nav-links.open {
-        right: 0;
-      }
-
-      .nav-links a {
-        margin: 10px 0;
-        font-size: 1.2rem;
-        width: 100%;
-        padding: 8px 0;
-      }
-
-      .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease;
-        z-index: 5;
-        pointer-events: none; /* Add this line */
-      }
-
-      .overlay.active {
-        opacity: 1;
-        visibility: visible;
-      }
-    }
   </style>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
+  
+  <!-- Header with Navigation (loaded dynamically) -->
   <header id="site-header"></header>
-  <script src="./header.js"></script>
+  
   <main id="main-content">
     <header class="page-header">
       <h1>About me</h1>
@@ -702,44 +282,56 @@
       </p>
     </section>
   </main>
-  <!-- Footer -->
-  <footer>
-    <div class="footer-content">
-      <div class="connect-social">
-        <a href="https://instagram.com/rois_cordova" class="social-icon" target="_blank" rel="noopener" aria-label="Follow me on Instagram - New posts available">
-          <i class="fab fa-instagram"></i>
-          <span>Instagram</span>
-          <span class="new-content">3</span>
-        </a>
-        <a href="https://tiktok.com/@rois.c" class="social-icon" target="_blank" rel="noopener" aria-label="Follow me on TikTok">
-          <i class="fab fa-tiktok"></i>
-          <span>TikTok</span>
-          <span class="badge-live"></span>
-        </a>
-        <a href="mailto:rocordov@gmail.com" class="social-icon" aria-label="Email me">
-          <i class="far fa-envelope"></i>
-          <span>Email</span>
-        </a>
-      </div>
-    </div>
-  </footer>
+  
+  <!-- Connect Social Section -->
+  <div class="connect-social">
+    <a href="https://instagram.com/rois_cordova" class="social-icon" target="_blank" rel="noopener" aria-label="Follow me on Instagram - New posts available">
+      <i class="fab fa-instagram"></i>
+      <span>Instagram</span>
+      <span class="new-content">3</span>
+    </a>
+    <a href="https://tiktok.com/@rois.c" class="social-icon" target="_blank" rel="noopener" aria-label="Follow me on TikTok">
+      <i class="fab fa-tiktok"></i>
+      <span>TikTok</span>
+      <span class="badge-live"></span>
+    </a>
+    <a href="mailto:rocordov@gmail.com" class="social-icon" aria-label="Email me">
+      <i class="far fa-envelope"></i>
+      <span>Email</span>
+    </a>
+  </div>
+  
+  <!-- Footer (loaded dynamically) -->
+  <footer id="site-footer"></footer>
+  
   <!-- Back to Top Button -->
   <button id="back-to-top" aria-label="Back to top">
     <i class="fas fa-arrow-up"></i>
   </button>
-  <script>
-    // Sticky & Shrinking Navigation
-    window.addEventListener('scroll', () => {
-      const nav = document.querySelector('nav');
-      if (window.scrollY > 100) {
-        nav.classList.add('shrink');
-      } else {
-        nav.classList.remove('shrink');
-      }
-    });
+  
+  <!-- Command Palette -->
+  <div class="command-palette" id="command-palette" role="dialog" aria-label="Command palette">
+    <div class="command-palette-container">
+      <div class="command-palette-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="text" id="command-palette-input" class="command-palette-input" placeholder="Type a command or search..." aria-label="Search commands">
+      </div>
+      <div class="command-palette-results" id="command-palette-results"></div>
+    </div>
+  </div>
 
+  <!-- Component Loader Script -->
+  <script src="./assets/js/components/component-loader.js" type="module"></script>
+  
+  <!-- Component scripts -->
+  <script src="./assets/js/components/theme-toggle.js" type="module"></script>
+  <script src="./assets/js/components/command-palette.js" type="module"></script>
+  
+  <!-- Page-specific script -->
+  <script>
     // Back to Top Button functionality
     const backToTopBtn = document.getElementById('back-to-top');
+    
     // Show/hide back-to-top button based on scroll position
     window.addEventListener('scroll', () => {
       if (window.scrollY > 300) {
@@ -748,7 +340,7 @@
         backToTopBtn.classList.remove('visible');
       }
     });
-
+    
     // Smooth scroll to top when button is clicked
     backToTopBtn.addEventListener('click', () => {
       window.scrollTo({
@@ -756,35 +348,7 @@
         behavior: 'smooth'
       });
     });
-
-    // Theme toggle functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const themeToggle = document.getElementById('theme-toggle');
-      if (themeToggle) {
-        const htmlElement = document.documentElement;
-        // Check for saved theme preference or use default (dark)
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        // Apply the saved theme on page load
-        if (savedTheme === 'light') {
-          htmlElement.classList.add('light-mode');
-          themeToggle.setAttribute('aria-pressed', 'false');
-        } else {
-          themeToggle.setAttribute('aria-pressed', 'true');
-        }
-
-        // Toggle theme when button is clicked
-        themeToggle.addEventListener('click', () => {
-          // Toggle light-mode class on html element
-          htmlElement.classList.toggle('light-mode');
-          // Update button aria-pressed state
-          const isLightMode = htmlElement.classList.contains('light-mode');
-          themeToggle.setAttribute('aria-pressed', !isLightMode);
-          // Save preference to localStorage
-          localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
-        });
-      }
-    });
-
+    
     // Keyboard navigation improvements
     document.querySelectorAll('a, button').forEach(element => {
       element.addEventListener('keydown', e => {
@@ -794,43 +358,6 @@
           element.click();
         }
       });
-    });
-
-    // Ensure all interactive elements can be focused
-    document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])').forEach(el => {
-      el.setAttribute('tabindex', el.getAttribute('tabindex') || '0');
-    });
-
-    // Mobile menu toggle
-    document.addEventListener('DOMContentLoaded', () => {
-      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-      const navLinks = document.querySelector('.nav-links');
-      const overlay = document.querySelector('.overlay');
-
-      if (mobileMenuBtn && navLinks) {
-        mobileMenuBtn.addEventListener('click', function() {
-          const isOpen = mobileMenuBtn.classList.contains('open');
-          if (!isOpen) {
-            mobileMenuBtn.classList.add('open');
-            navLinks.classList.add('open');
-            if (overlay) {
-              overlay.classList.add('active');
-              overlay.style.pointerEvents = "auto";
-            }
-            navLinks.setAttribute('aria-hidden', 'false');
-            mobileMenuBtn.setAttribute('aria-expanded', 'true');
-          } else {
-            mobileMenuBtn.classList.remove('open');
-            navLinks.classList.remove('open');
-            if (overlay) {
-              overlay.classList.remove('active');
-              overlay.style.pointerEvents = "none";
-            }
-            navLinks.setAttribute('aria-hidden', 'true');
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
-          }
-        });
-      }
     });
   </script>
 </body>
