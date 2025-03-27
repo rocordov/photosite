@@ -224,6 +224,12 @@ nav.shrink .logo {
     transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
   }
+  
+  /* Light mode mobile navigation override */
+  :root.light-mode .nav-links {
+    background-color: rgba(245, 245, 245, 0.98);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  }
 
   .nav-links.open {
     right: 0;
