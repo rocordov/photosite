@@ -18,7 +18,6 @@ export function initThemeToggle() {
   const savedTheme = localStorage.getItem('theme') || 'dark';
   console.log('Saved theme:', savedTheme); // Debug log
   
-  // Apply initial theme
   applyTheme(savedTheme);
   
   // Toggle theme on button click
@@ -35,23 +34,9 @@ export function initThemeToggle() {
 // Helper function to apply theme
 function applyTheme(theme) {
   const root = document.documentElement;
-  const themeToggle = document.querySelector('.theme-toggle');
-  const isLight = theme === 'light';
-  
-  root.classList.toggle('light-mode', isLight);
-  
-  // Update button icons
-  const sunIcon = themeToggle.querySelector('.fa-sun');
-  const moonIcon = themeToggle.querySelector('.fa-moon');
-  
-  if (sunIcon && moonIcon) {
-    sunIcon.style.display = isLight ? 'none' : 'block';
-    moonIcon.style.display = isLight ? 'block' : 'none';
-  }
+  root.classList.toggle('light-mode', theme === 'light');
 }
 
 // Initialize theme toggle on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', initThemeToggle);
 
-// Export functions for potential reuse
-export { initThemeToggle, applyTheme };
