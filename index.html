@@ -207,6 +207,7 @@
     .nav-links {
       display: flex;
       align-items: center;
+      z-index: 10; /* Should be higher than overlay */
     }
 
     .nav-links a {
@@ -716,6 +717,10 @@
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
+      }
+
+      .overlay {
+        z-index: 5;
       }
 
     }
