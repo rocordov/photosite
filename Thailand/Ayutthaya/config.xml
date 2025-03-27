@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
-				enableAutoPlay="true"
-					displayTime="0.007"
-					maxThumbRows="2"
-					imageScaleMode="SCALE"
-					randomizeImages="true"
-					autoPlayOnLoad="true"
-					galleryTitle="Ayutthaya"
-					imageTransitionType="CROSS_FADE"
+		enableAutoPlay="true"
+		displayTime="7"
+		maxThumbRows="2"
+		imageScaleMode="SCALE"
+		randomizeImages="true"
+		autoPlayOnLoad="true"
+		galleryTitle="Ayutthaya"
+		imageTransitionType="CROSS_FADE"
+		enableFullscreen="true"
+		showCaptions="true"
+		captionTextColor="#ffffff"
+		captionBackgroundColor="#000000"
 		>
 			<image imageURL="images/_DSC0610.jpg" thumbURL="thumbs/_DSC0610.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
