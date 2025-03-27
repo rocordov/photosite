@@ -197,6 +197,11 @@ nav.shrink .logo {
   pointer-events: none;
 }
 
+/* Light mode overlay */
+:root.light-mode .overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
 .overlay.active {
   opacity: 1;
   visibility: visible;
