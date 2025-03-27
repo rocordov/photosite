@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rois Cordova | Creative Work</title>
+  <meta name="description" content="Discover the creative work of Rois Cordova. Explore inspiring photography, innovative projects, and interactive designs that engage and captivate.">
+  
+  <!-- Open Graph tags for better social sharing -->
+  <meta property="og:title" content="Rois Cordova | Creative Work">
+  <meta property="og:description" content="Explore inspiring photography, innovative projects, and interactive designs by Rois Cordova.">
+  <meta property="og:image" content="https://rocordov.github.io/photosite/Me/images/IMG_4685.jpg">
+  <meta property="og:url" content="https://rocordov.github.io/photosite/">
+  <meta property="og:type" content="website">
+  
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Rois Cordova",
+    "url": "https://rocordov.github.io/photosite/",
+    "sameAs": [
+      "https://instagram.com/rois_cordova",
+      "https://tiktok.com/@rois.c"
+    ],
+    "jobTitle": "Photographer and Creative Professional",
+    "description": "Discover the creative work of Rois Cordova featuring inspiring photography, innovative projects, and interactive designs."
+  }
+  </script>
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Global and Component CSS -->
+  <link rel="stylesheet" href="./assets/css/global.css">
+  <link rel="stylesheet" href="./assets/css/components/header.css">
+  <link rel="stylesheet" href="./assets/css/components/footer.css">
+  <link rel="stylesheet" href="./assets/css/components/hero.css">
+  <link rel="stylesheet" href="./assets/css/components/gallery.css">
+  <link rel="stylesheet" href="./assets/css/components/theme-toggle.css">
+  <link rel="stylesheet" href="./assets/css/components/command-palette.css">
+  
+  <!-- Page-specific CSS -->
+  <link rel="stylesheet" href="./assets/css/pages/home.css">
+  
+  <!-- External JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <!-- Hero Section with SVG Animation -->
+    <section class="hero home-hero" id="hero">
+      <!-- Animated SVG Gradient Background -->
+      <div id="bg-wrap" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden;" aria-hidden="true" role="presentation">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width: 100%; ">
+          <defs>
+            <radialGradient id="Gradient1" cx="50%" cy="50%" fx="0.441602%" fy="50%" r=".5">
+              <animate attributeName="fx" dur="34s" values="0%;3%;0%" repeatCount="indefinite" />
+              <stop offset="0%" stop-color="rgba(255, 0, 255, 1)" />
+              <stop offset="100%" stop-color="rgba(255, 0, 255, 0)" />
+            </radialGradient>
+            <radialGradient id="Gradient2" cx="50%" cy="50%" fx="2.68147%" fy="50%" r=".5">
+              <animate attributeName="fx" dur="23.5s" values="0%;3%;0%" repeatCount="indefinite" />
+              <stop offset="0%" stop-color="rgba(255, 255, 0, 1)" />
+              <stop offset="100%" stop-color="rgba(255, 255, 0, 0)" />
+            </radialGradient>
+            <radialGradient id="Gradient3" cx="50%" cy="50%" fx="0.836536%" fy="50%" r=".5">
+              <animate attributeName="fx" dur="21.5s" values="0%;3%;0%" repeatCount="indefinite" />
+              <stop offset="0%" stop-color="rgba(0, 255, 255, 1)" />
+              <stop offset="100%" stop-color="rgba(0, 255, 255, 0)" />
+            </radialGradient>
+          </defs>
+          <rect x="13.744%" y="1.18473%" width="100%" height="100%" fill="url(#Gradient1)" transform="rotate(334.41 50 50)">
+            <animate attributeName="x" dur="20s" values="25%;0%;25%" repeatCount="indefinite" />
+            <animate attributeName="y" dur="21s" values="0%;25%;0%" repeatCount="indefinite" />
+            <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="7s" repeatCount="indefinite" />
+          </rect>
+          <rect x="-2.17916%" y="35.4267%" width="100%" height="100%" fill="url(#Gradient2)" transform="rotate(255.072 50 50)">
+            <animate attributeName="x" dur="23s" values="-25%;0%;-25%" repeatCount="indefinite" />
+            <animate attributeName="y" dur="24s" values="0%;50%;0%" repeatCount="indefinite" />
+            <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="12s" repeatCount="indefinite" />
+          </rect>
+          <rect x="9.00483%" y="14.5733%" width="100%" height="100%" fill="url(#Gradient3)" transform="rotate(139.903 50 50)">
+            <animate attributeName="x" dur="25s" values="0%;25%;0%" repeatCount="indefinite" />
+            <animate attributeName="y" dur="12s" values="0%;25%;0%" repeatCount="indefinite" />
+            <animateTransform attributeName="transform" type="rotate" from="360 50 50" to="0 50 50" dur="9s" repeatCount="indefinite" />
+          </rect>
+        </svg>
+      </div>
+            
+      <!-- Hero content overlays the SVG -->
+      <div class="hero-content">
+        <h1 id="animated-welcome">💗💜💙</h1>
+      </div>
+    </section>
+    
+    <!-- Quote Section -->
+    <section class="quote-section">
+      <p id="quote-display">Loading quote...</p>
+    </section>
+
+    <!-- Gallery Grid - Dynamically populated from albums.json -->
+    <div class="gallery-menu home-gallery" id="gallery-menu"></div>
+  </main>
+
+  <!-- User Feedback Section -->
+  <section id="feedback">
+    <h2>Leave Your Feedback</h2>
+    <p>Share your thoughts or testimonials below:</p>
+    <script src="https://utteranc.es/client.js"
+            repo="rocordov/site-feedback"
+            issue-term="pathname"
+            theme="github-dark"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </section>
+
+  <!-- Footer (loaded dynamically) -->
+  <footer id="site-footer"></footer>
+
+  <!-- Command Palette -->
+  <div class="command-palette" id="command-palette" role="dialog" aria-label="Command palette">
+    <div class="command-palette-container">
+      <div class="command-palette-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="text" id="command-palette-input" class="command-palette-input" placeholder="Type a command or search..." aria-label="Search commands">
+      </div>
+      <div class="command-palette-results" id="command-palette-results"></div>
+    </div>
+  </div>
+
+  <!-- Component Loader Script -->
+  <script src="./assets/js/components/component-loader.js" type="module"></script>
+  
+  <!-- Component scripts -->
+  <script src="./assets/js/components/theme-toggle.js" type="module"></script>
+  <script src="./assets/js/components/command-palette.js" type="module"></script>
+  
+  <!-- Welcome messages script -->
+  <script>
+    const welcomeMessages = [
+    { text: "Welcome", flag: "🏳️‍🌈" },
+    { text: "Bienvenue", flag: "🇫🇷" },
+    { text: "Willkommen", flag: "🇩🇪" },
+    { text: "Benvenuto", flag: "🇮🇹" },
+    { text: "ยินดีต้อนรับ", flag: "🇹🇭" },
+    { text: "ようこそ", flag: "🇯🇵" },
+    { text: "환영합니다", flag: "🇰🇷" },
+    { text: "欢迎", flag: "🇨🇳" },
+    { text: "स्वागत है", flag: "🇮🇳" },
+    // Trimmed the list for readability
+    { text: "Tere", flag: "🇪🇪" }
+  ];
+    
+    let currentIndex = 0;
+    const welcomeEl = document.getElementById('animated-welcome');
+    
+    function cycleWelcomeMessages() {
+      welcomeEl.classList.remove('fade-in');
+      void welcomeEl.offsetWidth; // Trigger reflow
+      welcomeEl.classList.add('fade-in');
+      const { text, flag } = welcomeMessages[currentIndex];
+      welcomeEl.textContent = `${flag} ${text}`;
+      currentIndex = (currentIndex + 1) % welcomeMessages.length;
+    }
+    
+    setInterval(cycleWelcomeMessages, 4000); // Change message every 4 seconds
+    
+    document.addEventListener("DOMContentLoaded", () => {
+      welcomeEl.classList.add('fade-in');
+    });
+  </script>
+  
+  <!-- Quotes script -->
+  <script>
+    const quotes = [
+      "Trying to define yourself is like trying to bite your own teeth.",
+      "Man suffers only because he takes seriously what the gods made for fun.",
+      "We seldom realize, for example, that our most private thoughts and emotions are not actually our own.",
+      "The meaning of life is just to be alive. It is so plain and so obvious and so simple.",
+      // Trimmed the list for readability
+      "The only thing that is ultimately real about your journey is the step that you are taking at this moment."
+    ];
+ 
+    function displayRandomQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      document.getElementById('quote-display').textContent = quotes[randomIndex];
+    }
+ 
+    document.addEventListener('DOMContentLoaded', displayRandomQuote);
+  </script>
+  
+  <!-- Dynamic Gallery Generation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Fetch the albums data from the JSON file
+        const response = await fetch('albums.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const albums = await response.json();
+        console.debug(`Number of albums loaded: ${albums.length}`);
+        
+        // Shuffle the albums array using Fisher-Yates algorithm
+        function shuffleArray(array) {
+          for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+          return array;
+        }
+        const shuffledAlbums = shuffleArray(albums);
+        
+        const galleryContainer = document.getElementById('gallery-menu');
+        // Clear any existing content
+        galleryContainer.innerHTML = '';
+        
+        // Create and append gallery items in randomized order
+        shuffledAlbums.forEach((album, index) => {
+          const galleryItem = document.createElement('a');
+          galleryItem.className = 'gallery-item';
+          galleryItem.href = album.link;
+          galleryItem.setAttribute('aria-label', `View ${album.title} photo gallery`);
+          galleryItem.style.animationDelay = `${0.1 * (index + 1)}s`;
+          
+          const thumbnail = document.createElement('img');
+          thumbnail.className = 'thumbnail';
+          thumbnail.src = album.thumbnail;
+          thumbnail.alt = `${album.title} photography collection - thumbnail preview`;
+          thumbnail.loading = 'lazy';
+          
+          const caption = document.createElement('div');
+          caption.className = 'caption';
+          caption.textContent = album.title;
+          
+          galleryItem.appendChild(thumbnail);
+          galleryItem.appendChild(caption);
+          galleryContainer.appendChild(galleryItem);
+        });
+      } catch (error) {
+        console.error('Error loading albums:', error);
+        document.getElementById('gallery-menu').innerHTML = 
+          `<div style="color: var(--text); text-align: center; width: 100%;">
+            <p>Unable to load gallery albums. Please try again later.</p>
+          </div>`;
+      }
+    });
+  </script>
+</body>
+</html>
