@@ -114,10 +114,9 @@ function initBackToTop() {
 // Initialize components on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Component loader initialized'); // Debug log
-  loadLayoutComponents();
-  
-  // Initialize theme toggle
-  initThemeToggle();
+  loadLayoutComponents().then(() => {
+    initThemeToggle(); // Initialize theme toggle after components are loaded
+  });
 });
 
 // Export functions for potential reuse
