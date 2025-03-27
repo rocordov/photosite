@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic SVG Animations | Experiments</title>
+  <meta name="description" content="Showcase of lightweight SVG-based animations that respond to user interaction, offering smooth visual feedback without heavy resources.">
+  
+  <!-- Open Graph tags for better social sharing -->
+  <meta property="og:title" content="Dynamic SVG Animations | Experiments">
+  <meta property="og:description" content="Interactive SVG-based animations that respond to user interaction.">
+  <meta property="og:image" content="https://rocordov.github.io/photosite/Me/images/IMG_4685.jpg">
+  <meta property="og:url" content="https://rocordov.github.io/photosite/experiments/DynamicAnimations.html">
+  <meta property="og:type" content="website">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #121212;
+      --bg-gradient: linear-gradient(145deg, #141414, #0f0f0f);
+      --card: #1e1e1e;
+      --accent: #00bcd4;
+      --accent-secondary: #ff5722;
+      --accent-tertiary: #9c27b0;
+      --text: #e0e0e0;
+      --text-secondary: #aaa;
+      --hover-scale: 1.05;
+      --transition-standard: all 0.3s ease;
+      --spacing-sm: 10px;
+      --spacing-md: 20px;
+      --spacing-lg: 30px;
+      --spacing-xl: 60px;
+      --border-radius: 12px;
+      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --header-border: #333;
+      --accent-glow: rgba(0, 188, 212, 0.5);
+      --footer-bg: rgba(20, 20, 20, 0.7);
+    }
+
+    /* Light Mode Theme */
+    :root.light-mode {
+      --bg: #ffffff;
+      --bg-gradient: linear-gradient(145deg, #f5f5f5, #ffffff);
+      --card: #f5f5f5;
+      --accent: #007acc; /* Darker blue for better contrast on light backgrounds */
+      --accent-secondary: #e74c3c;
+      --accent-tertiary: #8e44ad;
+      --text: #121212;
+      --text-secondary: #555;
+      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+      --header-border: #ddd;
+      --accent-glow: rgba(0, 122, 204, 0.3);
+      --footer-bg: rgba(245, 245, 245, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      line-height: 1.6;
+      letter-spacing: 0.2px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Skip Link for Accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      padding: 8px;
+      background-color: var(--accent);
+      color: #000;
+      z-index: 100;
+      transition: top 0.3s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Navigation */
+    nav {
+      background-color: rgba(24, 24, 24, 0.98);
+      padding: var(--spacing-md);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      height: 80px; /* Initial height */
+      transition: all 0.3s ease;
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+      position: relative;
+    }
+    
+    .logo {
+      position: absolute;
+      left: 0;
+    }
+    
+    .mobile-menu-btn {
+      position: absolute;
+      right: 0;
+    }
+    
+    nav.shrink {
+      height: 60px;
+      background-color: rgba(24, 24, 24, 0.9); /* Slightly transparent when shrunk */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Enhanced shadow when shrunk */
+      padding: 10px var(--spacing-md);
+    }
+    
+    nav.shrink .logo {
+      font-size: 1.3rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition-standard);
+    }
+
+    .logo:hover, .logo:focus {
+      color: #fff;
+      text-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: var(--spacing-md);
+      padding: 6px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-standard);
+    }
+
+    .theme-toggle:hover, .theme-toggle:focus {
+      background-color: rgba(0, 188, 212, 0.1);
+      transform: scale(1.1);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Icon changes based on theme */
+    :root.light-mode .theme-toggle .fa-moon {
+      display: none;
+    }
+
+    :root.light-mode .theme-toggle .fa-sun {
+      display: inline-block;
+    }
+
+    .theme-toggle .fa-sun {
+      display: none;
+    }
+
+    .theme-toggle .fa-moon {
+      display: inline-block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      margin-left: var(--spacing-md);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      padding: 6px 0;
+      transition: var(--transition-standard);
+      z-index: 20;
+      pointer-events: auto;
+    }
+
+    .nav-links a:hover, .nav-links a:focus {
+      color: var(--accent);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a:focus::after, .nav-links a[aria-current="page"]::after {
+      width: 100%;
+    }
+    
+    .nav-links a[aria-current="page"] {
+      color: var(--accent);
+    }
+
+    /* Experimental link styling */
+    .experimental-link {
+      position: relative;
+    }
+    
+    .beta-badge {
+      font-size: 0.6rem;
+      background-color: rgba(0, 188, 212, 0.2);
+      color: var(--accent);
+      padding: 2px 4px;
+      border-radius: 4px;
+      margin-left: 4px;
+      vertical-align: top;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(0, 188, 212, 0.3);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 15;
+      position: relative;
+      width: 46px;
+      height: 46px;
+      margin-right: 10px;
+    }
+
+    .hamburger-icon {
+      position: absolute;
+      display: block;
+      width: 30px;
+      height: 3px;
+      background-color: var(--accent);
+      transition: var(--transition-standard);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hamburger-icon::before, .hamburger-icon::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 3px;
+      background-color: var(--accent);
+      transition: var(--transition-standard);
+      left: 0;
+    }
+
+    .hamburger-icon::before {
+      transform: translateY(-8px);
+    }
+
+    .hamburger-icon::after {
+      transform: translateY(8px);
+    }
+
+    .mobile-menu-btn.open .hamburger-icon {
+      background-color: transparent;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::before {
+      transform: rotate(45deg);
+      top: 0;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::after {
+      transform: rotate(-45deg);
+      top: 0;
+    }
+    
+    /* Overlay for mobile menu */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+      pointer-events: none;
+    }
+    
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    /* SVG Animations Section */
+    .page-title {
+      text-align: center;
+      margin: 40px 0 20px;
+      font-size: 2.5rem;
+      color: var(--accent);
+    }
+
+    .page-description {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+      color: var(--text-secondary);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .demos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+
+    .demo-card {
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-standard);
+      transition: var(--transition-standard);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .demo-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .demo-title {
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      color: var(--accent);
+    }
+
+    .demo-description {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+
+    /* SVG Container Styles */
+    .svg-container {
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* SVG Animation 1: Morphing Shape */
+    .morph-container {
+      width: 200px;
+      height: 200px;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .morph-shape {
+      fill: var(--accent);
+      transition: all 0.5s ease-in-out;
+      transform-origin: center;
+      cursor: pointer;
+    }
+
+    .morph-shape:hover {
+      fill: var(--accent-secondary);
+      filter: drop-shadow(0 0 8px var(--accent-glow));
+    }
+
+    /* SVG Animation 2: Cursor Following */
+    .follower-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .follower-dot {
+      fill: var(--accent);
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 0 5px var(--accent-glow));
+    }
+
+    /* SVG Animation 3: Interactive Gradient */
+    .gradient-shape {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gradient-shape:hover {
+      filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+
+    /* Cursor animations */
+    .cursor-area {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* Back to experiments button */
+    .back-to-experiments {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: var(--card);
+      color: var(--accent);
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      margin-bottom: 20px;
+      transition: var(--transition-standard);
+      font-weight: 500;
+    }
+    
+    .back-to-experiments i {
+      margin-right: 5px;
+    }
+    
+    .back-to-experiments:hover, .back-to-experiments:focus {
+      background-color: var(--accent);
+      color: #000;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Fallback message */
+    .fallback-message {
+      display: none;
+      text-align: center;
+      padding: 30px;
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      margin: 40px auto;
+      max-width: 600px;
+    }
+
+    .fallback-message h2 {
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: var(--spacing-lg) var(--spacing-md);
+      color: #777;
+      font-size: 0.95rem;
+      border-top: 1px solid #2a2a2a;
+      background-color: rgba(20, 20, 20, 0.7);
+    }
+
+    .footer-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .footer-social {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--spacing-md);
+      gap: var(--spacing-md);
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #2a2a2a;
+      color: var(--text);
+      font-size: 1.2rem;
+      transition: var(--transition-standard);
+    }
+
+    .footer-social a:hover, .footer-social a:focus {
+      background-color: var(--accent);
+      color: #000;
+      transform: translateY(-3px);
+    }
+
+    .footer-social a:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .footer-info {
+      margin-top: var(--spacing-sm);
+    }
+
+    .footer-info a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition-standard);
+    }
+
+    .footer-info a:hover, .footer-info a:focus {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .demos-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .svg-container {
+        height: 200px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .svg-container {
+        height: 180px;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 75%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: rgba(25, 25, 25, 0.98);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 70px var(--spacing-md) var(--spacing-md);
+        transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-links.open {
+        right: 0;
+      }
+
+      .nav-links a {
+        margin: 10px 0;
+        font-size: 1.2rem;
+        width: 100%;
+        padding: 8px 0;
+      }
+    }
+
+    /* Keyframe animations */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+  <script src="../header.js"></script>
+
+  <main id="main-content">
+    <div class="container">
+      <a href="./" class="back-to-experiments"><i class="fas fa-arrow-left"></i> Back to Experiments</a>
+      
+      <h1 class="page-title">Dynamic SVG Animations</h1>
+      <p class="page-description">Explore interactive vector-based animations using SVG. These lightweight animations respond to user interaction, providing smooth visual feedback without heavy graphical resources.</p>
+      
+      <div class="demos-grid">
+        <!-- Animation Demo 1: Morphing Shape -->
+        <div class="demo-card">
+          <h2 class="demo-title">Morphing Shape</h2>
+          <p class="demo-description">Abstract SVG shape that morphs when hovered. Try hovering over the shape to see the transformation.</p>
+          
+          <div class="svg-container">
+            <div class="morph-container">
+              <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <title>Morphing Shape Animation</title>
+                <desc>An abstract shape that changes form when hovered</desc>
+                <path class="morph-shape" d="M50,20 C70,20 80,40 80,50 C80,60 70,80 50,80 C30,80 20,60 20,50 C20,40 30,20 50,20 Z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Animation Demo 2: Cursor Following -->
+        <div class="demo-card">
+          <h2 class="demo-title">Cursor Following</h2>
+          <p class="demo-description">SVG elements that follow your cursor movement. Move your mouse inside the container to see the effect.</p>
+          
+          <div class="svg-container" id="follower-demo">
+            <div class="follower-container">
+              <svg viewBox="0 0 300 200" width="100%" height="100%">
+                <title>Cursor Following Animation</title>
+                <desc>Circles that follow the cursor position</desc>
+                <circle class="follower-dot" cx="50" cy="50" r="5" data-delay="0"></circle>
+                <circle class="follower-dot" cx="50" cy="50" r="10" data-delay="50" opacity="0.8"></circle>
+                <circle class="follower-dot" cx="50" cy="50" r="15" data-delay="100" opacity="0.6"></circle>
+                <circle class="follower-dot" cx="50" cy="50" r="20" data-delay="150" opacity="0.4"></circle>
+                <circle class="follower-dot" cx="50" cy="50" r="25" data-delay="200" opacity="0.2"></circle>
+              </svg>
+              <div class="cursor-area"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Animation Demo 3: Interactive Gradient -->
+        <div class="demo-card">
+          <h2 class="demo-title">Interactive Gradient</h2>
+          <p class="demo-description">SVG shape with gradient animation on click. Click the shape to trigger the color transition.</p>
+          
+          <div class="svg-container">
+            <svg viewBox="0 0 200 150" width="100%" height="100%">
+              <title>Interactive Gradient Animation</title>
+              <desc>A shape with gradient that changes on click</desc>
+              <defs>
+                <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="var(--accent)" />
+                  <stop offset="100%" stop-color="var(--accent-tertiary)" />
+                </linearGradient>
+                <linearGradient id="gradient2" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="var(--accent-tertiary)" />
+                  <stop offset="100%" stop-color="var(--accent-secondary)" />
+                </linearGradient>
+              </defs>
+              <rect class="gradient-shape" x="50" y="25" width="100" height="100" rx="15" fill="url(#gradient1)" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Fallback for browsers that don't support SVG animations -->
+      <div class="fallback-message" id="fallback">
+        <h2>SVG Animations Not Supported</h2>
+        <p>Your browser may not fully support the SVG animations shown here. Please try a modern browser like Chrome, Firefox, Safari, or Edge for the best experience.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-social">
+        <a href="https://instagram.com/rois_cordova" aria-label="Follow me on Instagram" target="_blank" rel="noopener">
+          <i class="fab fa-instagram" aria-hidden="true"></i>
+        </a>
+        <a href="https://tiktok.com/@rois.c" aria-label="Follow me on TikTok" target="_blank" rel="noopener">
+          <i class="fab fa-tiktok" aria-hidden="true"></i>
+        </a>
+        <a href="mailto:rocordov@gmail.com" aria-label="Email me">
+          <i class="far fa-envelope" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="footer-info">
+        <p>&copy; 2025 R Cordova. All rights reserved.</p>
+        <p><a href="../connect.html">Connect with me</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sticky & Shrinking Navigation
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 100) {
+        nav.classList.add('shrink');
+      } else {
+        nav.classList.remove('shrink');
+      }
+    });
+    
+    // Check SVG animation support
+    document.addEventListener('DOMContentLoaded', function() {
+      // Feature detection for SVG and CSS animations
+      const svgSupported = !!document.createElementNS && 
+                          !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+      
+      if (!svgSupported) {
+        document.getElementById('fallback').style.display = 'block';
+      }
+      
+      // Demo 1: Morphing Shape Animation
+      const morphShape = document.querySelector('.morph-shape');
+      
+      if (morphShape) {
+        morphShape.addEventListener('mouseenter', function() {
+          this.setAttribute('d', 'M50,10 C80,30 90,40 70,70 C50,100 30,90 20,60 C10,30 20,20 50,10 Z');
+        });
+        
+        morphShape.addEventListener('mouseleave', function() {
+          this.setAttribute('d', 'M50,20 C70,20 80,40 80,50 C80,60 70,80 50,80 C30,80 20,60 20,50 C20,40 30,20 50,20 Z');
+        });
+      }
+      
+      // Demo 2: Cursor Following Animation
+      const followerDemo = document.getElementById('follower-demo');
+      const followerDots = document.querySelectorAll('.follower-dot');
+      const cursorArea = document.querySelector('.cursor-area');
+      
+      if (followerDemo && cursorArea) {
+        let cursorPositions = [];
+        
+        cursorArea.addEventListener('mousemove', function(e) {
+          const rect = this.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width * 300; // Adjust to viewBox coords
+          const y = (e.clientY - rect.top) / rect.height * 200; // Adjust to viewBox coords
+          
+          // Store the position with a timestamp
+          cursorPositions.push({ x, y, time: Date.now() });
+          
+          // Keep only last 10 positions
+          if (cursorPositions.length > 10) {
+            cursorPositions.shift();
+          }
+          
+          // Update each dot with delay
+          followerDots.forEach(dot => {
+            const delay = parseInt(dot.getAttribute('data-delay'));
+            
+            // Find the delayed position
+            const currentTime = Date.now();
+            const targetTime = currentTime - delay;
+            
+            // Default to most recent position
+            let targetPos = { x, y };
+            
+            // Find the closest position based on time
+            for (let i = cursorPositions.length - 1; i >= 0; i--) {
+              if (cursorPositions[i].time <= targetTime) {
+                targetPos = cursorPositions[i];
+                break;
+              }
+            }
+            
+            // Set the position with a smooth transition
+            dot.setAttribute('cx', targetPos.x);
+            dot.setAttribute('cy', targetPos.y);
+          });
+        });
+        
+        // When mouse leaves, fade out the circles
+        cursorArea.addEventListener('mouseleave', function() {
+          followerDots.forEach(dot => {
+            dot.style.opacity = '0';
+            setTimeout(() => {
+              dot.style.opacity = '';
+            }, 500);
+          });
+        });
+        
+        // When mouse enters, reset positions
+        cursorArea.addEventListener('mouseenter', function() {
+          cursorPositions = [];
+        });
+      }
+      
+      // Demo 3: Interactive Gradient Animation
+      const gradientShape = document.querySelector('.gradient-shape');
+      
+      if (gradientShape) {
+        let isGradient1 = true;
+        
+        gradientShape.addEventListener('click', function() {
+          // Toggle between gradients
+          if (isGradient1) {
+            this.setAttribute('fill', 'url(#gradient2)');
+            
+            // Add rotation animation
+            this.style.transformOrigin = 'center';
+            this.style.animation = 'rotate 1s ease-out forwards';
+          } else {
+            this.setAttribute('fill', 'url(#gradient1)');
+            
+            // Add different animation
+            this.style.animation = 'float 1s ease-in-out forwards';
+          }
+          
+          // Reset animation after it completes
+          setTimeout(() => {
+            this.style.animation = '';
+          }, 1000);
+          
+          isGradient1 = !isGradient1;
+        });
+      }
+      
+      // Mobile Menu Toggle
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      const overlay = document.querySelector('.overlay');
+      
+      if (mobileMenuBtn && navLinks) {
+        // Handle hamburger button click
+        mobileMenuBtn.addEventListener('click', function() {
+          const isOpen = this.classList.contains('open');
+          
+          if (!isOpen) {
+            // Opening the menu
+            this.
