@@ -1,0 +1,171 @@
+/* 
+ * Gallery Grid Styles
+ * Contains styles for gallery grid, cards, animations, and responsive adjustments
+ */
+
+/* Gallery Grid Container */
+.gallery-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  padding: var(--spacing-md);
+  margin-top: 0;
+}
+
+/* Gallery Item Cards */
+.gallery-item {
+  text-decoration: none;
+  color: var(--text);
+  width: 260px;
+  background-color: var(--card);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-standard);
+  transition: var(--transition-standard);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Sequential Animation Delays */
+.gallery-item:nth-child(1) { animation-delay: 0.1s; }
+.gallery-item:nth-child(2) { animation-delay: 0.2s; }
+.gallery-item:nth-child(3) { animation-delay: 0.3s; }
+.gallery-item:nth-child(4) { animation-delay: 0.4s; }
+.gallery-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* Gallery Item Hover/Focus States */
+.gallery-item:hover, .gallery-item:focus {
+  transform: scale(var(--hover-scale));
+  box-shadow: 0 0 20px var(--accent);
+  outline: none;
+}
+
+.gallery-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Thumbnails */
+.thumbnail {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border: none;
+  pointer-events: none;
+  display: block;
+}
+
+/* Caption Styling */
+.caption {
+  padding: 15px 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  border-top: 1px solid #333;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .gallery-item {
+    width: 85%;
+    max-width: 340px;
+  }
+}
+
+/* Experiment Cards (similar style but with variations) */
+.experiments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: var(--spacing-lg);
+}
+
+.experiment-card {
+  background-color: var(--card);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-standard);
+  transition: var(--transition-standard);
+  height: 100%;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.experiment-card:nth-child(1) { animation-delay: 0.1s; }
+.experiment-card:nth-child(2) { animation-delay: 0.2s; }
+.experiment-card:nth-child(3) { animation-delay: 0.3s; }
+.experiment-card:nth-child(4) { animation-delay: 0.4s; }
+
+.experiment-card:hover, .experiment-card:focus-within {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.experiment-thumbnail {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid var(--header-border);
+}
+
+.experiment-content {
+  padding: var(--spacing-md);
+}
+
+.experiment-title {
+  font-size: 1.4rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.experiment-description {
+  margin-bottom: var(--spacing-md);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.experiment-link {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition-standard);
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.experiment-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.experiment-link:hover::after, .experiment-link:focus::after {
+  width: 100%;
+}
+
+.experiment-link:hover, .experiment-link:focus {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .experiments-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .experiments-grid {
+    grid-template-columns: 1fr;
+  }
+}
