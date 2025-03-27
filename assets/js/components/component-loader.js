@@ -1,3 +1,5 @@
+import { initThemeToggle } from './theme-toggle.js';
+
 /**
  * Component Loader
  * Utility for loading HTML components like header and footer
@@ -110,7 +112,12 @@ function initBackToTop() {
 }
 
 // Initialize components on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', loadLayoutComponents);
+document.addEventListener('DOMContentLoaded', () => {
+  loadLayoutComponents();
+  
+  // Initialize theme toggle
+  initThemeToggle();
+});
 
 // Export functions for potential reuse
 export { loadComponent, loadLayoutComponents, initBackToTop };
