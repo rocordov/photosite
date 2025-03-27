@@ -18,6 +18,12 @@ nav {
   transition: all 0.3s ease;
 }
 
+/* Light mode navigation override */
+:root.light-mode nav {
+  background-color: rgba(245, 245, 245, 0.98);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
 .nav-container {
   display: flex;
   justify-content: center;
@@ -38,7 +44,7 @@ nav {
 }
 
 .logo:hover, .logo:focus {
-  color: #fff;
+  color: var(--text);
   text-shadow: 0 0 8px var(--accent-glow);
 }
 
@@ -48,6 +54,12 @@ nav.shrink {
   background-color: rgba(24, 24, 24, 0.9); /* Slightly transparent when shrunk */
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Enhanced shadow when shrunk */
   padding: 10px var(--spacing-md);
+}
+
+/* Light mode shrinking navigation override */
+:root.light-mode nav.shrink {
+  background-color: rgba(245, 245, 245, 0.9);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 nav.shrink .logo {
