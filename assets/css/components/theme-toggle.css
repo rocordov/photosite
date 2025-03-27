@@ -3,15 +3,25 @@
  * Contains styles for dark/light mode toggle button and related states
  */
 
+:root {
+  --bg: #121212;
+  --text: #ffffff;
+}
+
+:root.light-mode {
+  --bg: #ffffff;
+  --text: #121212;
+}
+
 /* Theme Toggle Button */
 .theme-toggle {
   background: none;
   border: none;
-  color: var(--accent);
+  color: var(--text);
   font-size: 1.2rem;
   cursor: pointer;
   margin-left: var(--spacing-md);
-  padding: 6px;
+  padding: 8px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -29,19 +39,19 @@
   outline-offset: 2px;
 }
 
-/* Icon changes based on theme */
-:root.light-mode .theme-toggle .fa-moon {
+/* Icon visibility */
+.theme-toggle .fa-sun {
+  display: block;
+}
+
+.theme-toggle .fa-moon {
   display: none;
 }
 
 :root.light-mode .theme-toggle .fa-sun {
-  display: inline-block;
-}
-
-.theme-toggle .fa-sun {
   display: none;
 }
 
-.theme-toggle .fa-moon {
-  display: inline-block;
+:root.light-mode .theme-toggle .fa-moon {
+  display: block;
 }
