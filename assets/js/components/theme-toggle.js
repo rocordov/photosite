@@ -6,28 +6,29 @@
 /**
  * Initialize the theme toggle functionality
  */
-function initThemeToggle() {
-  const themeToggle = document.getElementById('theme-toggle');
-  if (!themeToggle) return;
+export function initThemeToggle() {
+  const themeToggle = document.querySelector('.theme-toggle');
+  const root = document.documentElement;
   
-  const htmlElement = document.documentElement;
-  
-  // Check for saved theme preference or use default (dark)
+  if (!themeToggle) {
+    console.warn('Theme toggle button not found');
+    return;
+  }
+
+  // Set initial state
   const savedTheme = localStorage.getItem('theme') || 'dark';
+  applyTheme(savedTheme, themeToggle, root);
   
-  // Apply the saved theme on page load
-  applyTheme(savedTheme, themeToggle, htmlElement);
-  
-  // Toggle theme when button is clicked
+  // Toggle theme on button click
   themeToggle.addEventListener('click', () => {
-    // Toggle light-mode class on html element
-    const isLightMode = htmlElement.classList.contains('light-mode');
-    const newTheme = isLightMode ? 'dark' : 'light';
+    const currentTheme = root.classList.contains('light-mode') ? 'light' : 'dark';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     
-    applyTheme(newTheme, themeToggle, htmlElement);
-    
-    // Save preference to localStorage
+    applyTheme(newTheme, themeToggle, root);
     localStorage.setItem('theme', newTheme);
+    
+    // Debug logging
+    console.log('Theme toggled:', newTheme);
   });
 }
 
@@ -38,12 +39,17 @@ function initThemeToggle() {
  * @param {HTMLElement} rootElement - The document's root element (usually htmlElement)
  */
 function applyTheme(theme, toggleButton, rootElement) {
-  if (theme === 'light') {
-    rootElement.classList.add('light-mode');
-    toggleButton.setAttribute('aria-pressed', 'false');
-  } else {
-    rootElement.classList.remove('light-mode');
-    toggleButton.setAttribute('aria-pressed', 'true');
+  const isLight = theme === 'light';
+  rootElement.classList.toggle('light-mode', isLight);
+  toggleButton.setAttribute('aria-pressed', (!isLight).toString());
+  
+  // Update icons visibility if they exist
+  const sunIcon = toggleButton.querySelector('.fa-sun');
+  const moonIcon = toggleButton.querySelector('.fa-moon');
+  
+  if (sunIcon && moonIcon) {
+    sunIcon.style.display = isLight ? 'none' : 'block';
+    moonIcon.style.display = isLight ? 'block' : 'none';
   }
 }
 
