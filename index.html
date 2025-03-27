@@ -705,32 +705,9 @@
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- Header with Navigation (implemented directly) -->
-  <header>
-    <nav>
-      <a href="index.html" class="logo">
-        <img src="./images/website-icon.png" alt="R." style="height: 40px; width: auto; vertical-align: middle;" />
-      </a>
-      
-      <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
-        <span class="hamburger-icon"></span>
-      </button>
-      
-      <div class="nav-links" id="nav-links" aria-hidden="true">
-        <a href="./index.html" aria-label="Home">Home</a>
-        <a href="./projects.html" aria-label="Projects">Projects</a>
-        <a href="./about.html" aria-label="About">About</a>
-        <a href="./experiments.html" aria-label="Experiments (Non-Production)" class="experimental-link">Experiments<span class="beta-badge">beta</span></a>
-        <a href="./connect.html" aria-label="Connect">Connect</a>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="true">
-          <i class="fas fa-moon"></i>
-          <i class="fas fa-sun"></i>
-        </button>
-      </div>
-      
-      <div class="overlay" id="overlay"></div>
-    </nav>
-  </header>
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+  <script src="./header.js"></script>
 
   <main id="main-content">
     <!-- Hero Section with SVG Animation -->

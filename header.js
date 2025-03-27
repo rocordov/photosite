@@ -3,109 +3,141 @@ document.addEventListener('DOMContentLoaded', function() {
   const headerContainer = document.getElementById('site-header');
   if (!headerContainer) return;
 
-  // Insert the header HTML with Plausible Analytics
-  headerContainer.innerHTML = `
-    
-    <!-- Navigation -->
-    <nav>
-      <div class="nav-container">
-        <a href="index.html" class="logo">
-        <img src="./images/website-icon.png" alt="R." style="height: 40px; width: auto; vertical-align: middle;" /></a>
-        
-        <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
-          <span class="hamburger-icon"></span>
-        </button>
-        
-        <div class="nav-links" id="nav-links" aria-hidden="true">
-        <a href="index.html#photography" aria-label="View photography galleries">Photography</a>
-        <a href="index.html#projects" aria-label="View projects">Projects</a>
-        <a href="experiments.html" aria-label="View experiments">Experiments</a>
-        <a href="about.html" aria-label="About Royce">About</a>
-        <a href="connect.html" aria-label="Contact information">Connect</a>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="true">
-          <i class="fas fa-moon"></i>
-          <i class="fas fa-sun"></i>
-        </button>
-        </div>
-        
-        <div class="overlay" id="overlay"></div>
-      </div>
-    </nav>
-  `;
-
-  // Set current page as active
+  // Determine if we're in a subdirectory
   const currentPath = window.location.pathname;
-  const currentPage = currentPath.split('/').pop();
+  const inSubdirectory = currentPath.includes('/experiments/');
   
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    const linkHref = link.getAttribute('href').split('#')[0];
-    if ((currentPage === '' && linkHref === 'index.html') || 
-        (currentPage === 'index.html' && linkHref === 'index.html') ||
-        (currentPage && linkHref === currentPage)) {
-      link.setAttribute('aria-current', 'page');
-    }
-  });
+  // Set the root path based on directory level
+  const rootPath = inSubdirectory ? '../' : './';
+  
+  // Fetch the header HTML
+  fetch(`${rootPath}header.html`)
+    .then(response => response.text())
+    .then(html => {
+      // Replace path placeholders
+      html = html.replace(/\{\{ROOT_PATH\}\}/g, rootPath);
+      
+      // Insert the header HTML
+      headerContainer.innerHTML = html;
+      
+      // Set current page as active
+      const currentPage = currentPath.split('/').pop() || 'index.html';
+      const isExperimentsPage = currentPath.includes('/experiments/');
+      
+      document.querySelectorAll('.nav-links a').forEach(link => {
+        const dataPage = link.getAttribute('data-page');
+        
+        if ((currentPage === dataPage) || 
+            (currentPage === '' && dataPage === 'index.html') ||
+            (isExperimentsPage && dataPage === 'experiments/')) {
+          link.setAttribute('aria-current', 'page');
+        }
+      });
 
-  // Mobile navigation functionality
+      // Initialize mobile menu
+      initMobileMenu();
+      
+      // Initialize theme toggle
+      initThemeToggle();
+    })
+    .catch(error => {
+      console.error('Error loading header:', error);
+      headerContainer.innerHTML = `
+        <nav>
+          <a href="${rootPath}index.html">Home</a>
+        </nav>
+      `;
+    });
+});
+
+// Mobile menu functionality
+function initMobileMenu() {
   const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
   const navLinks = document.querySelector('.nav-links');
   const overlay = document.querySelector('.overlay');
   
-  mobileMenuBtn.addEventListener('click', () => {
-    const isOpen = mobileMenuBtn.classList.toggle('open');
-    navLinks.classList.toggle('open');
-    overlay.classList.toggle('active');
+  if (mobileMenuBtn && navLinks) {
+    // Handle hamburger button click
+    mobileMenuBtn.addEventListener('click', function() {
+      const isOpen = mobileMenuBtn.classList.contains('open');
+      
+      if (!isOpen) {
+        // Opening the menu
+        mobileMenuBtn.classList.add('open');
+        navLinks.classList.add('open');
+        
+        if (overlay) {
+          overlay.classList.add('active');
+        }
+        
+        mobileMenuBtn.setAttribute('aria-expanded', 'true');
+        navLinks.setAttribute('aria-hidden', 'false');
+      } else {
+        // Closing the menu
+        mobileMenuBtn.classList.remove('open');
+        navLinks.classList.remove('open');
+        
+        if (overlay) {
+          overlay.classList.remove('active');
+        }
+        
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        navLinks.setAttribute('aria-hidden', 'true');
+      }
+    });
     
-    // Update ARIA attributes
-    mobileMenuBtn.setAttribute('aria-expanded', isOpen);
-    navLinks.setAttribute('aria-hidden', !isOpen);
-  });
-  
-  // Close menu when clicking outside
-  overlay.addEventListener('click', () => {
-    mobileMenuBtn.classList.remove('open');
-    navLinks.classList.remove('open');
-    overlay.classList.remove('active');
-    mobileMenuBtn.setAttribute('aria-expanded', 'false');
-    navLinks.setAttribute('aria-hidden', 'true');
-  });
-
-  // Close menu when pressing Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && navLinks.classList.contains('open')) {
-      mobileMenuBtn.classList.remove('open');
-      navLinks.classList.remove('open');
-      overlay.classList.remove('active');
-      mobileMenuBtn.setAttribute('aria-expanded', 'false');
-      navLinks.setAttribute('aria-hidden', 'true');
+    // Close menu when clicking overlay
+    if (overlay) {
+      overlay.addEventListener('click', function() {
+        mobileMenuBtn.classList.remove('open');
+        navLinks.classList.remove('open');
+        overlay.classList.remove('active');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        navLinks.setAttribute('aria-hidden', 'true');
+      });
     }
-  });
-  
-  // Theme toggle functionality
-  const themeToggle = document.getElementById('theme-toggle');
-  const htmlElement = document.documentElement;
-  
-  // Check for saved theme preference or use default (dark)
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  
-  // Apply the saved theme on page load
-  if (savedTheme === 'light') {
-    htmlElement.classList.add('light-mode');
-    themeToggle.setAttribute('aria-pressed', 'false');
-  } else {
-    themeToggle.setAttribute('aria-pressed', 'true');
+    
+    // Close menu when pressing Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+        mobileMenuBtn.classList.remove('open');
+        navLinks.classList.remove('open');
+        if (overlay) overlay.classList.remove('active');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        navLinks.setAttribute('aria-hidden', 'true');
+      }
+    });
   }
-  
-  // Toggle theme when button is clicked
-  themeToggle.addEventListener('click', () => {
-    // Toggle light-mode class on html element
-    htmlElement.classList.toggle('light-mode');
+}
+
+// Theme toggle functionality
+function initThemeToggle() {
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    const htmlElement = document.documentElement;
     
-    // Update button aria-pressed state
-    const isLightMode = htmlElement.classList.contains('light-mode');
-    themeToggle.setAttribute('aria-pressed', !isLightMode);
+    // Check for saved theme preference or use default (dark)
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     
-    // Save preference to localStorage
-    localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
-  });
-});
+    // Apply the saved theme on page load
+    if (savedTheme === 'light') {
+      htmlElement.classList.add('light-mode');
+      themeToggle.setAttribute('aria-pressed', 'false');
+    } else {
+      themeToggle.setAttribute('aria-pressed', 'true');
+    }
+    
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', function() {
+      // Toggle light-mode class on html element
+      htmlElement.classList.toggle('light-mode');
+      
+      // Update button aria-pressed state
+      const isLightMode = htmlElement.classList.contains('light-mode');
+      themeToggle.setAttribute('aria-pressed', !isLightMode);
+      
+      // Save preference to localStorage
+      localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+    });
+  }
+}
