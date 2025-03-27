@@ -190,6 +190,7 @@
     .nav-links {
       display: flex;
       align-items: center;
+      z-index: 10; /* Add this to ensure links are clickable */
     }
 
     .nav-links a {
@@ -577,7 +578,7 @@
       visibility: hidden;
       transition: opacity 0.3s ease;
       z-index: 5;
-      pointer-events: none;
+      pointer-events: none; /* Add this line */
     }
     
     .overlay.active {
@@ -772,8 +773,7 @@
       const overlay = document.querySelector('.overlay');
       
       if (mobileMenuBtn && navLinks) {
-        // Handle hamburger button click
-        mobileMenuBtn.addEventListener('click', function(e) {
+        mobileMenuBtn.addEventListener('click', function() {
           const isOpen = mobileMenuBtn.classList.contains('open');
           
           if (!isOpen) {
@@ -783,6 +783,7 @@
             
             if (overlay) {
               overlay.classList.add('active');
+              overlay.style.pointerEvents = "none"; // Allow clicks to pass through
             }
             
             mobileMenuBtn.setAttribute('aria-expanded', 'true');
@@ -794,26 +795,18 @@
             
             if (overlay) {
               overlay.classList.remove('active');
+              overlay.style.pointerEvents = ""; // Reset pointer events
             }
             
             mobileMenuBtn.setAttribute('aria-expanded', 'false');
             navLinks.setAttribute('aria-hidden', 'true');
           }
         });
-        
-        // Close menu when clicking overlay
-        if (overlay) {
-          overlay.addEventListener('click', function() {
-            mobileMenuBtn.classList.remove('open');
-            navLinks.classList.remove('open');
-            overlay.classList.remove('active');
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
-            navLinks.setAttribute('aria-hidden', 'true');
-          });
-        }
       }
-      
-      // Theme toggle functionality
+    });
+    
+    // Theme toggle functionality
+    document.addEventListener('DOMContentLoaded', () => {
       const themeToggle = document.getElementById('theme-toggle');
       if (themeToggle) {
         const htmlElement = document.documentElement;

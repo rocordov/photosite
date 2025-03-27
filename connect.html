@@ -436,6 +436,58 @@
     :root.light-mode footer a:focus {
       color: #333;
     }
+
+    @media (max-width: 600px) {
+      .mobile-menu-btn {
+        cursor: pointer;
+        padding: 8px;
+        z-index: 15;
+        position: relative;
+        width: 46px;
+        height: 46px;
+        margin-right: 10px;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: var(--bg);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 70px var(--spacing-md) var(--spacing-md);
+        transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .nav-links.open {
+        right: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -534,6 +586,43 @@
           }
         });
       });
+    });
+
+    // Add this before the closing </body> tag
+    document.addEventListener('DOMContentLoaded', () => {
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      const overlay = document.querySelector('.overlay');
+      
+      if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', function() {
+          const isOpen = mobileMenuBtn.classList.contains('open');
+          
+          if (!isOpen) {
+            mobileMenuBtn.classList.add('open');
+            navLinks.classList.add('open');
+            
+            if (overlay) {
+              overlay.classList.add('active');
+              overlay.style.pointerEvents = "none";
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            navLinks.setAttribute('aria-hidden', 'false');
+          } else {
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            
+            if (overlay) {
+              overlay.classList.remove('active');
+              overlay.style.pointerEvents = "";
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+          }
+        });
+      }
     });
   </script>
 
