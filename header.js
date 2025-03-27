@@ -94,12 +94,15 @@ function initMobileMenu() {
     
     // Close menu when clicking overlay
     if (overlay) {
-      overlay.addEventListener('click', function() {
-        mobileMenuBtn.classList.remove('open');
-        navLinks.classList.remove('open');
-        overlay.classList.remove('active');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        navLinks.setAttribute('aria-hidden', 'true');
+      overlay.addEventListener('click', function(e) {
+        // Only close if clicking the overlay itself, not its children
+        if (e.target === overlay) {
+          mobileMenuBtn.classList.remove('open');
+          navLinks.classList.remove('open');
+          overlay.classList.remove('active');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+          navLinks.setAttribute('aria-hidden', 'true');
+        }
       });
     }
 
