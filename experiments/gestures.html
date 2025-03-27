@@ -906,3 +906,609 @@
     <div class="footer-content">
       <div class="footer-social">
         <a href="https://instagram.com/rois_cordova" aria-label="Follow me on Instagram" target="_blank" rel="noopener">
+          <i class="fab fa-instagram" aria-hidden="true"></i>
+        </a>
+        <a href="https://tiktok.com/@rois.c" aria-label="Follow me on TikTok" target="_blank" rel="noopener">
+          <i class="fab fa-tiktok" aria-hidden="true"></i>
+        </a>
+        <a href="mailto:rocordov@gmail.com" aria-label="Email me">
+          <i class="far fa-envelope" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="footer-info">
+        <p>&copy; 2025 R Cordova. All rights reserved.</p>
+        <p><a href="../connect.html">Connect with me</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sticky & Shrinking Navigation
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 100) {
+        nav.classList.add('shrink');
+      } else {
+        nav.classList.remove('shrink');
+      }
+    });
+    
+    // Gesture Recognition
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get DOM Elements
+      const gestureArea = document.getElementById('gesture-area');
+      const gestureFeedback = document.getElementById('gesture-feedback');
+      const fallbackMessage = document.getElementById('fallback');
+      
+      // Animation elements
+      const swipeLeftAnimation = document.querySelector('.swipe-left-animation');
+      const swipeRightAnimation = document.querySelector('.swipe-right-animation');
+      const swipeUpAnimation = document.querySelector('.swipe-up-animation');
+      const swipeDownAnimation = document.querySelector('.swipe-down-animation');
+      const tapAnimation = document.querySelector('.tap-animation');
+      const doubleTapAnimation = document.querySelector('.double-tap-animation');
+      const holdAnimation = document.querySelector('.hold-animation');
+      const dragAnimation = document.querySelector('.drag-animation');
+      
+      // Gesture state
+      let pointerState = {
+        startTime: 0,
+        startX: 0,
+        startY: 0,
+        lastX: 0,
+        lastY: 0,
+        isDown: false,
+        isHolding: false,
+        holdTimer: null,
+        lastTapTime: 0,
+        dragTrails: []
+      };
+      
+      // Feature detection
+      const hasPointerEvents = 'PointerEvent' in window;
+      const hasTouchEvents = 'TouchEvent' in window;
+      
+      // Show fallback message if no pointer or touch support
+      if (!hasPointerEvents && !hasTouchEvents) {
+        fallbackMessage.style.display = 'block';
+      }
+      
+      // ============= UTILITY FUNCTIONS =============
+      
+      // Show feedback message
+      function showFeedback(message, color) {
+        gestureFeedback.textContent = message;
+        gestureFeedback.style.color = color;
+        gestureFeedback.style.fontWeight = 'bold';
+        
+        // Reset after a delay
+        setTimeout(() => {
+          gestureFeedback.style.color = '';
+          gestureFeedback.style.fontWeight = '';
+        }, 1500);
+      }
+      
+      // Show animation and hide after a delay
+      function showAnimation(element, delay = 800) {
+        hideAllAnimations();
+        
+        element.classList.add('active');
+        
+        setTimeout(() => {
+          element.classList.remove('active');
+        }, delay);
+      }
+      
+      // Hide all animations
+      function hideAllAnimations() {
+        swipeLeftAnimation.classList.remove('active');
+        swipeRightAnimation.classList.remove('active');
+        swipeUpAnimation.classList.remove('active');
+        swipeDownAnimation.classList.remove('active');
+        tapAnimation.classList.remove('active');
+        doubleTapAnimation.classList.remove('active');
+        holdAnimation.classList.remove('active');
+        dragAnimation.classList.remove('active');
+      }
+      
+      // Create ripple effect
+      function createRipple(x, y) {
+        const ripple = document.createElement('div');
+        ripple.className = 'ripple';
+        
+        // Position at the pointer location
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        
+        gestureArea.appendChild(ripple);
+        
+        // Remove after animation completes
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      }
+      
+      // Create drag trail
+      function createDragTrail(x, y) {
+        const trail = document.createElement('div');
+        trail.className = 'drag-trail';
+        
+        // Position at the current pointer location
+        trail.style.left = `${x}px`;
+        trail.style.top = `${y}px`;
+        
+        gestureArea.appendChild(trail);
+        pointerState.dragTrails.push(trail);
+        
+        // Fade and remove after a short delay
+        setTimeout(() => {
+          trail.style.opacity = '0';
+          setTimeout(() => {
+            trail.remove();
+            pointerState.dragTrails = pointerState.dragTrails.filter(t => t !== trail);
+          }, 500);
+        }, 300);
+      }
+      
+      // Clean up all trails
+      function cleanupTrails() {
+        pointerState.dragTrails.forEach(trail => {
+          trail.remove();
+        });
+        pointerState.dragTrails = [];
+      }
+      
+      // Detect gesture type based on movement
+      function detectGesture(endX, endY) {
+        const startX = pointerState.startX;
+        const startY = pointerState.startY;
+        
+        const deltaX = endX - startX;
+        const deltaY = endY - startY;
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        const duration = Date.now() - pointerState.startTime;
+        
+        // Threshold for swipe detection (min distance and max time)
+        const MIN_SWIPE_DISTANCE = 50;
+        const MAX_SWIPE_TIME = 300;
+        
+        // For swipes, need enough distance and speed
+        if (distance >= MIN_SWIPE_DISTANCE && duration <= MAX_SWIPE_TIME) {
+          // Determine direction based on angle
+          const absX = Math.abs(deltaX);
+          const absY = Math.abs(deltaY);
+          
+          if (absX > absY) {
+            // Horizontal swipe
+            if (deltaX > 0) {
+              return { type: 'swipe-right', color: 'var(--swipe-right)' };
+            } else {
+              return { type: 'swipe-left', color: 'var(--swipe-left)' };
+            }
+          } else {
+            // Vertical swipe
+            if (deltaY > 0) {
+              return { type: 'swipe-down', color: 'var(--swipe-down)' };
+            } else {
+              return { type: 'swipe-up', color: 'var(--swipe-up)' };
+            }
+          }
+        }
+        
+        // For taps and other gestures
+        if (distance < 10) {  // Small movement threshold for tap detection
+          const lastTapDelta = pointerState.startTime - pointerState.lastTapTime;
+          
+          // Double tap detection (two taps within 300ms)
+          if (lastTapDelta < 300) {
+            pointerState.lastTapTime = 0; // Reset to avoid triple tap
+            return { type: 'double-tap', color: 'var(--double-tap)' };
+          }
+          
+          // Hold detection (handled separately with timers)
+          if (pointerState.isHolding) {
+            return { type: 'hold', color: 'var(--hold)' };
+          }
+          
+          // Regular tap
+          pointerState.lastTapTime = pointerState.startTime;
+          return { type: 'tap', color: 'var(--tap)' };
+        }
+        
+        // If significant movement but not a swipe, it's a drag
+        if (distance > 10) {
+          return { type: 'drag', color: 'var(--drag)' };
+        }
+        
+        return null;
+      }
+      
+      // Process detected gesture
+      function processGesture(gesture) {
+        if (!gesture) return;
+        
+        // Show appropriate feedback and animation
+        switch (gesture.type) {
+          case 'swipe-left':
+            showFeedback('Swipe Left Detected', gesture.color);
+            showAnimation(swipeLeftAnimation);
+            break;
+          case 'swipe-right':
+            showFeedback('Swipe Right Detected', gesture.color);
+            showAnimation(swipeRightAnimation);
+            break;
+          case 'swipe-up':
+            showFeedback('Swipe Up Detected', gesture.color);
+            showAnimation(swipeUpAnimation);
+            break;
+          case 'swipe-down':
+            showFeedback('Swipe Down Detected', gesture.color);
+            showAnimation(swipeDownAnimation);
+            break;
+          case 'tap':
+            showFeedback('Tap Detected', gesture.color);
+            showAnimation(tapAnimation);
+            break;
+          case 'double-tap':
+            showFeedback('Double Tap Detected', gesture.color);
+            showAnimation(doubleTapAnimation);
+            break;
+          case 'hold':
+            showFeedback('Hold Detected', gesture.color);
+            showAnimation(holdAnimation);
+            break;
+          case 'drag':
+            showFeedback('Drag Detected', gesture.color);
+            showAnimation(dragAnimation, 300);
+            break;
+        }
+      }
+      
+      // ============= EVENT HANDLERS =============
+      
+      // Pointer Events Handlers
+      if (hasPointerEvents) {
+        
+        // Pointer down initiates gesture tracking
+        gestureArea.addEventListener('pointerdown', function(e) {
+          e.preventDefault();
+          
+          // For touch screen stylus or finger only
+          if (e.pointerType === 'mouse' && e.button !== 0) return;
+          
+          pointerState.isDown = true;
+          pointerState.startTime = Date.now();
+          pointerState.startX = e.clientX - gestureArea.getBoundingClientRect().left;
+          pointerState.startY = e.clientY - gestureArea.getBoundingClientRect().top;
+          pointerState.lastX = pointerState.startX;
+          pointerState.lastY = pointerState.startY;
+          
+          // Start hold timer
+          pointerState.holdTimer = setTimeout(() => {
+            if (pointerState.isDown) {
+              pointerState.isHolding = true;
+              const holdGesture = { type: 'hold', color: 'var(--hold)' };
+              processGesture(holdGesture);
+            }
+          }, 500);
+          
+          createRipple(pointerState.startX, pointerState.startY);
+        });
+        
+        // Pointer move for drag detection
+        gestureArea.addEventListener('pointermove', function(e) {
+          if (!pointerState.isDown) return;
+          
+          const currentX = e.clientX - gestureArea.getBoundingClientRect().left;
+          const currentY = e.clientY - gestureArea.getBoundingClientRect().top;
+          
+          // Detect drag with significant movement
+          const deltaX = currentX - pointerState.lastX;
+          const deltaY = currentY - pointerState.lastY;
+          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+          
+          if (distance > 5) {
+            // Cancel hold timer if user is dragging
+            clearTimeout(pointerState.holdTimer);
+            pointerState.isHolding = false;
+            
+            // Create drag trail
+            createDragTrail(currentX, currentY);
+            
+            // Update position
+            pointerState.lastX = currentX;
+            pointerState.lastY = currentY;
+            
+            // Only show active animation while dragging
+            dragAnimation.classList.add('active');
+          }
+        });
+        
+        // Pointer up finalizes gesture
+        gestureArea.addEventListener('pointerup', function(e) {
+          if (!pointerState.isDown) return;
+          
+          const currentX = e.clientX - gestureArea.getBoundingClientRect().left;
+          const currentY = e.clientY - gestureArea.getBoundingClientRect().top;
+          
+          // Detect gesture type
+          const gesture = detectGesture(currentX, currentY);
+          processGesture(gesture);
+          
+          // Reset state
+          clearTimeout(pointerState.holdTimer);
+          pointerState.isDown = false;
+          pointerState.isHolding = false;
+          
+          // Clean up drag trails with small delay
+          setTimeout(cleanupTrails, 300);
+        });
+        
+        // Handle leaving gesture area
+        gestureArea.addEventListener('pointerleave', function(e) {
+          if (pointerState.isDown) {
+            clearTimeout(pointerState.holdTimer);
+            pointerState.isDown = false;
+            pointerState.isHolding = false;
+            hideAllAnimations();
+            cleanupTrails();
+          }
+        });
+        
+        // Cancel gesture on pointer cancel
+        gestureArea.addEventListener('pointercancel', function(e) {
+          clearTimeout(pointerState.holdTimer);
+          pointerState.isDown = false;
+          pointerState.isHolding = false;
+          hideAllAnimations();
+          cleanupTrails();
+        });
+      }
+      // Fallback to regular mouse events if pointer events not supported
+      else if ('MouseEvent' in window) {
+        
+        gestureArea.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          
+          // For primary mouse button only
+          if (e.button !== 0) return;
+          
+          pointerState.isDown = true;
+          pointerState.startTime = Date.now();
+          pointerState.startX = e.clientX - gestureArea.getBoundingClientRect().left;
+          pointerState.startY = e.clientY - gestureArea.getBoundingClientRect().top;
+          pointerState.lastX = pointerState.startX;
+          pointerState.lastY = pointerState.startY;
+          
+          // Start hold timer
+          pointerState.holdTimer = setTimeout(() => {
+            if (pointerState.isDown) {
+              pointerState.isHolding = true;
+              const holdGesture = { type: 'hold', color: 'var(--hold)' };
+              processGesture(holdGesture);
+            }
+          }, 500);
+          
+          createRipple(pointerState.startX, pointerState.startY);
+        });
+        
+        gestureArea.addEventListener('mousemove', function(e) {
+          if (!pointerState.isDown) return;
+          
+          const currentX = e.clientX - gestureArea.getBoundingClientRect().left;
+          const currentY = e.clientY - gestureArea.getBoundingClientRect().top;
+          
+          // Detect drag with significant movement
+          const deltaX = currentX - pointerState.lastX;
+          const deltaY = currentY - pointerState.lastY;
+          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+          
+          if (distance > 5) {
+            // Cancel hold timer if user is dragging
+            clearTimeout(pointerState.holdTimer);
+            pointerState.isHolding = false;
+            
+            // Create drag trail
+            createDragTrail(currentX, currentY);
+            
+            // Update position
+            pointerState.lastX = currentX;
+            pointerState.lastY = currentY;
+            
+            // Only show active animation while dragging
+            dragAnimation.classList.add('active');
+          }
+        });
+        
+        gestureArea.addEventListener('mouseup', function(e) {
+          if (!pointerState.isDown) return;
+          
+          const currentX = e.clientX - gestureArea.getBoundingClientRect().left;
+          const currentY = e.clientY - gestureArea.getBoundingClientRect().top;
+          
+          // Detect gesture type
+          const gesture = detectGesture(currentX, currentY);
+          processGesture(gesture);
+          
+          // Reset state
+          clearTimeout(pointerState.holdTimer);
+          pointerState.isDown = false;
+          pointerState.isHolding = false;
+          
+          // Clean up drag trails with small delay
+          setTimeout(cleanupTrails, 300);
+        });
+        
+        gestureArea.addEventListener('mouseleave', function(e) {
+          if (pointerState.isDown) {
+            clearTimeout(pointerState.holdTimer);
+            pointerState.isDown = false;
+            pointerState.isHolding = false;
+            hideAllAnimations();
+            cleanupTrails();
+          }
+        });
+      }
+      
+      // ============= KEYBOARD ACCESSIBILITY =============
+      
+      // Handle keyboard accessibility for gesture simulation
+      gestureArea.addEventListener('keydown', function(e) {
+        let gesture = null;
+        
+        // Map keys to gestures
+        switch (e.key) {
+          case 'ArrowLeft':
+            gesture = { type: 'swipe-left', color: 'var(--swipe-left)' };
+            break;
+          case 'ArrowRight':
+            gesture = { type: 'swipe-right', color: 'var(--swipe-right)' };
+            break;
+          case 'ArrowUp':
+            gesture = { type: 'swipe-up', color: 'var(--swipe-up)' };
+            break;
+          case 'ArrowDown':
+            gesture = { type: 'swipe-down', color: 'var(--swipe-down)' };
+            break;
+          case ' ':  // Space key
+            gesture = { type: 'tap', color: 'var(--tap)' };
+            e.preventDefault(); // Prevent page scrolling
+            break;
+          case 'd':
+          case 'D':
+            gesture = { type: 'double-tap', color: 'var(--double-tap)' };
+            break;
+          case 'h':
+          case 'H':
+            gesture = { type: 'hold', color: 'var(--hold)' };
+            break;
+          case 'm':
+          case 'M':
+            gesture = { type: 'drag', color: 'var(--drag)' };
+            break;
+        }
+        
+        if (gesture) {
+          processGesture(gesture);
+        }
+      });
+      
+      // Keyboard button handlers
+      const keyboardButtons = document.querySelectorAll('.keyboard-btn');
+      keyboardButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const gestureType = this.getAttribute('data-gesture');
+          let color;
+          
+          switch (gestureType) {
+            case 'swipe-left':
+              color = 'var(--swipe-left)';
+              break;
+            case 'swipe-right':
+              color = 'var(--swipe-right)';
+              break;
+            case 'swipe-up':
+              color = 'var(--swipe-up)';
+              break;
+            case 'swipe-down':
+              color = 'var(--swipe-down)';
+              break;
+            case 'tap':
+              color = 'var(--tap)';
+              break;
+            case 'double-tap':
+              color = 'var(--double-tap)';
+              break;
+            case 'hold':
+              color = 'var(--hold)';
+              break;
+            case 'drag':
+              color = 'var(--drag)';
+              break;
+          }
+          
+          const gesture = { type: gestureType, color: color };
+          processGesture(gesture);
+        });
+      });
+    });
+    
+    // Mobile Menu Toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      const overlay = document.querySelector('.overlay');
+      
+      if (mobileMenuBtn && navLinks) {
+        // Handle hamburger button click
+        mobileMenuBtn.addEventListener('click', function() {
+          const isOpen = this.classList.contains('open');
+          
+          if (!isOpen) {
+            // Opening the menu
+            this.classList.add('open');
+            navLinks.classList.add('open');
+            
+            if (overlay) {
+              overlay.classList.add('active');
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            navLinks.setAttribute('aria-hidden', 'false');
+          } else {
+            // Closing the menu
+            this.classList.remove('open');
+            navLinks.classList.remove('open');
+            
+            if (overlay) {
+              overlay.classList.remove('active');
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+          }
+        });
+        
+        // Close menu when clicking overlay
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            overlay.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+          });
+        }
+      }
+      
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or use default (dark)
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        // Apply the saved theme on page load
+        if (savedTheme === 'light') {
+          htmlElement.classList.add('light-mode');
+          themeToggle.setAttribute('aria-pressed', 'false');
+        } else {
+          themeToggle.setAttribute('aria-pressed', 'true');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+          // Toggle light-mode class on html element
+          htmlElement.classList.toggle('light-mode');
+          
+          // Update button aria-pressed state
+          const isLightMode = htmlElement.classList.contains('light-mode');
+          themeToggle.setAttribute('aria-pressed', !isLightMode);
+          
+          // Save preference to localStorage
+          localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+        });
+      }
+    });
+  </script>
