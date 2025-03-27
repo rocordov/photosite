@@ -794,3 +794,198 @@
   <script>
     // Sticky & Shrinking Navigation
     window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 100) {
+        nav.classList.add('shrink');
+      } else {
+        nav.classList.remove('shrink');
+      }
+    });
+    
+    // Fade-in animation on scroll
+    document.addEventListener('DOMContentLoaded', () => {
+      const fadeElements = document.querySelectorAll('.fade-in');
+      
+      const fadeInOnScroll = () => {
+        fadeElements.forEach(element => {
+          const elementTop = element.getBoundingClientRect().top;
+          const elementVisible = 150;
+          
+          if (elementTop < window.innerHeight - elementVisible) {
+            element.classList.add('visible');
+          }
+        });
+      };
+      
+      // Initial check on load
+      fadeInOnScroll();
+      
+      // Add scroll event listener
+      window.addEventListener('scroll', fadeInOnScroll);
+    });
+    
+    // Mobile Menu Toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      const overlay = document.querySelector('.overlay');
+      
+      if (mobileMenuBtn && navLinks) {
+        // Handle hamburger button click
+        mobileMenuBtn.addEventListener('click', function(e) {
+          const isOpen = mobileMenuBtn.classList.contains('open');
+          
+          if (!isOpen) {
+            // Opening the menu
+            mobileMenuBtn.classList.add('open');
+            navLinks.classList.add('open');
+            
+            if (overlay) {
+              overlay.classList.add('active');
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            navLinks.setAttribute('aria-hidden', 'false');
+          } else {
+            // Closing the menu
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            
+            if (overlay) {
+              overlay.classList.remove('active');
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+          }
+        });
+        
+        // Close menu when clicking overlay
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            overlay.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+          });
+        }
+      }
+      
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or use default (dark)
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        // Apply the saved theme on page load
+        if (savedTheme === 'light') {
+          htmlElement.classList.add('light-mode');
+          themeToggle.setAttribute('aria-pressed', 'false');
+        } else {
+          themeToggle.setAttribute('aria-pressed', 'true');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+          // Toggle light-mode class on html element
+          htmlElement.classList.toggle('light-mode');
+          
+          // Update button aria-pressed state
+          const isLightMode = htmlElement.classList.contains('light-mode');
+          themeToggle.setAttribute('aria-pressed', !isLightMode);
+          
+          // Save preference to localStorage
+          localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+        });
+      }
+      
+      // Set up SVG morphing controls
+      const speedControl = document.getElementById('speed-control');
+      const speedValue = document.getElementById('speed-value');
+      const color1Input = document.getElementById('color1');
+      const color2Input = document.getElementById('color2');
+      const color3Input = document.getElementById('color3');
+      const opacityControl = document.getElementById('opacity-control');
+      const opacityValue = document.getElementById('opacity-value');
+      const resetButton = document.getElementById('reset-controls');
+      
+      const blob1 = document.getElementById('blob1');
+      const blob2 = document.getElementById('blob2');
+      const blob3 = document.getElementById('blob3');
+      const animations = document.querySelectorAll('.svg-morph animate');
+      
+      // Initial values
+      const defaults = {
+        speed: 1,
+        color1: '#00bcd4',
+        color2: '#9c27b0',
+        color3: '#ff5722',
+        opacity: 0.7
+      };
+      
+      // Update animation speed
+      speedControl.addEventListener('input', function() {
+        const speed = this.value;
+        speedValue.textContent = speed + 'x';
+        
+        animations.forEach(animation => {
+          const originalDur = parseInt(animation.getAttribute('dur'));
+          animation.setAttribute('dur', (originalDur / speed) + 's');
+        });
+      });
+      
+      // Update colors
+      color1Input.addEventListener('input', function() {
+        document.documentElement.style.setProperty('--color1', this.value);
+      });
+      
+      color2Input.addEventListener('input', function() {
+        document.documentElement.style.setProperty('--color2', this.value);
+      });
+      
+      color3Input.addEventListener('input', function() {
+        document.documentElement.style.setProperty('--color3', this.value);
+      });
+      
+      // Update opacity
+      opacityControl.addEventListener('input', function() {
+        const opacity = this.value;
+        opacityValue.textContent = opacity;
+        
+        blob1.setAttribute('opacity', opacity);
+        blob2.setAttribute('opacity', opacity * 0.7); // Slightly more transparent
+        blob3.setAttribute('opacity', opacity * 0.4); // Even more transparent
+      });
+      
+      // Reset controls to default
+      resetButton.addEventListener('click', function() {
+        speedControl.value = defaults.speed;
+        speedValue.textContent = defaults.speed + 'x';
+        
+        color1Input.value = defaults.color1;
+        color2Input.value = defaults.color2;
+        color3Input.value = defaults.color3;
+        
+        opacityControl.value = defaults.opacity;
+        opacityValue.textContent = defaults.opacity;
+        
+        document.documentElement.style.setProperty('--color1', defaults.color1);
+        document.documentElement.style.setProperty('--color2', defaults.color2);
+        document.documentElement.style.setProperty('--color3', defaults.color3);
+        
+        blob1.setAttribute('opacity', defaults.opacity);
+        blob2.setAttribute('opacity', defaults.opacity * 0.7);
+        blob3.setAttribute('opacity', defaults.opacity * 0.4);
+        
+        animations.forEach(animation => {
+          const originalDur = parseInt(animation.getAttribute('dur'));
+          animation.setAttribute('dur', originalDur + 's');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
