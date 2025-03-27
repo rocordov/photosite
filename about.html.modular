@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Me – Scientist & Artist</title>
+  
+  <!-- External CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Global and Component CSS -->
+  <link rel="stylesheet" href="./assets/css/global.css">
+  <link rel="stylesheet" href="./assets/css/components/header.css">
+  <link rel="stylesheet" href="./assets/css/components/footer.css">
+  <link rel="stylesheet" href="./assets/css/components/theme-toggle.css">
+  <link rel="stylesheet" href="./assets/css/components/command-palette.css">
+  
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Royce",
+      "jobTitle": "Scientist, Photographer & Visual Storyteller",
+      "description": "Scientist and visual storyteller based in Thailand and Arisona, specializing in creative photography that captures the extraordinary in everyday moments.",
+      "url": "https://rocordov.github.io/photosite/",
+      "sameAs": [
+        "https://instagram.com/rois_cordova",
+        "https://tiktok.com/@rois.c"
+      ],
+      "image": "Me/images/IMG_4685.jpg",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://rocordov.github.io/photosite/about.html"
+      }
+    }
+  </script>
+  
+  <!-- Privacy-focused Analytics -->
+  <script async defer data-website-id="your-website-id" src="https://analytics.example.com/script.js"></script>
+  
+  <!-- Page-specific CSS -->
+  <style>
+    /* About Page Specific Styles */
+    main {
+      padding: var(--spacing-lg) var(--spacing-md);
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .page-header h1 {
+      font-size: 3rem;
+      color: var(--accent);
+      margin-bottom: var(--spacing-sm);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .page-header p {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .about-section {
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      box-shadow: var(--shadow-standard);
+      transition: var(--transition-standard);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .about-section:nth-child(1) { animation-delay: 0.1s; }
+    .about-section:nth-child(2) { animation-delay: 0.2s; }
+    .about-section:nth-child(3) { animation-delay: 0.3s; }
+
+    .about-section:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .about-section h2 {
+      font-size: 2.2rem;
+      color: var(--accent);
+      margin-bottom: var(--spacing-md);
+      border-bottom: 1px solid var(--header-border);
+      padding-bottom: var(--spacing-sm);
+      position: relative;
+    }
+
+    .about-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100px;
+      height: 3px;
+      background-color: var(--accent);
+    }
+
+    .about-section p {
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-md);
+      line-height: 1.7;
+    }
+
+    .about-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .highlight {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Social Connect Section Styles */
+    .connect-social {
+      display: flex;
+      justify-content: center;
+      margin: var(--spacing-lg) 0;
+      gap: var(--spacing-lg);
+    }
+
+    .social-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .social-icon i {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: var(--spacing-sm);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .social-icon span {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      transition: var(--transition-standard);
+    }
+
+    .social-icon:hover i, .social-icon:focus i {
+      transform: translateY(-5px) scale(1.2);
+      color: #fff;
+      text-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent-glow);
+    }
+
+    .social-icon:hover span, .social-icon:focus span {
+      color: var(--accent);
+      transform: scale(1.05);
+    }
+
+    .social-icon:focus {
+      outline: none;
+    }
+
+    .social-icon:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    /* Live notification badge */
+    .badge-live {
+      position: absolute;
+      top: 0;
+      right: -5px;
+      width: 12px;
+      height: 12px;
+      background-color: #ff4757;
+      border-radius: 50%;
+      border: 2px solid var(--card);
+      animation: pulse 2s infinite;
+    }
+
+    /* Animated update indicator for Instagram */
+    .new-content {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 20px;
+      height: 20px;
+      background-color: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: #000;
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-5px);
+      }
+      60% {
+        transform: translateY(-2px);
+      }
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .page-header h1 {
+        font-size: 2.5rem;
+      }
+
+      .about-section h2 {
+        font-size: 1.8rem;
+      }
+
+      .connect-social {
+        flex-wrap: wrap;
+        gap: var(--spacing-xl) var(--spacing-lg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+  
+  <main id="main-content">
+    <header class="page-header">
+      <h1>About me</h1>
+      <p>Scientist, visual storyteller, and explorer of light</p>
+    </header>
+    <section class="about-section">
+      <h2>Muddy water is best cleared by leaving it alone</h2>
+      <p>🌏 A Thoughtful Approach to Tech, Creativity, and Living; I have been working in computer science since the mid-90s, moving through roles in software development, systems architecture, cloud infrastructure, and AI. Over the years, I have learned how to stay ahead of emerging technologies without losing sight of clarity and purpose. My work has always been about more than just code—it is about creating systems that make sense, scale well, and leave things better than I found them. One of the contributions I am proud of is a peer-to-peer software distribution system I helped develop and patent. It laid the groundwork for more efficient content delivery and has shown up in technologies that support decentralized and scalable infrastructure. But what motivates me now is not just optimization—it is finding tools and approaches that fit into more intentional workflows. 
+      </p>
+      <p>👨‍💻 Keeping AI Grounded These days, I am focused on using AI in ways that are actually useful—not just impressive on paper. I like platforms that encourage modularity and collaboration between tools without unnecessary complexity. For me, AI should serve the user, not the other way around. I tend to avoid overly abstract setups and gravitate toward systems that are simple, maintainable, and well-aligned with the work at hand. 
+      </p>
+      <p>🌅 Shifting Gears I am in a phase of life where I am designing things more on my own terms. That includes how I spend my time, where I live, and what I choose to work on. I still love solving hard problems, but I have shifted away from high-pressure timelines and rigid structures. I prefer slower mornings, creative sessions in outdoor cafés, and projects that leave space for reflection and iteration. This is not about checking out—it is about showing up differently. I want my work to be intentional, rooted in curiosity, and aligned with how I want to live. 
+      </p>
+      <p>📸 Visual Exploration Photography has become one of my creative outlets. I shoot with a Sony mirrorless setup and usually keep the settings wide open to get a smooth, shallow depth of field. I like working with natural light and subtle edits that bring out the contrast and mood without overdoing it. When it comes to visual styles, I am drawn to Futurism, Fauvism, and expressive realism. I like art that says something—work that feels alive, unexpected, and just a little bit strange in the right ways.
+      </p> 
+    </section>
+    <section class="about-section" id="connect">
+      <h2>Connect With Me</h2>
+      <p>I believe in the power of connection and conversation. Whether you're interested in my work, have questions about my approach, or simply want to reach out, I'd love to hear from you. 
+      </p>
+      <p>Follow me on social media for updates on my latest projects, behind-the-scenes glimpses, and insights into my creative process.
+      </p>
+    </section>
+  </main>
+  
+  <!-- Connect Social Section -->
+  <div class="connect-social">
+    <a href="https://instagram.com/rois_cordova" class="social-icon" target="_blank" rel="noopener" aria-label="Follow me on Instagram - New posts available">
+      <i class="fab fa-instagram"></i>
+      <span>Instagram</span>
+      <span class="new-content">3</span>
+    </a>
+    <a href="https://tiktok.com/@rois.c" class="social-icon" target="_blank" rel="noopener" aria-label="Follow me on TikTok">
+      <i class="fab fa-tiktok"></i>
+      <span>TikTok</span>
+      <span class="badge-live"></span>
+    </a>
+    <a href="mailto:rocordov@gmail.com" class="social-icon" aria-label="Email me">
+      <i class="far fa-envelope"></i>
+      <span>Email</span>
+    </a>
+  </div>
+  
+  <!-- Footer (loaded dynamically) -->
+  <footer id="site-footer"></footer>
+  
+  <!-- Back to Top Button -->
+  <button id="back-to-top" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  
+  <!-- Command Palette -->
+  <div class="command-palette" id="command-palette" role="dialog" aria-label="Command palette">
+    <div class="command-palette-container">
+      <div class="command-palette-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="text" id="command-palette-input" class="command-palette-input" placeholder="Type a command or search..." aria-label="Search commands">
+      </div>
+      <div class="command-palette-results" id="command-palette-results"></div>
+    </div>
+  </div>
+
+  <!-- Component Loader Script -->
+  <script src="./assets/js/components/component-loader.js" type="module"></script>
+  
+  <!-- Component scripts -->
+  <script src="./assets/js/components/theme-toggle.js" type="module"></script>
+  <script src="./assets/js/components/command-palette.js" type="module"></script>
+  
+  <!-- Page-specific script -->
+  <script>
+    // Back to Top Button functionality
+    const backToTopBtn = document.getElementById('back-to-top');
+    
+    // Show/hide back-to-top button based on scroll position
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    });
+    
+    // Smooth scroll to top when button is clicked
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // Keyboard navigation improvements
+    document.querySelectorAll('a, button').forEach(element => {
+      element.addEventListener('keydown', e => {
+        // Enter or Space activates the element
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          element.click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
