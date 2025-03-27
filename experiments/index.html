@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Experiments & Innovations | Rois Cordova</title>
+  <meta name="description" content="A sandbox for testing advanced web tools, animations, and interactive elements - explore the latest experiments and innovations.">
+  
+  <!-- Open Graph tags for better social sharing -->
+  <meta property="og:title" content="Experiments & Innovations | Rois Cordova">
+  <meta property="og:description" content="A sandbox for testing advanced web tools, animations, and interactive elements.">
+  <meta property="og:image" content="https://rocordov.github.io/photosite/Me/images/IMG_4685.jpg">
+  <meta property="og:url" content="https://rocordov.github.io/photosite/experiments/">
+  <meta property="og:type" content="website">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #121212;
+      --bg-gradient: linear-gradient(145deg, #141414, #0f0f0f);
+      --card: #1e1e1e;
+      --accent: #00bcd4;
+      --text: #e0e0e0;
+      --text-secondary: #aaa;
+      --hover-scale: 1.05;
+      --transition-standard: all 0.3s ease;
+      --spacing-sm: 10px;
+      --spacing-md: 20px;
+      --spacing-lg: 30px;
+      --spacing-xl: 60px;
+      --border-radius: 12px;
+      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --header-border: #333;
+      --accent-glow: rgba(0, 188, 212, 0.5);
+      --footer-bg: rgba(20, 20, 20, 0.7);
+    }
+
+    /* Light Mode Theme */
+    :root.light-mode {
+      --bg: #ffffff;
+      --bg-gradient: linear-gradient(145deg, #f5f5f5, #ffffff);
+      --card: #f5f5f5;
+      --accent: #007acc; /* Darker blue for better contrast on light backgrounds */
+      --text: #121212;
+      --text-secondary: #555;
+      --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+      --header-border: #ddd;
+      --accent-glow: rgba(0, 122, 204, 0.3);
+      --footer-bg: rgba(245, 245, 245, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      line-height: 1.6;
+      letter-spacing: 0.2px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Skip Link for Accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      padding: 8px;
+      background-color: var(--accent);
+      color: #000;
+      z-index: 100;
+      transition: top 0.3s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Navigation */
+    nav {
+      background-color: rgba(24, 24, 24, 0.98);
+      padding: var(--spacing-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      height: 80px; /* Initial height */
+      transition: all 0.3s ease;
+    }
+    
+    nav.shrink {
+      height: 60px;
+      background-color: rgba(24, 24, 24, 0.9); /* Slightly transparent when shrunk */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Enhanced shadow when shrunk */
+      padding: 10px var(--spacing-md);
+    }
+    
+    nav.shrink .logo {
+      font-size: 1.3rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition-standard);
+    }
+
+    .logo:hover, .logo:focus {
+      color: #fff;
+      text-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: var(--spacing-md);
+      padding: 6px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-standard);
+    }
+
+    .theme-toggle:hover, .theme-toggle:focus {
+      background-color: rgba(0, 188, 212, 0.1);
+      transform: scale(1.1);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Icon changes based on theme */
+    :root.light-mode .theme-toggle .fa-moon {
+      display: none;
+    }
+
+    :root.light-mode .theme-toggle .fa-sun {
+      display: inline-block;
+    }
+
+    .theme-toggle .fa-sun {
+      display: none;
+    }
+
+    .theme-toggle .fa-moon {
+      display: inline-block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      margin-left: var(--spacing-md);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      padding: 6px 0;
+      transition: var(--transition-standard);
+      z-index: 20;
+      pointer-events: auto;
+    }
+
+    .nav-links a:hover, .nav-links a:focus {
+      color: var(--accent);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a:focus::after {
+      width: 100%;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 15;
+      position: relative;
+      width: 46px;
+      height: 46px;
+      margin-right: 10px;
+    }
+
+    .hamburger-icon {
+      position: absolute;
+      display: block;
+      width: 30px;
+      height: 3px;
+      background-color: var(--accent);
+      transition: var(--transition-standard);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hamburger-icon::before, .hamburger-icon::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 3px;
+      background-color: var(--accent);
+      transition: var(--transition-standard);
+      left: 0;
+    }
+
+    .hamburger-icon::before {
+      transform: translateY(-8px);
+    }
+
+    .hamburger-icon::after {
+      transform: translateY(8px);
+    }
+
+    .mobile-menu-btn.open .hamburger-icon {
+      background-color: transparent;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::before {
+      transform: rotate(45deg);
+      top: 0;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::after {
+      transform: rotate(-45deg);
+      top: 0;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 30vh;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(18, 18, 18, 0.9);
+      overflow: hidden;
+    }
+    
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 0.2;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(0, 188, 212, 0.6) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(121, 85, 255, 0.6) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 84, 131, 0.6) 0%, transparent 60%);
+      filter: blur(20px);
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: var(--spacing-md);
+      width: 100%;
+      max-width: 800px;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    
+    .hero-content h1 {
+      font-size: 2.8rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--accent);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    
+    .hero-content p {
+      font-size: 1.4rem;
+      color: var(--text);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      line-height: 1.5;
+    }
+
+    /* Experiment Cards */
+    .experiments-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .section-title {
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: var(--spacing-lg);
+      position: relative;
+      padding-bottom: var(--spacing-sm);
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background-color: var(--accent);
+    }
+
+    .experiments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: var(--spacing-lg);
+    }
+
+    .experiment-card {
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-standard);
+      transition: var(--transition-standard);
+      height: 100%;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .experiment-card:nth-child(1) { animation-delay: 0.1s; }
+    .experiment-card:nth-child(2) { animation-delay: 0.2s; }
+    .experiment-card:nth-child(3) { animation-delay: 0.3s; }
+    .experiment-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .experiment-card:hover, .experiment-card:focus-within {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .experiment-thumbnail {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 1px solid var(--header-border);
+    }
+
+    .experiment-content {
+      padding: var(--spacing-md);
+    }
+
+    .experiment-title {
+      font-size: 1.4rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .experiment-description {
+      margin-bottom: var(--spacing-md);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .experiment-link {
+      display: inline-block;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition-standard);
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .experiment-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .experiment-link:hover::after, .experiment-link:focus::after {
+      width: 100%;
+    }
+
+    .experiment-link:hover, .experiment-link:focus {
+      color: #fff;
+    }
+
+    /* Documentation Section */
+    .documentation-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+      background-color: rgba(30, 30, 30, 0.5);
+      border-radius: var(--border-radius);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .documentation-content {
+      padding: var(--spacing-md);
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: var(--spacing-lg) var(--spacing-md);
+      color: #777;
+      font-size: 0.95rem;
+      border-top: 1px solid #2a2a2a;
+      background-color: rgba(20, 20, 20, 0.7);
+    }
+
+    .footer-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .footer-social {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--spacing-md);
+      gap: var(--spacing-md);
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #2a2a2a;
+      color: var(--text);
+      font-size: 1.2rem;
+      transition: var(--transition-standard);
+    }
+
+    .footer-social a:hover, .footer-social a:focus {
+      background-color: var(--accent);
+      color: #000;
+      transform: translateY(-3px);
+    }
+
+    .footer-social a:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .footer-info {
+      margin-top: var(--spacing-sm);
+    }
+
+    .footer-info a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition-standard);
+    }
+
+    .footer-info a:hover, .footer-info a:focus {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Fade-in animation for scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Overlay for mobile menu */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+      pointer-events: none;
+    }
+    
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+
+      .experiments-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 75%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: rgba(25, 25, 25, 0.98);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 70px var(--spacing-md) var(--spacing-md);
+        transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-links.open {
+        right: 0;
+      }
+
+      .nav-links a {
+        margin: 10px 0;
+        font-size: 1.2rem;
+        width: 100%;
+        padding: 8px 0;
+      }
+
+      .experiments-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation -->
+  <header>
+    <nav>
+      <a href="../index.html" class="logo">
+        <img src="../images/website-icon.png" alt="R." style="height: 40px; width: auto; vertical-align: middle;" />
+      </a>
+      
+      <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+        <span class="hamburger-icon"></span>
+      </button>
+      
+      <div class="nav-links" id="nav-links" aria-hidden="true">
+        <a href="../index.html" aria-label="Home">Home</a>
+        <a href="../projects.html" aria-label="Projects">Projects</a>
+        <a href="../about.html" aria-label="About">About</a>
+        <a href="../experiments/" aria-label="Experiments" aria-current="page">Experiments</a>
+        <a href="../connect.html" aria-label="Connect">Connect</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="true">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+        </button>
+      </div>
+      
+      <div class="overlay" id="overlay"></div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-content">
+        <h1>Experiments & Innovations</h1>
+        <p>A sandbox for testing advanced integrations, new animations, and interactive widgets</p>
+      </div>
+    </section>
+
+    <!-- Experiments Section -->
+    <section class="experiments-container">
+      <h2 class="section-title">Current Experiments</h2>
+      <div class="experiments-grid">
+        <!-- Experiment 1 - Dynamic SVG Morphing Background -->
+        <article class="experiment-card fade-in">
+          <img src="images/card.jpg" alt="Dynamic SVG Morphing Background preview" class="experiment-thumbnail">
+          <div class="experiment-content">
+            <h3 class="experiment-title">Dynamic SVG Morphing Background</h3>
+            <p class="experiment-description">An interactive experiment using SVG and CSS animations to create a continuously morphing background that reacts subtly to user interactions. This experiment demonstrates advanced visual effects and modern design techniques.</p>
+            <a href="dynamic-svg.html" class="experiment-link" aria-label="View Dynamic SVG Morphing Background experiment">View Demo</a>
+          </div>
+        </article>
+
+        <!-- Experiment 2 -->
+        <article class="experiment-card fade-in">
+          <div class="experiment-content">
+            <h3 class="experiment-title">Interactive Command Palette</h3>
+            <p class="experiment-description">A keyboard-driven interface for quickly navigating the site and accessing features without using the mouse. Press Cmd+K (Mac) or Ctrl+K (Windows) to try it.</p>
+            <a href="#" class="experiment-link" aria-label="Learn more about the Interactive Command Palette">View Demo</a>
+          </div>
+        </article>
+
+        <!-- Experiment 3 -->
+        <article class="experiment-card fade-in">
+          <div class="experiment-content">
+            <h3 class="experiment-title">WebGL Shader Demo</h3>
+            <p class="experiment-description">Exploring real-time graphics with GLSL shaders. This experiment demonstrates advanced rendering techniques and interactive visual effects.</p>
+            <a href="#" class="experiment-link" aria-label="Learn more about the WebGL Shader Demo">View Demo</a>
+          </div>
+        </article>
+
+        <!-- Experiment 4 -->
+        <article class="experiment-card fade-in">
+          <div class="experiment-content">
+            <h3 class="experiment-title">Dynamic SVG Animations</h3>
+            <p class="experiment-description">Vector-based animations that respond to user interaction. These lightweight animations provide engaging visual feedback without heavy resources.</p>
+            <a href="#" class="experiment-link" aria-label="Learn more about the Dynamic SVG Animations">View Demo</a>
+          </div>
+        </article>
+
+        <!-- Experiment 5 -->
+        <article class="experiment-card fade-in">
+          <div class="experiment-content">
+            <h3 class="experiment-title">Gesture Recognition API</h3>
+            <p class="experiment-description">Testing implementation of touch and mouse gestures for intuitive navigation and interaction patterns on both mobile and desktop devices.</p>
+            <a href="#" class="experiment-link" aria-label="Learn more about the Gesture Recognition API">View Demo</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section class="documentation-section">
+      <h2 class="section-title">Notes & Documentation</h2>
+      <div class="documentation-content fade-in">
+        <p>Documentation and notes on experiments will appear here. This section provides insights into the development process, technical specifications, and goals for each experiment.</p>
+        <p>The experiments showcased on this page represent ongoing work to explore new web technologies, interaction patterns, and design approaches. Each experiment is carefully documented to track progress and share knowledge.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-social">
+        <a href="https://instagram.com/rois_cordova" aria-label="Follow me on Instagram" target="_blank" rel="noopener">
+          <i class="fab fa-instagram" aria-hidden="true"></i>
+        </a>
+        <a href="https://tiktok.com/@rois.c" aria-label="Follow me on TikTok" target="_blank" rel="noopener">
+          <i class="fab fa-tiktok" aria-hidden="true"></i>
+        </a>
+        <a href="mailto:rocordov@gmail.com" aria-label="Email me">
+          <i class="far fa-envelope" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="footer-info">
+        <p>&copy; 2025 R Cordova. All rights reserved.</p>
+        <p><a href="../connect.html">Connect with me</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sticky & Shrinking Navigation
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 100) {
+        nav.classList.add('shrink');
+      } else {
+        nav.classList.remove('shrink');
+      }
+    });
+    
+    // Fade-in animation on scroll
+    document.addEventListener('DOMContentLoaded', () => {
+      const fadeElements = document.querySelectorAll('.fade-in');
+      
+      const fadeInOnScroll = () => {
+        fadeElements.forEach(element => {
+          const elementTop = element.getBoundingClientRect().top;
+          const elementVisible = 150;
+          
+          if (elementTop < window.innerHeight - elementVisible) {
+            element.classList.add('visible');
+          }
+        });
+      };
+      
+      // Initial check on load
+      fadeInOnScroll();
+      
+      // Add scroll event listener
+      window.addEventListener('scroll', fadeInOnScroll);
+    });
+    
+    // Mobile Menu Toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      const overlay = document.querySelector('.overlay');
+      
+      if (mobileMenuBtn && navLinks) {
+        // Handle hamburger button click
+        mobileMenuBtn.addEventListener('click', function(e) {
+          const isOpen = mobileMenuBtn.classList.contains('open');
+          
+          if (!isOpen) {
+            // Opening the menu
+            mobileMenuBtn.classList.add('open');
+            navLinks.classList.add('open');
+            
+            if (overlay) {
+              overlay.classList.add('active');
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            navLinks.setAttribute('aria-hidden', 'false');
+          } else {
+            // Closing the menu
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            
+            if (overlay) {
+              overlay.classList.remove('active');
+            }
+            
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+          }
+        });
+        
+        // Close menu when clicking overlay
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            mobileMenuBtn.classList.remove('open');
+            navLinks.classList.remove('open');
+            overlay.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+          });
+        }
+      }
+      
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or use default (dark)
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        // Apply the saved theme on page load
+        if (savedTheme === 'light') {
+          htmlElement.classList.add('light-mode');
+          themeToggle.setAttribute('aria-pressed', 'false');
+        } else {
+          themeToggle.setAttribute('aria-pressed', 'true');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+          // Toggle light-mode class on html element
+          htmlElement.classList.toggle('light-mode');
+          
+          // Update button aria-pressed state
+          const isLightMode = htmlElement.classList.contains('light-mode');
+          themeToggle.setAttribute('aria-pressed', !isLightMode);
+          
+          // Save preference to localStorage
+          localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+        });
+      }
+    });
+    
+    // Debug utility - simple console log to confirm page load
+    console.log('Experiments page loaded successfully');
+  </script>
+</body>
+</html>
