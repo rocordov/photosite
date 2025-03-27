@@ -1,0 +1,103 @@
+/* 
+ * Footer Styles
+ * Contains styles for site footer, social links and footer information
+ */
+
+/* Main Footer Container */
+footer {
+  margin-top: auto;
+  text-align: center;
+  padding: var(--spacing-lg) var(--spacing-md);
+  color: #777;
+  font-size: 0.95rem;
+  border-top: 1px solid #2a2a2a;
+  background-color: var(--footer-bg);
+}
+
+.footer-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Social Media Links */
+.footer-social {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-md);
+}
+
+.footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #2a2a2a;
+  color: var(--text);
+  font-size: 1.2rem;
+  transition: var(--transition-standard);
+}
+
+.footer-social a:hover, .footer-social a:focus {
+  background-color: var(--accent);
+  color: #000;
+  transform: translateY(-3px);
+}
+
+.footer-social a:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Footer Information Section */
+.footer-info {
+  margin-top: var(--spacing-sm);
+}
+
+.footer-info a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: var(--transition-standard);
+}
+
+.footer-info a:hover, .footer-info a:focus {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Back to Top Button */
+#back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--card);
+  color: var(--accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: var(--shadow-standard);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 9;
+}
+
+#back-to-top:hover, #back-to-top:focus {
+  background-color: var(--accent);
+  color: #000;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+#back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
