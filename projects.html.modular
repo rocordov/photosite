@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Royce</title>
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Global and Component CSS -->
+  <link rel="stylesheet" href="./assets/css/global.css">
+  <link rel="stylesheet" href="./assets/css/components/header.css">
+  <link rel="stylesheet" href="./assets/css/components/footer.css">
+  <link rel="stylesheet" href="./assets/css/components/hero.css">
+  <link rel="stylesheet" href="./assets/css/components/theme-toggle.css">
+  <link rel="stylesheet" href="./assets/css/components/command-palette.css">
+  
+  <!-- Page-specific CSS -->
+  <style>
+    /* Projects Grid Specific Styles */
+    .projects-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 40px;
+      margin-top: var(--spacing-lg);
+    }
+
+    .project-card {
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-standard);
+      transition: var(--transition-standard);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .project-card:nth-child(1) { animation-delay: 0.1s; }
+    .project-card:nth-child(2) { animation-delay: 0.2s; }
+    .project-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .project-card:hover, .project-card:focus-within {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .project-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--header-border);
+    }
+
+    .project-content {
+      padding: var(--spacing-md);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-title {
+      font-size: 1.4rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .project-description {
+      margin-bottom: var(--spacing-md);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .project-link {
+      display: inline-block;
+      margin-top: auto;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition-standard);
+      position: relative;
+      padding-bottom: 2px;
+      align-self: flex-start;
+    }
+
+    .project-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .project-link:hover::after, .project-link:focus::after {
+      width: 100%;
+    }
+
+    .project-link:hover, .project-link:focus {
+      color: #fff;
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Unleashing Innovation: Explore My Projects</h1>
+        <p>Discover a showcase of my work and creative explorations</p>
+      </div>
+    </section>
+
+    <!-- Projects Gallery -->
+    <section class="projects-container">
+      <div class="projects-grid">
+        <!-- Project 1: AI Systems -->
+        <article class="project-card">
+          <img src="./images/aisystemsproj.png" alt="AI Systems & Integration Research" class="project-image" loading="lazy">
+          <div class="project-content">
+            <h2 class="project-title">AI Systems & Integration Research</h2>
+            <p class="project-description">Exploring scalable architectures and orchestration methods for AI deployment—ranging from agent frameworks and chatbot interoperability to containerized model serving across private infrastructure.</p>
+            <a href="project-ai.html" class="project-link" aria-label="View AI Systems project details">Learn more</a>
+          </div>
+        </article>
+
+        <!-- Project 2: Project LΞAF -->
+        <article class="project-card">
+          <img src="./images/leafproj.png" alt="Project LΞAF" class="project-image" loading="lazy">
+          <div class="project-content">
+            <h2 class="project-title">Project LΞAF</h2>
+            <p class="project-description">Co-developing a resilient biological system with two partners. Focused on the convergence of cultivation science, local sustainability, and legacy healing knowledge. Current phase: sensory profile alignment and phenotype refinement.</p>
+            <a href="project-leaf.html" class="project-link" aria-label="View Project LΞAF details">Learn more</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (loaded dynamically) -->
+  <footer id="site-footer"></footer>
+
+  <!-- Command Palette -->
+  <div class="command-palette" id="command-palette" role="dialog" aria-label="Command palette">
+    <div class="command-palette-container">
+      <div class="command-palette-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="text" id="command-palette-input" class="command-palette-input" placeholder="Type a command or search..." aria-label="Search commands">
+      </div>
+      <div class="command-palette-results" id="command-palette-results"></div>
+    </div>
+  </div>
+
+  <!-- Component Loader Script -->
+  <script src="./assets/js/components/component-loader.js" type="module"></script>
+  
+  <!-- Component scripts -->
+  <script src="./assets/js/components/theme-toggle.js" type="module"></script>
+  <script src="./assets/js/components/command-palette.js" type="module"></script>
+</body>
+</html>
