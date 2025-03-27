@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Experiments & Innovations | Rois Cordova</title>
+  <meta name="description" content="A sandbox for testing advanced web tools, animations, and interactive elements - explore the latest experiments and innovations.">
+  
+  <!-- Open Graph tags for better social sharing -->
+  <meta property="og:title" content="Experiments & Innovations | Rois Cordova">
+  <meta property="og:description" content="A sandbox for testing advanced web tools, animations, and interactive elements.">
+  <meta property="og:image" content="https://rocordov.github.io/photosite/Me/images/IMG_4685.jpg">
+  <meta property="og:url" content="https://rocordov.github.io/photosite/experiments/">
+  <meta property="og:type" content="website">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Global and Component CSS -->
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/components/header.css">
+  <link rel="stylesheet" href="../assets/css/components/footer.css">
+  <link rel="stylesheet" href="../assets/css/components/hero.css">
+  <link rel="stylesheet" href="../assets/css/components/gallery.css">
+  <link rel="stylesheet" href="../assets/css/components/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/components/command-palette.css">
+  
+  <!-- Page-specific CSS -->
+  <link rel="stylesheet" href="../assets/css/pages/experiments.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <!-- Hero Section -->
+    <section class="hero experiments-hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-content">
+        <h1>Experiments & Innovations</h1>
+        <p>A sandbox for testing advanced integrations, new animations, and interactive widgets</p>
+      </div>
+    </section>
+
+    <!-- Experiments Section -->
+    <section class="experiments-container">
+      <h2 class="section-title">Current Experiments</h2>
+      <div class="experiments-grid">
+        <!-- Experiment 1 - Dynamic SVG Morphing Background -->
+        <article class="experiment-card fade-in">
+          <img src="images/SVGMorph-card.png" alt="Dynamic SVG Morphing Background preview" class="experiment-thumbnail">
+          <div class="experiment-content">
+            <h3 class="experiment-title">Dynamic SVG Morphing</h3>
+            <p class="experiment-description">An interactive experiment using SVG and CSS animations to create a continuously morphing background that reacts subtly to user interactions. This experiment demonstrates advanced visual effects and modern design techniques.</p>
+            <a href="dynamic-svg.html" class="experiment-link" aria-label="View Dynamic SVG Morphing Background experiment">View Demo</a>
+          </div>
+        </article>
+
+        <!-- Experiment 2 -->
+        <article class="experiment-card fade-in">
+          <img src="images/CommandP-card.png" alt="Screenshot of command palette demo" class="experiment-thumbnail">
+          <div class="experiment-content">
+            <h3 class="experiment-title">Command Palette</h3>
+            <p class="experiment-description">A keyboard-driven interface for quickly navigating the site and accessing features without using the mouse. Press Cmd+K (Mac) or Ctrl+K (Windows) to try it.</p>
+            <a href="./commandpalette.html" class="experiment-link" aria-label="View Interactive Command Palette experiment">View Demo</a>
+          </div>
+        </article>
+
+        <!-- Experiment 3 - WebGL Shader Demo -->
+        <article class="experiment-card fade-in">
+          <img src="images/webgl-card.png" alt="Preview of WebGL shader effect" class="experiment-thumbnail">
+          <div class="experiment-content">
+            <h3 class="experiment-title">WebGL Shader Demo</h3>
+            <p class="experiment-description">Exploring real-time graphics with GLSL shaders. This experiment demonstrates advanced rendering techniques and interactive visual effects.</p>
+            <a href="./WebGLShader.html" class="experiment-link" aria-label="View WebGL Shader Demo experiment">View Demo</a>
+          </div>
+        </article>
+
+        <!-- Experiment 4 - Dynamic SVG Animations -->
+        <article class="experiment-card fade-in">
+          <img src="images/DynamicAnimations-card.png" alt="Preview of interactive SVG animation demo" class="experiment-thumbnail">
+          <div class="experiment-content">
+            <h3 class="experiment-title">Dynamic SVG Animations</h3>
+            <p class="experiment-description">Vector-based animations that respond to user interaction. These lightweight animations provide engaging visual feedback without heavy resources.</p>
+            <a href="./DynamicAnimations.html" class="experiment-link" aria-label="View Dynamic SVG Animations experiment">View Demo</a>
+          </div>
+        </article>
+
+        <!-- Experiment 5 - Gesture Recognition API -->
+        <article class="experiment-card fade-in">
+          <img src="images/gesture-card.png" alt="Gesture recognition demo preview" class="experiment-thumbnail">
+          <div class="experiment-content">
+            <h3 class="experiment-title">Gesture Recognition API</h3>
+            <p class="experiment-description">Testing implementation of touch and mouse gestures for intuitive navigation and interaction patterns on both mobile and desktop devices.</p>
+            <a href="./gestures.html" class="experiment-link" aria-label="View Gesture Recognition API experiment">View Demo</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (loaded dynamically) -->
+  <footer id="site-footer"></footer>
+
+  <!-- Component Loader Script -->
+  <script src="../assets/js/components/component-loader.js" type="module"></script>
+  
+  <!-- Component scripts -->
+  <script src="../assets/js/components/theme-toggle.js" type="module"></script>
+  
+  <!-- Page Specific Scripts -->
+  <script>
+    // Fade-in animation on scroll
+    document.addEventListener('DOMContentLoaded', () => {
+      const fadeElements = document.querySelectorAll('.fade-in');
+      
+      const fadeInOnScroll = () => {
+        fadeElements.forEach(element => {
+          const elementTop = element.getBoundingClientRect().top;
+          const elementVisible = 150;
+          
+          if (elementTop < window.innerHeight - elementVisible) {
+            element.classList.add('visible');
+          }
+        });
+      };
+      
+      // Initial check on load
+      fadeInOnScroll();
+      
+      // Add scroll event listener
+      window.addEventListener('scroll', fadeInOnScroll);
+    });
+  </script>
+</body>
+</html>
