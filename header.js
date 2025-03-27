@@ -57,6 +57,8 @@ function initMobileMenu() {
   const overlay = document.querySelector('.overlay');
   
   if (mobileMenuBtn && navLinks) {
+    console.log("Mobile menu initialization");
+    
     // Handle hamburger button click
     mobileMenuBtn.addEventListener('click', function() {
       const isOpen = mobileMenuBtn.classList.contains('open');
@@ -68,6 +70,10 @@ function initMobileMenu() {
         
         if (overlay) {
           overlay.classList.add('active');
+          
+          // Important: Make sure overlay doesn't block clicks to the nav links
+          // by ensuring nav links are above the overlay in z-index
+          // but don't disable pointer events which would break closing the menu
         }
         
         mobileMenuBtn.setAttribute('aria-expanded', 'true');
@@ -96,17 +102,11 @@ function initMobileMenu() {
         navLinks.setAttribute('aria-hidden', 'true');
       });
     }
-    
-    // Close menu when pressing Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && navLinks.classList.contains('open')) {
-        mobileMenuBtn.classList.remove('open');
-        navLinks.classList.remove('open');
-        if (overlay) overlay.classList.remove('active');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        navLinks.setAttribute('aria-hidden', 'true');
-      }
-    });
+
+    // We don't need to add click handlers to the links
+    // Let them navigate naturally via their href attribute
+    // This approach avoids any event handler conflicts or event bubbling issues
+    // The page will reload on navigation so the menu state will reset
   }
 }
 
