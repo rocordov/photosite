@@ -1,0 +1,101 @@
+/* 
+ * Hero Section Styles
+ * Contains styles for hero sections, backgrounds, and animations
+ */
+
+/* Hero Section with SVG Animation Background */
+.hero {
+  display: flex;
+  align-items: flex-start; /* Align content to the top */
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 8vh;
+  /*min-height: 100px;*/
+  overflow: hidden;
+  background-color: rgba(18, 18, 18, 0.9);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: var(--spacing-md);
+  width: 100%;
+  max-width: 800px;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+  top: -15px; /* Adjust this value to move it up */
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--accent);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content p {
+  font-size: 1.4rem;
+  color: var(--text);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  line-height: 1.5;
+}
+
+/* Animated welcome text */
+#animated-welcome.fade-in {
+  animation: fadeInText 1s ease-in-out;
+}
+
+/* Taller hero variant - used in experiment pages */
+.hero.hero-tall {
+  position: relative;
+  width: 100%;
+  height: 30vh;
+  min-height: 200px;
+}
+
+/* Hero background variations */
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0.2;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(0, 188, 212, 0.6) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(121, 85, 255, 0.6) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 84, 131, 0.6) 0%, transparent 60%);
+  filter: blur(20px);
+}
+
+/* Quote Section */
+.quote-section {
+  padding: 20px 20px 30px; 
+  text-align: center; 
+  background-color: var(--bg); 
+  margin-top: -10px; 
+  margin-bottom: 20px;
+}
+
+#quote-display {
+  font-size: 1.2rem; 
+  color: var(--text); 
+  max-width: 800px; 
+  margin: 0 auto; 
+  font-style: italic; 
+  line-height: 1.6;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-content p {
+    font-size: 1.1rem;
+  }
+}
