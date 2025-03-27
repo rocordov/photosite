@@ -96,17 +96,6 @@ function initMobileMenu() {
         navLinks.setAttribute('aria-hidden', 'true');
       });
     }
-
-    // Close menu when a nav link is clicked
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', function() {
-        mobileMenuBtn.classList.remove('open');
-        navLinks.classList.remove('open');
-        if (overlay) overlay.classList.remove('active');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        navLinks.setAttribute('aria-hidden', 'true');
-      });
-    });
     
     // Close menu when pressing Escape key
     document.addEventListener('keydown', function(e) {
