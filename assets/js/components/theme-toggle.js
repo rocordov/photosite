@@ -7,28 +7,43 @@
  * Initialize the theme toggle functionality
  */
 export function initThemeToggle() {
+  console.log('Initializing theme toggle...'); // Debug log
+  
   const themeToggle = document.querySelector('.theme-toggle');
   const root = document.documentElement;
   
   if (!themeToggle) {
-    console.warn('Theme toggle button not found');
+    console.error('Theme toggle button not found in DOM');
     return;
   }
 
-  // Set initial state
+  console.log('Theme toggle button found:', themeToggle); // Debug log
+  
+  // Set initial theme
   const savedTheme = localStorage.getItem('theme') || 'dark';
+  console.log('Saved theme:', savedTheme); // Debug log
   applyTheme(savedTheme, themeToggle, root);
   
   // Toggle theme on button click
-  themeToggle.addEventListener('click', () => {
-    const currentTheme = root.classList.contains('light-mode') ? 'light' : 'dark';
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  themeToggle.addEventListener('click', (e) => {
+    console.log('Theme toggle clicked'); // Debug log
+    e.preventDefault();
     
-    applyTheme(newTheme, themeToggle, root);
-    localStorage.setItem('theme', newTheme);
+    const isCurrentlyLight = root.classList.contains('light-mode');
+    root.classList.toggle('light-mode');
     
-    // Debug logging
-    console.log('Theme toggled:', newTheme);
+    // Save theme preference
+    localStorage.setItem('theme', isCurrentlyLight ? 'dark' : 'light');
+    console.log('Theme set to:', isCurrentlyLight ? 'dark' : 'light'); // Debug log
+    
+    // Toggle icon visibility
+    const sunIcon = themeToggle.querySelector('.fa-sun');
+    const moonIcon = themeToggle.querySelector('.fa-moon');
+    
+    if (sunIcon && moonIcon) {
+      sunIcon.style.display = isCurrentlyLight ? 'block' : 'none';
+      moonIcon.style.display = isCurrentlyLight ? 'none' : 'block';
+    }
   });
 }
 
