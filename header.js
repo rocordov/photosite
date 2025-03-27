@@ -71,9 +71,10 @@ function initMobileMenu() {
         if (overlay) {
           overlay.classList.add('active');
           
-          // Important: Make sure overlay doesn't block clicks to the nav links
-          // by ensuring nav links are above the overlay in z-index
-          // but don't disable pointer events which would break closing the menu
+          // Explicitly ensure nav-links is above the overlay
+          // This is crucial for mobile navigation
+          navLinks.style.position = 'relative';
+          navLinks.style.zIndex = '30'; // Higher than overlay's z-index of 5
         }
         
         mobileMenuBtn.setAttribute('aria-expanded', 'true');
