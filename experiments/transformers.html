@@ -17,6 +17,10 @@
         <p class="subtitle">Powered by Transformers.js</p>
     </header>
 
+    <section id="authContainer">
+        <button id="loginButton">Login with Hugging Face</button>
+    </section>
+
     <main>
         <div id="chatContainer">
             <div id="chatHeader">
@@ -70,6 +74,15 @@
         <p class="tech-info">Using <a href="https://huggingface.co/Xenova/SmolLM2-135M-Instruct" target="_blank">SmolLM2-135M-Instruct</a> model via Hugging Face Transformers.js</p>
     </footer>
 
-    <!-- Scripts -->
+    <script type="module">
+        const loginButton = document.getElementById('loginButton');
+        loginButton.addEventListener('click', async () => {
+            const token = prompt("Enter your Hugging Face access token:");
+            if (token) {
+                localStorage.setItem('hf_token', token);
+                location.reload(); // Refresh to attempt loading model with token
+            }
+        });
+    </script>
 </body>
 </html>
