@@ -104,7 +104,7 @@ async function initializeModel() {
         Debug.log('Starting model initialization...');
         UI.updateLoadingStatus('Checking authentication...');
 
-        const token = CONFIG.auth_token;
+        const token = localStorage.getItem('hf_token');
         if (!token) {
             Debug.log('No authentication token found');
             document.getElementById('authContainer').style.display = 'block';
