@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breakout/Brick Breaker Game</title>
+    <link rel="stylesheet" href="../assets/css/pages/breakout.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Breakout</h1>
+            <div class="score-container">
+                <div class="score">
+                    <p>Score: <span id="score">0</span></p>
+                </div>
+                <div class="lives">
+                    <p>Lives: <span id="lives">3</span></p>
+                </div>
+                <div class="level">
+                    <p>Level: <span id="level">1</span></p>
+                </div>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <div class="game-controls">
+            <button id="startButton">Start Game</button>
+            <button id="pauseButton">Pause</button>
+            <button id="resetButton">Reset</button>
+        </div>
+        
+        <div class="game-instructions">
+            <h3>Instructions</h3>
+            <ul>
+                <li>Move the paddle with your mouse or arrow keys</li>
+                <li>Break all the bricks to advance to the next level</li>
+                <li>Don't let the ball fall below the paddle</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="../assets/js/pages/breakout.js"></script>
+</body>
+</html>
