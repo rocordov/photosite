@@ -8,7 +8,7 @@
  * All processing happens locally in the browser without sending data to external servers.
  */
 
-import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers?module';
+import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/+esm';
 
 // Configuration object
 const CONFIG = {
@@ -91,6 +91,7 @@ async function initializeModel() {
         
         const startTime = performance.now();
         
+        // Use the imported pipeline
         const generator = await pipeline('text-generation', CONFIG.model, {
             quantized: true,
             progress_callback: (data) => {
