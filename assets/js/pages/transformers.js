@@ -105,39 +105,42 @@ async function initializeModel() {
         Debug.log('Token found, initializing model...');
         UI.updateLoadingStatus('Loading model...');
 
-        // Set up auth headers
         const modelConfig = {
             quantized: true,
             progress_callback: (data) => {
                 const progress = ((data.loaded / data.total) * 100).toFixed(2);
                 const downloadedMB = (data.loaded / (1024 * 1024)).toFixed(2);
                 const totalMB = (data.total / (1024 * 1024)).toFixed(2);
-                
+
                 Debug.log(`Loading: ${progress}% (${downloadedMB}MB / ${totalMB}MB)`);
                 Debug.log(`Status: ${data.status}`);
-                
+
                 UI.updateProgressBar(progress);
                 UI.updateLoadingStatus(`Loading: ${progress}%`);
             },
-            use_auth_token: token // Add auth token to requests
+            use_auth_token: token
         };
 
-        const generator = await pipeline('text-generation', CONFIG.model, modelConfig);
-        
-        // Hide auth container if successful
-        document.getElementById('authContainer').style.display = 'none';
-        document.getElementById('loadingContainer').style.display = 'none';
-        document.getElementById('sendButton').disabled = false;
-        document.getElementById('userInput').disabled = false;
-
-        return generator;
-    } catch (err) {
-        Debug.error('Error loading model:', err);
-        if (err.message.includes('Unauthorized')) {
-            localStorage.removeItem('hf_token'); // Clear invalid token
-            document.getElementById('authContainer').style.display = 'block';
-            UI.updateLoadingStatus('Authentication required. Please login.');
+        try {
+            const generator = await pipeline('text-generation', CONFIG.model, modelConfig);
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('loadingContainer').style.display = 'none';
+            document.getElementById('sendButton').disabled = false;
+            document.getElementById('userInput').disabled = false;
+            return generator;
+        } catch (err) {
+            if (err.message.includes('Unauthorized')) {
+                Debug.error('Authentication failed. Clearing token.', err);
+                localStorage.removeItem('hf_token'); // Clear invalid token
+                document.getElementById('authContainer').style.display = 'block';
+                UI.updateLoadingStatus('Authentication required. Please login.');
+            } else {
+                Debug.error('Error loading model:', err);
+            }
+            throw err;
         }
+    } catch (err) {
+        Debug.error('Unexpected error during model initialization:', err);
         throw err;
     }
 }
@@ -192,13 +195,16 @@ function modelReady() {
  * Called when there's an error loading or initializing the model
  */
 function modelError(error) {
-    // Update UI to show error state
     elements.loadingText.textContent = 'Error loading model';
     elements.loadingInfo.textContent = error.message || 'Please try reloading the page';
     elements.loadingContainer.style.backgroundColor = 'rgba(254, 226, 226, 0.9)';
     elements.modelStatus.classList.add('model-error');
     elements.statusText.textContent = 'Error';
-    
+
+    if (error.message.includes('Unauthorized')) {
+        elements.loadingInfo.textContent = 'Authentication failed. Please login again.';
+    }
+
     console.error('Model loading error:', error);
 }
 
