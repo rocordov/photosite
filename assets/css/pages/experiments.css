@@ -76,7 +76,7 @@
 /* Card Image Container */
 .experiment-image {
   height: auto; /* 60% of card height for image */
-  overflow: hidden;
+  overflow: visible;
 }
 
 .experiment-image img {
