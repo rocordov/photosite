@@ -27,7 +27,7 @@ const CONFIG = {
     auth_token: localStorage.getItem('hf_token') // Get token from localStorage
 };
 
-// Suppress source map warnings specifically
+// Suppress source map warnings specifically in production
 if (!CONFIG.debugMode) {
     const originalConsoleError = console.error;
     console.error = (message, ...args) => {
@@ -36,6 +36,19 @@ if (!CONFIG.debugMode) {
         }
         originalConsoleError(message, ...args); // Log other errors
     };
+
+    const originalConsoleWarn = console.warn;
+    console.warn = (message, ...args) => {
+        if (typeof message === 'string' && message.includes('.map')) {
+            return; // Suppress source map warnings
+        }
+        originalConsoleWarn(message, ...args); // Log other warnings
+    };
+}
+
+// Ensure debugMode is defined in CONFIG
+if (typeof CONFIG.debugMode === 'undefined') {
+    CONFIG.debugMode = false; // Default to production mode
 }
 
 // DOM Elements
