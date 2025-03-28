@@ -339,8 +339,116 @@
             </ul>
         </section>
 
+        <section id="automation">
+            <h2>5. Automated Photography Workflow Integration</h2>
+            
+            <p>The PhotoSite project incorporates a sophisticated automation system that streamlines the process from photo editing to website publication. This integration significantly reduces manual intervention and ensures that the website stays current with minimal effort.</p>
+            
+            <h3>5.1 Integration Overview</h3>
+            
+            <p>The automation workflow connects Adobe Lightroom to the website through a series of scripts:</p>
+            
+            <ul>
+                <li><strong>Lightroom Export via Juicebox Plugin</strong> - Photos are exported from Lightroom using the Juicebox gallery plugin, which creates the necessary directory structure with images, thumbnails, and configuration files.</li>
+                <li><strong>Python Watchdog Monitoring</strong> - A Python-based watchdog script continuously monitors for new exports and triggers the appropriate actions when new content is detected.</li>
+                <li><strong>Automated Git Integration</strong> - Changes to the website content are automatically committed and pushed to the repository, ensuring that the live site is always up to date.</li>
+            </ul>
+            
+            <div class="note">
+                <p><strong>Note:</strong> This automation eliminates the need for manual file transfers or FTP uploads, significantly streamlining the workflow for frequent updates to the photo galleries.</p>
+            </div>
+            
+            <h3>5.2 Details on the ~/scripts Folder</h3>
+            
+            <p>The automation is managed by several specialized scripts located in the <code>~/scripts</code> directory:</p>
+            
+            <ul>
+                <li><strong>checkforalbums.py</strong> - This script monitors the designated directories for new album folders. When a new album is detected (identified by the presence of 'images', 'jbcore', and 'thumbs' subdirectories), it extracts metadata about the album and updates the central <code>albums.json</code> file, which serves as the data source for the website's gallery listings.</li>
+                
+                <li><strong>monitorAlbums-insertJson.py</strong> - An enhanced version of the album monitoring script that includes:
+                    <ul>
+                        <li>Improved logging for better troubleshooting</li>
+                        <li>Timestamp addition to album entries</li>
+                        <li>More robust error handling for file operations</li>
+                        <li>JSON validation to prevent data corruption</li>
+                    </ul>
+                </li>
+                
+                <li><strong>gitautopush-web.sh</strong> - A Bash script that:
+                    <ul>
+                        <li>Uses <code>fswatch</code> to continuously monitor the web directory for any file changes</li>
+                        <li>Automatically stages changes with <code>git add</code></li>
+                        <li>Creates commits with timestamped messages</li>
+                        <li>Pushes changes to the remote repository, triggering the website update</li>
+                    </ul>
+                </li>
+                
+                <li><strong>gitautopush-web.log</strong> - A log file that records the activities of the git automation process, providing an audit trail of when updates were pushed to the live site.</li>
+                
+                <li><strong>albums.json</strong> - A template or backup of the main JSON data file that stores information about all galleries available on the site.</li>
+            </ul>
+            
+            <pre><code class="language-python"># Example from monitorAlbums-insertJson.py: How albums are detected and processed
+def on_created(self, event):
+    if event.is_directory:
+        new_dir = event.src_path
+        
+        # Skip events for directories that are likely part of an album's structure
+        if os.path.basename(new_dir) in ['images', 'jbcore', 'thumbs']:
+            return
+
+        # Skip if new_dir is inside a previously detected album
+        for album in detected_albums:
+            if new_dir.startswith(album + os.sep):
+                return
+
+        # Wait briefly to allow the album structure to be copied completely
+        time.sleep(1)
+        
+        # Define required subdirectories for an album
+        required_subdirs = ['images', 'jbcore', 'thumbs']
+        if all(os.path.isdir(os.path.join(new_dir, subdir)) for subdir in required_subdirs):
+            logging.info(f"New album directory detected: {new_dir}")
+            detected_albums.add(new_dir)
+            
+            # Build the JSON list item
+            album_json = build_album_json(new_dir, self.web_root)
+            logging.info(f"Album JSON: {json.dumps(album_json, indent=2)}")
+            
+            # Append the new album item to the albums.json file
+            update_albums_json(album_json, json_file_path)</code></pre>
+            
+            <h3>5.3 Workflow Orchestration</h3>
+            
+            <p>The integration creates a seamless end-to-end workflow:</p>
+            
+            <ol>
+                <li><strong>Content Creation</strong> - Photographers edit images in Lightroom and prepare them for export.</li>
+                <li><strong>Gallery Generation</strong> - The Juicebox plugin exports the images with the required directory structure and assets.</li>
+                <li><strong>Automatic Detection</strong> - The Python scripts detect the new gallery and update the site's metadata.</li>
+                <li><strong>Version Control Integration</strong> - The git automation scripts commit and push changes to the repository.</li>
+                <li><strong>Website Update</strong> - The live website is automatically updated, making the new gallery visible to visitors.</li>
+            </ol>
+            
+            <p>This orchestration ensures that the website remains current with minimal manual intervention. A photographer can focus on capturing and editing images, and the system handles the technical aspects of publishing to the website.</p>
+            
+            <h3>5.4 Benefits</h3>
+            
+            <p>The automated workflow integration offers several significant advantages:</p>
+            
+            <ul>
+                <li><strong>Reduced Manual Error</strong> - By automating repetitive tasks like file transfers and metadata updates, the system eliminates common sources of human error.</li>
+                <li><strong>Time Efficiency</strong> - What would previously require multiple manual steps (exporting, transferring, updating JSON, committing, pushing) now happens automatically in the background.</li>
+                <li><strong>Consistent Structure</strong> - The automation enforces a consistent directory structure and metadata format across all galleries.</li>
+                <li><strong>Real-time Updates</strong> - New content becomes available on the website almost immediately after export from Lightroom.</li>
+                <li><strong>Version History</strong> - All changes are tracked in git, providing a complete history of the website's evolution and the ability to revert if needed.</li>
+            </ul>
+            
+            <p>Through this automation, the PhotoSite project achieves a remarkably smooth workflow that allows for frequent updates with minimal technical overhead, enabling photographers to focus on their creative work rather than website maintenance.</p>
+        </section>
+
         <section id="conclusion">
-            <h2>5. Conclusion</h2>
+            <h2>6. Conclusion</h2>
             
             <p>The PhotoSite project demonstrates how thoughtful organization and a modular approach can create a scalable, maintainable platform for showcasing extensive photography collections. The site's architecture offers several key benefits:</p>
             
