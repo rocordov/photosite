@@ -75,7 +75,7 @@
 
 /* Card Image Container */
 .experiment-image {
-  height: 80%; /* 60% of card height for image */
+  height: 60%; /* 60% of card height for image */
   overflow: hidden;
 }
 
@@ -89,7 +89,7 @@
 /* Card Content Area */
 .experiment-content {
   padding: var(--spacing-md);
-  height: 40%; /* 40% of card height for content */
+  height: 60%; /* 40% of card height for content */
   display: flex;
   flex-direction: column;
 }
