@@ -27,13 +27,14 @@ const CONFIG = {
     auth_token: localStorage.getItem('hf_token') // Get token from localStorage
 };
 
-// Suppress source map warnings in production
+// Suppress source map warnings specifically
 if (!CONFIG.debugMode) {
-    console.warn = () => {}; // Suppress warnings
-    console.error = (message) => {
-        if (!message.includes('Failed to load resource') || !message.includes('.map')) {
-            console.error(message); // Allow other errors
+    const originalConsoleError = console.error;
+    console.error = (message, ...args) => {
+        if (typeof message === 'string' && message.includes('.map') && message.includes('Failed to load resource')) {
+            return; // Suppress source map errors
         }
+        originalConsoleError(message, ...args); // Log other errors
     };
 }
 
@@ -548,7 +549,7 @@ function formatBytes(bytes, decimals = 2) {
 // Main initialization function
 async function initChatbot() {
     try {
-        const token = CONFIG.auth_token;
+    const token = localStorage.getItem('hf_token');
         if (token) {
             generator = await initializeModel(); // Use authenticated model load
             if (generator) modelReady();
