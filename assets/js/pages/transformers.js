@@ -1,3 +1,5 @@
+import { pipeline } from '@xenova/transformers';
+
 /**
  * Transformers.js Chatbot Implementation
  * 
@@ -7,10 +9,6 @@
  * 
  * All processing happens locally in the browser without sending data to external servers.
  */
-
-// Set environment variables for Transformers.js
-env.allowLocalModels = false;  // Disallow local models for security
-env.useBrowserCache = true;    // Use browser cache to speed up subsequent loads
 
 // Configuration object
 const CONFIG = {
@@ -45,57 +43,51 @@ let chatHistory = [];
 // Reference to the pipeline once loaded
 let generator = null;
 
-// Single instance of loading status function
-function updateLoadingStatus(status) {
-    const loadingText = document.getElementById('loadingText');
-    if (loadingText) {
-        loadingText.textContent = status;
+// UI state management
+const UI = {
+    updateLoadingStatus(status) {
+        const loadingText = document.getElementById('loadingText');
+        if (loadingText) {
+            loadingText.textContent = status;
+        }
+    },
+    
+    updateProgressBar(progress) {
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) {
+            progressBar.style.width = `${progress}%`;
+        }
     }
-}
+};
 
+// Model initialization
 async function initializeModel() {
     try {
-        updateLoadingStatus('Loading model...');
+        UI.updateLoadingStatus('Loading model...');
         
-        // Wait for Transformers to be available
-        while (!window.pipeline) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-        
-        const pipeline = await window.pipeline('text-generation', CONFIG.model, {
+        const generator = await pipeline('text-generation', CONFIG.model, {
             quantized: true,
             progress_callback: (data) => {
                 const progress = ((data.loaded / data.total) * 100).toFixed(2);
-                const progressBar = document.getElementById('progressBar');
-                if (progressBar) {
-                    progressBar.style.width = `${progress}%`;
-                }
-                updateLoadingStatus(`Loading: ${progress}%`);
+                UI.updateProgressBar(progress);
+                UI.updateLoadingStatus(`Loading: ${progress}%`);
             }
         });
         
-        // Enable UI once model is loaded
+        // Enable UI when model is ready
         document.getElementById('loadingContainer').style.display = 'none';
         document.getElementById('sendButton').disabled = false;
         document.getElementById('userInput').disabled = false;
         
-        return pipeline;
+        return generator;
     } catch (err) {
         console.error('Error loading model:', err);
-        updateLoadingStatus('Error loading model. Please refresh and try again.');
+        UI.updateLoadingStatus('Error loading model. Please refresh and try again.');
         throw err;
     }
 }
 
-function updateModelStatus(status) {
-    const statusEl = document.querySelector('.status-text');
-    const indicator = document.querySelector('.status-indicator');
-    
-    statusEl.textContent = status;
-    indicator.className = 'status-indicator ' + status.toLowerCase();
-}
-
-// Initialize when page loads
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', initializeModel);
 
 /**
