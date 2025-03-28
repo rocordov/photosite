@@ -28,8 +28,7 @@ const CONFIG = {
     auth_token: localStorage.getItem('hf_token') // Get token from localStorage
 };
 
-// Load saved settings first
-loadSavedSettings();
+
 
 // Add this after the CONFIG object definition
 function loadSavedSettings() {
@@ -44,6 +43,9 @@ function loadSavedSettings() {
     
     Debug.log('Loaded saved settings from localStorage');
 }
+
+// Load saved settings first
+loadSavedSettings();
 
 // Suppress source map warnings specifically
 if (!CONFIG.debugMode) {
