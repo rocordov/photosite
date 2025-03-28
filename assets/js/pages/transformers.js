@@ -58,44 +58,74 @@ const UI = {
     }
 };
 
+// Debug utilities
+const Debug = {
+    log(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        const debugLog = document.getElementById('debugLog');
+        if (debugLog) {
+            debugLog.innerHTML += `[${timestamp}] ${message}\n`;
+            debugLog.scrollTop = debugLog.scrollHeight;
+        }
+        console.log(`[Debug] ${message}`);
+    },
+    
+    error(message, error) {
+        const timestamp = new Date().toLocaleTimeString();
+        const debugLog = document.getElementById('debugLog');
+        if (debugLog) {
+            debugLog.innerHTML += `[${timestamp}] ERROR: ${message}\n${error}\n`;
+            debugLog.scrollTop = debugLog.scrollHeight;
+        }
+        console.error(`[Debug Error] ${message}`, error);
+    }
+};
+
 // Model initialization
 async function initializeModel() {
     try {
-        UI.updateLoadingStatus('Initializing...');
-        
-        // Wait for Transformers to be available
-        while (typeof window.Transformers === 'undefined') {
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-        
-        const { pipeline } = window.Transformers;
-        
+        Debug.log('Starting model initialization...');
         UI.updateLoadingStatus('Loading model...');
+        
+        const startTime = performance.now();
         
         const generator = await pipeline('text-generation', CONFIG.model, {
             quantized: true,
             progress_callback: (data) => {
                 const progress = ((data.loaded / data.total) * 100).toFixed(2);
+                const downloadedMB = (data.loaded / (1024 * 1024)).toFixed(2);
+                const totalMB = (data.total / (1024 * 1024)).toFixed(2);
+                
+                Debug.log(`Loading: ${progress}% (${downloadedMB}MB / ${totalMB}MB)`);
+                Debug.log(`Status: ${data.status}`);
+                
                 UI.updateProgressBar(progress);
                 UI.updateLoadingStatus(`Loading: ${progress}%`);
             }
         });
         
-        // Enable UI when model is ready
+        const endTime = performance.now();
+        const loadTime = ((endTime - startTime) / 1000).toFixed(2);
+        Debug.log(`Model loaded successfully in ${loadTime} seconds`);
+        
+        // Enable UI
         document.getElementById('loadingContainer').style.display = 'none';
         document.getElementById('sendButton').disabled = false;
         document.getElementById('userInput').disabled = false;
         
         return generator;
     } catch (err) {
-        console.error('Error loading model:', err);
+        Debug.error('Error loading model:', err);
         UI.updateLoadingStatus('Error loading model. Please refresh and try again.');
         throw err;
     }
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initializeModel);
+document.addEventListener('DOMContentLoaded', () => {
+    Debug.log('Page loaded, initializing model...');
+    initializeModel();
+});
 
 /**
  * Called when model loading progress updates
