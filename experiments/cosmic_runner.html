@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Runner</title>
+    <link rel="stylesheet" href="../assets/css/pages/cosmic_runner.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Cosmic Runner</h1>
+            <div class="score-display">
+                <p>Score: <span id="score">0</span></p>
+            </div>
+        </div>
+        
+        <div id="gameContainer"></div>
+        
+        <div class="game-controls">
+            <div class="instructions">
+                <h3>Instructions</h3>
+                <ul>
+                    <li>Use arrow keys or WASD to control your spaceship</li>
+                    <li>Avoid asteroids and enemy ships</li>
+                    <li>Collect power-ups to boost your score</li>
+                    <li>Press P to pause the game</li>
+                </ul>
+            </div>
+            <div class="buttons">
+                <button id="startButton">Start Game</button>
+                <button id="restartButton">Restart</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load Phaser from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+    
+    <!-- Load game script -->
+    <script src="../assets/js/pages/cosmic_runner.js"></script>
+</body>
+</html>
