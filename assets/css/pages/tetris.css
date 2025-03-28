@@ -1,0 +1,220 @@
+/* Tetris Game Styles */
+:root {
+    /* Color palette for Tetris pieces */
+    --i-piece-color: #00f0f0; /* Cyan - I piece */
+    --j-piece-color: #0000f0; /* Blue - J piece */
+    --l-piece-color: #f0a000; /* Orange - L piece */
+    --o-piece-color: #f0f000; /* Yellow - O piece */
+    --s-piece-color: #00f000; /* Green - S piece */
+    --t-piece-color: #a000f0; /* Purple - T piece */
+    --z-piece-color: #f00000; /* Red - Z piece */
+    --grid-color: #111; /* Background grid color */
+    --grid-border: #333; /* Grid border color */
+    --background-color: #222; /* Main background */
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.game-container {
+    max-width: 800px;
+    width: 95%;
+    margin: 0 auto;
+    background-color: #333;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.game-header h1 {
+    color: #f0f0f0;
+    font-size: 2.5rem;
+    margin: 0 0 15px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.score-container {
+    display: flex;
+    justify-content: space-around;
+    background-color: #444;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.score-container div {
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: #555;
+}
+
+.game-play {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* Main Tetris grid container */
+.tetris-container {
+    width: 300px;
+    height: 600px;
+    background-color: var(--grid-color);
+    border: 2px solid var(--grid-border);
+    position: relative;
+    display: grid;
+    grid-template-rows: repeat(20, 1fr);
+    grid-template-columns: repeat(10, 1fr);
+    gap: 1px;
+}
+
+/* Grid cell */
+.cell {
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-sizing: border-box;
+}
+
+/* Active (falling) piece cell */
+.active {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Color classes for Tetris pieces */
+.i-piece { background-color: var(--i-piece-color); }
+.j-piece { background-color: var(--j-piece-color); }
+.l-piece { background-color: var(--l-piece-color); }
+.o-piece { background-color: var(--o-piece-color); }
+.s-piece { background-color: var(--s-piece-color); }
+.t-piece { background-color: var(--t-piece-color); }
+.z-piece { background-color: var(--z-piece-color); }
+
+/* Game info sidebar */
+.game-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.next-piece-container, .controls-container {
+    background-color: #444;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.next-piece-container h3, .controls-container h3 {
+    margin-top: 0;
+    color: #f0f0f0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+/* Next piece preview */
+.next-piece {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    background-color: var(--grid-color);
+    border: 2px solid var(--grid-border);
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+}
+
+.controls-container ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.controls-container li {
+    margin-bottom: 5px;
+}
+
+/* Game control buttons */
+.game-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+button {
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #666;
+}
+
+button:active {
+    background-color: #777;
+}
+
+#startButton {
+    background-color: #2a9d8f;
+}
+
+#startButton:hover {
+    background-color: #3ab7a7;
+}
+
+#pauseButton {
+    background-color: #e9c46a;
+}
+
+#pauseButton:hover {
+    background-color: #f2d384;
+}
+
+#resetButton {
+    background-color: #e76f51;
+}
+
+#resetButton:hover {
+    background-color: #f48670;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .game-play {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .tetris-container {
+        width: 250px;
+        height: 500px;
+    }
+    
+    .game-info {
+        width: 100%;
+    }
+    
+    .next-piece {
+        width: 80px;
+        height: 80px;
+    }
+}
