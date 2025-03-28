@@ -530,18 +530,15 @@ function formatBytes(bytes, decimals = 2) {
 // Main initialization function
 async function initChatbot() {
     try {
-        //await waitForTransformers();
-        
-        // Update loading status
-        updateLoadingStatus('Loading model...');
-        
-        // Initialize the pipeline
-        generator = await pipeline('text-generation', CONFIG.model, {
-            quantized: true,
-            progress_callback: progressCallback
-        });
-        
-        modelReady();
+        const token = CONFIG.auth_token;
+        if (token) {
+            generator = await initializeModel(); // Use authenticated model load
+            if (generator) modelReady();
+        } else {
+            Debug.log('No token found, showing login prompt...');
+            document.getElementById('authContainer').style.display = 'block';
+            document.getElementById('loadingContainer').style.display = 'none';
+        }
     } catch (error) {
         modelError(error);
     }
