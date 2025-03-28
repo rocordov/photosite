@@ -105,7 +105,7 @@ async function initializeModel() {
         Debug.log('Starting model initialization...');
         UI.updateLoadingStatus('Checking authentication...');
 
-        const token = localStorage.getItem('hf_token');
+        const token = CONFIG.auth_token;
         if (!token) {
             Debug.log('No authentication token found');
             document.getElementById('authContainer').style.display = 'block';
@@ -119,12 +119,12 @@ async function initializeModel() {
         const modelConfig = {
             quantized: true,
             progress_callback: (data) => {
-                const progress = ((data.loaded / data.total) * 100).toFixed(2);
+                const progress = ((data.loaded / (data.total || 1)) * 100).toFixed(2);
                 const downloadedMB = (data.loaded / (1024 * 1024)).toFixed(2);
                 const totalMB = (data.total / (1024 * 1024)).toFixed(2);
 
                 Debug.log(`Loading: ${progress}% (${downloadedMB}MB / ${totalMB}MB)`);
-                Debug.log(`Status: ${data.status}`);
+                Debug.log(`Status: ${data.status || 'downloading'}`);
 
                 UI.updateProgressBar(progress);
                 UI.updateLoadingStatus(`Loading: ${progress}%`);
@@ -136,6 +136,7 @@ async function initializeModel() {
 
         try {
             const generator = await pipeline('text-generation', CONFIG.model, modelConfig);
+            Debug.log('Model pipeline created successfully!');
             document.getElementById('authContainer').style.display = 'none';
             document.getElementById('loadingContainer').style.display = 'none';
             document.getElementById('sendButton').disabled = false;
@@ -147,6 +148,9 @@ async function initializeModel() {
                 localStorage.removeItem('hf_token'); // Clear invalid token
                 document.getElementById('authContainer').style.display = 'block';
                 UI.updateLoadingStatus('Authentication required. Please login.');
+
+                // Prompt user to re-enter token
+                promptForToken();
             } else {
                 Debug.error('Error loading model:', err);
             }
@@ -155,6 +159,35 @@ async function initializeModel() {
     } catch (err) {
         Debug.error('Unexpected error during model initialization:', err);
         throw err;
+    }
+}
+
+function promptForToken() {
+    const loginButton = document.getElementById('loginButton');
+    if (loginButton) {
+        Debug.log('Setting up login button listener');
+        loginButton.addEventListener('click', async () => {
+            const token = prompt("Enter your Hugging Face access token:");
+            if (token) {
+                Debug.log('New token entered, saving...');
+                localStorage.setItem('hf_token', token);
+
+                // Try to initialize the model with the new token
+                try {
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('loadingContainer').style.display = 'block';
+                    UI.updateLoadingStatus('Loading model with new token...');
+
+                    generator = await initializeModel();
+                    if (generator) {
+                        modelReady();
+                        Debug.log('Model loaded successfully with new token!');
+                    }
+                } catch (error) {
+                    modelError(error);
+                }
+            }
+        });
     }
 }
 
