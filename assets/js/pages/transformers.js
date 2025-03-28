@@ -139,6 +139,7 @@ async function initializeModel() {
         const modelConfig = {
         //quantized: true,
         quantized: true,
+        dtype: 'q8',
             progress_callback: (data) => {
                 const progress = ((data.loaded / (data.total || 1)) * 100).toFixed(2);
                 const downloadedMB = (data.loaded / (1024 * 1024)).toFixed(2);
