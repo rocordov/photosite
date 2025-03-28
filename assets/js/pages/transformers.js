@@ -61,6 +61,15 @@ const UI = {
 // Model initialization
 async function initializeModel() {
     try {
+        UI.updateLoadingStatus('Initializing...');
+        
+        // Wait for Transformers to be available
+        while (typeof window.Transformers === 'undefined') {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
+        const { pipeline } = window.Transformers;
+        
         UI.updateLoadingStatus('Loading model...');
         
         const generator = await pipeline('text-generation', CONFIG.model, {
