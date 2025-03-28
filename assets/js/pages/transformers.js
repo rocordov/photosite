@@ -1,5 +1,3 @@
-import { pipeline } from '@xenova/transformers';
-
 /**
  * Transformers.js Chatbot Implementation
  * 
@@ -459,18 +457,20 @@ function formatBytes(bytes, decimals = 2) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-// Wait for Transformers library to load
+// Remove the import statement and use the global object
+let pipeline;
+
 async function waitForTransformers() {
     while (!window.Transformers) {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
+    pipeline = window.Transformers.pipeline;
 }
 
 // Main initialization function
 async function initChatbot() {
     try {
         await waitForTransformers();
-        const { pipeline } = window.Transformers;
         
         // Update loading status
         updateLoadingStatus('Loading model...');
