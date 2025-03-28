@@ -27,6 +27,16 @@ const CONFIG = {
     auth_token: localStorage.getItem('hf_token') // Get token from localStorage
 };
 
+// Suppress source map warnings in production
+if (!CONFIG.debugMode) {
+    console.warn = () => {}; // Suppress warnings
+    console.error = (message) => {
+        if (!message.includes('Failed to load resource') || !message.includes('.map')) {
+            console.error(message); // Allow other errors
+        }
+    };
+}
+
 // DOM Elements
 const elements = {
     chatContainer: document.getElementById('chatContainer'),
