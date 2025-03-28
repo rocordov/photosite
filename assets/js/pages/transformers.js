@@ -41,11 +41,13 @@ function loadSavedSettings() {
     CONFIG.typingSpeed = parseInt(localStorage.getItem('CONFIG_typingSpeed')) || 20;
     CONFIG.systemPrompt = localStorage.getItem('CONFIG_systemPrompt') || CONFIG.systemPrompt;
     
-    Debug.log('Loaded saved settings from localStorage');
+    
 }
 
 // Load saved settings first
 loadSavedSettings();
+
+Debug.log('Loaded saved settings from localStorage');
 
 // Suppress source map warnings specifically
 if (!CONFIG.debugMode) {
