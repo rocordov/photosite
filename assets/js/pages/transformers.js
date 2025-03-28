@@ -500,7 +500,7 @@ function formatBytes(bytes, decimals = 2) {
 }
 
 // Remove the import statement and use the global object
-let pipeline;
+//let pipeline;
 
 //async function waitForTransformers() {
 //    while (!window.Transformers) {
