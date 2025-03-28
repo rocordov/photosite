@@ -237,6 +237,7 @@ function modelReady() {
     elements.userInput.focus();
     
     console.log('Model loaded successfully and ready to generate text');
+    elements.sendButton.classList.remove('disabled');
 }
 
 /**
