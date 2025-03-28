@@ -1,0 +1,203 @@
+/**
+ * Velocity.js Animation Demo CSS
+ * Styles for animation container and elements
+ */
+
+/* Main experiment container */
+.experiment-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Experiment title styling */
+.experiment-title {
+  text-align: center;
+  color: var(--accent);
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Description text */
+.experiment-description {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out 0.2s forwards;
+}
+
+/* Animation stage - contains the animated elements */
+.animation-stage {
+  position: relative;
+  height: 300px;
+  background-color: var(--card);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-standard);
+  margin-bottom: 3rem;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out 0.4s forwards;
+}
+
+/* The main element that will be animated */
+.animate-box {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background-color: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  
+  /* Initial state for animation - hidden off-screen */
+  transform: translateX(-200px);
+  opacity: 0;
+}
+
+/* Text inside the animation box */
+.animate-box-text {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  padding: 0 15px;
+  user-select: none; /* Prevent text selection */
+}
+
+/* Animation controls section */
+.animation-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+/* Animation control button */
+.animation-button {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.animation-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.animation-button:active {
+  transform: translateY(1px);
+}
+
+/* Icon in button */
+.animation-button i {
+  font-size: 0.9rem;
+}
+
+/* Code explanation section */
+.code-explanation {
+  background-color: var(--card);
+  border-radius: var(--border-radius);
+  padding: 30px;
+  margin-bottom: 50px;
+  box-shadow: var(--shadow-standard);
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out 0.6s forwards;
+}
+
+.code-explanation h2 {
+  color: var(--accent);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.code-explanation p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.code-explanation ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.code-explanation li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* Fallback message styling */
+.fallback-message {
+  display: none;
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--card);
+  border-radius: var(--border-radius);
+  margin: 2rem auto;
+  max-width: 600px;
+  box-shadow: var(--shadow-standard);
+}
+
+/* When JS is disabled, display the fallback message */
+noscript .fallback-message {
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .experiment-title {
+    font-size: 2rem;
+  }
+  
+  .animation-stage {
+    height: 250px;
+  }
+  
+  .animate-box {
+    width: 120px;
+    height: 120px;
+    font-size: 1rem;
+  }
+  
+  .code-explanation {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .experiment-title {
+    font-size: 1.8rem;
+  }
+  
+  .animation-stage {
+    height: 200px;
+  }
+  
+  .animate-box {
+    width: 100px;
+    height: 100px;
+    font-size: 0.9rem;
+  }
+  
+  .animation-button {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+}
