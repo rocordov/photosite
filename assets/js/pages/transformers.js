@@ -118,7 +118,8 @@ async function initializeModel() {
         UI.updateLoadingStatus('Loading model...');
 
         const modelConfig = {
-            quantized: true,
+            //quantized: true,
+            quantized: false,
             progress_callback: (data) => {
                 const progress = ((data.loaded / (data.total || 1)) * 100).toFixed(2);
                 const downloadedMB = (data.loaded / (1024 * 1024)).toFixed(2);
