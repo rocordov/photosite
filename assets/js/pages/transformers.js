@@ -499,12 +499,12 @@ function formatBytes(bytes, decimals = 2) {
 // Remove the import statement and use the global object
 let pipeline;
 
-async function waitForTransformers() {
-    while (!window.Transformers) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    pipeline = window.Transformers.pipeline;
-}
+//async function waitForTransformers() {
+//    while (!window.Transformers) {
+//        await new Promise(resolve => setTimeout(resolve, 100));
+//    }
+//    pipeline = window.Transformers.pipeline;
+//}
 
 // Main initialization function
 async function initChatbot() {
