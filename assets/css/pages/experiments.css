@@ -70,18 +70,18 @@
   background: var(--card);
   border-radius: 12px;
   overflow: hidden;
-  height: 600px; /* Fixed height for consistency */
+  /*height: 600px; /* Fixed height for consistency */
 }
 
 /* Card Image Container */
 .experiment-image {
-  height: 60%; /* 60% of card height for image */
+  /*height: 60%; /* 60% of card height for image */
   overflow: hidden;
 }
 
 .experiment-image img {
   width: 100%;
-  height: 100%;
+  /*(height: 100%;*/
   object-fit: cover;
   object-position: center;
 }
@@ -89,7 +89,7 @@
 /* Card Content Area */
 .experiment-content {
   padding: var(--spacing-md);
-  height: 60%; /* 40% of card height for content */
+  /*height: 60%; /* 40% of card height for content */
   display: flex;
   flex-direction: column;
 }
