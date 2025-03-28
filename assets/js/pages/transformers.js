@@ -16,7 +16,8 @@ import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers
 
 // Configuration object
 const CONFIG = {
-    model: 'Xenova/SmolLM2-135M-Instruct',
+    //model: 'Xenova/SmolLM2-135M-Instruct',
+    model: 'HuggingFaceTB/SmolLM2-135M-Instruct',
     max_new_tokens: 512,
     temperature: 0.7,
     top_p: 0.9,
