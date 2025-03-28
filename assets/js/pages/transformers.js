@@ -44,11 +44,6 @@ function loadSavedSettings() {
     
 }
 
-// Load saved settings first
-loadSavedSettings();
-
-Debug.log('Loaded saved settings from localStorage');
-
 // Suppress source map warnings specifically
 if (!CONFIG.debugMode) {
     const originalConsoleError = console.error;
@@ -59,6 +54,9 @@ if (!CONFIG.debugMode) {
         originalConsoleError(message, ...args); // Log other errors
     };
 }
+// Load saved settings first
+loadSavedSettings();
+Debug.log('Loaded saved settings from localStorage');
 
 // DOM Elements
 const elements = {
