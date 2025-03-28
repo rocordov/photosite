@@ -191,18 +191,19 @@ class GameScene extends Phaser.Scene {
             .setBlendMode('ADD');
             
         // Add engine particles effect behind the player
-        this.engineParticles = this.add.particles('powerup');
-        this.engineEmitter = this.engineParticles.createEmitter({
-            speed: 100,
-            scale: { start: 0.2, end: 0 },
-            blendMode: 'ADD',
-            lifespan: 500,
-            tint: 0x00ffff,
-            on: true
+        this.engineParticles = this.add.particles({
+            key: 'powerup',
+            config: {
+                speed: 100,
+                scale: { start: 0.2, end: 0 },
+                blendMode: 'ADD',
+                lifespan: 500,
+                tint: 0x00ffff,
+                emitting: true,
+                follow: this.player,
+                followOffset: { x: -30, y: 0 }
+            }
         });
-        
-        // Position the emitter behind the ship
-        this.engineEmitter.startFollow(this.player, -30, 0);
         
         // Set up groups for obstacles and power-ups
         this.obstacles = this.physics.add.group();
@@ -469,7 +470,7 @@ class GameScene extends Phaser.Scene {
             // Hide the player
             player.setVisible(false);
             this.playerGlow.setVisible(false);
-            this.engineEmitter.stop();
+            this.engineParticles.stop();
             
             // Store high score
             if (this.score > this.game.globals.highScore) {
@@ -581,20 +582,24 @@ class GameScene extends Phaser.Scene {
      */
     createExplosion(x, y) {
         // Create explosion particles
-        const particles = this.add.particles('explosion');
-        const emitter = particles.createEmitter({
-            x: x,
-            y: y,
-            speed: { min: 50, max: 200 },
-            angle: { min: 0, max: 360 },
-            scale: { start: 0.5, end: 0 },
-            blendMode: 'ADD',
-            lifespan: 800,
-            gravityY: 0
+        const particles = this.add.particles({
+            key: 'explosion',
+            config: {
+                x: x,
+                y: y,
+                speed: { min: 50, max: 200 },
+                angle: { min: 0, max: 360 },
+                scale: { start: 0.5, end: 0 },
+                blendMode: 'ADD',
+                lifespan: 800,
+                gravityY: 0,
+                quantity: 30,
+                emitting: false
+            }
         });
         
         // Emit particles then destroy
-        emitter.explode(30);
+        particles.emitParticleAt(x, y, 30);
         this.time.delayedCall(1000, () => {
             particles.destroy();
         });
