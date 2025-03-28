@@ -7,43 +7,34 @@
     <!-- Firebase SDK v9 via CDN -->
     <script type="module">
         // Import Firebase modules using CDN imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
         import { 
             getAuth, 
             signInAnonymously, 
             onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
         import { 
             getFirestore, 
             collection, 
             addDoc, 
             serverTimestamp 
-        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js";
 
-        /**
-         * Firebase Configuration
-         * 
-         * IMPORTANT: Replace these placeholder values with your actual Firebase project configuration
-         * You can find these values in your Firebase project settings:
-         * 1. Go to https://console.firebase.google.com/
-         * 2. Select your project
-         * 3. Click on the gear icon (⚙️) next to "Project Overview" to access Project Settings
-         * 4. Scroll down to "Your apps" section and find your web app
-         * 5. Copy the firebaseConfig object
-         */
+        // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", // Replace with actual API key
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com", // Replace with your project ID
-            projectId: "YOUR_PROJECT_ID", // Replace with your project ID
-            storageBucket: "YOUR_PROJECT_ID.appspot.com", // Replace with your project ID
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Replace with your messaging sender ID
-            appId: "YOUR_APP_ID" // Replace with your app ID
+            apiKey: "AIzaSyCMkzB1YxV0eYXLFpcTo9wAkXsbSp3PWTY",
+            authDomain: "photosite-532d2.firebaseapp.com",
+            projectId: "photosite-532d2",
+            storageBucket: "photosite-532d2.firebasestorage.app",
+            messagingSenderId: "85539529669",
+            appId: "1:85539529669:web:d9875230df94bc57b521ac",
+            measurementId: "G-HNBNZJC509"
         };
 
-        // Initialize Firebase app
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        
-        // Initialize Firebase services
+        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
@@ -319,7 +310,7 @@
         
         .status-message.success {
             background-color: rgba(15, 157, 88, 0.1); /* Light green */
-            color: var(--success-color);
+            color: var (--success-color);
             border: 1px solid var(--success-color);
         }
         
