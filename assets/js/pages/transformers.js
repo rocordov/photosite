@@ -131,9 +131,9 @@ async function initializeModel() {
                 UI.updateProgressBar(progress);
                 UI.updateLoadingStatus(`Loading: ${progress}%`);
             },
-            headers: new Headers({
+            headers: {
                 'Authorization': `Bearer ${token}`
-            })
+            }
         };
 
         try {
