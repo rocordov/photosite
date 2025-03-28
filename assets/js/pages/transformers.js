@@ -56,7 +56,7 @@ if (!CONFIG.debugMode) {
 }
 // Load saved settings first
 loadSavedSettings();
-Debug.log('Loaded saved settings from localStorage');
+
 
 // DOM Elements
 const elements = {
