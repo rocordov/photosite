@@ -1,0 +1,131 @@
+/* 
+ * Experiments Page Specific Styles
+ * Contains styles specific to the experiments page layout and components
+ */
+
+/* Experiments Container */
+.experiments-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+/* Section Title */
+.section-title {
+  font-size: 2rem;
+  color: var(--accent);
+  margin-bottom: var(--spacing-lg);
+  position: relative;
+  padding-bottom: var(--spacing-sm);
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: var(--accent);
+}
+
+/* Documentation Section */
+.documentation-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
+  background-color: rgba(30, 30, 30, 0.5);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-xl);
+}
+
+.documentation-content {
+  padding: var(--spacing-md);
+  line-height: 1.6;
+}
+
+/* Experiments Page Hero Modifications */
+.experiments-hero .hero-content h1 {
+  color: var(--accent);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.experiments-hero .hero-content p {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Experiment Cards Grid */
+.experiments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+}
+
+/* Individual Experiment Card */
+.experiment-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+  height: 400px; /* Fixed height for consistency */
+}
+
+/* Card Image Container */
+.experiment-image {
+  height: 60%; /* 60% of card height for image */
+  overflow: hidden;
+}
+
+.experiment-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Card Content Area */
+.experiment-content {
+  padding: var(--spacing-md);
+  height: 40%; /* 40% of card height for content */
+  display: flex;
+  flex-direction: column;
+}
+
+.experiment-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.experiment-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  /* Limit to 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: auto;
+}
+
+.experiment-link {
+  margin-top: var(--spacing-sm);
+  align-self: flex-start;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .experiment-card {
+    height: 350px; /* Slightly shorter on mobile */
+  }
+}
