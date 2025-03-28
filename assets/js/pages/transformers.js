@@ -137,7 +137,6 @@ async function initializeModel() {
         UI.updateLoadingStatus('Loading model...');
 
         const modelConfig = {
-        //quantized: true,
         quantized: true,
         dtype: 'q8',
             progress_callback: (data) => {
