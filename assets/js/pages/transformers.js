@@ -23,7 +23,8 @@ const CONFIG = {
     repetition_penalty: 1.2,
     typingSpeed: 20,
     useTypingEffect: true,
-    systemPrompt: `You are a helpful, friendly AI assistant running directly in the user's browser using the Transformers.js library. You're designed to be concise but informative.`
+    systemPrompt: `You are a helpful, friendly AI assistant running directly in the user's browser using the Transformers.js library. You're designed to be concise but informative.`,
+    auth_token: localStorage.getItem('hf_token') // Get token from localStorage
 };
 
 // DOM Elements
@@ -87,16 +88,25 @@ const Debug = {
     }
 };
 
-// Model initialization
+// Model initialization with auth
 async function initializeModel() {
     try {
         Debug.log('Starting model initialization...');
+        UI.updateLoadingStatus('Checking authentication...');
+
+        const token = CONFIG.auth_token;
+        if (!token) {
+            Debug.log('No authentication token found');
+            document.getElementById('authContainer').style.display = 'block';
+            document.getElementById('loadingContainer').style.display = 'none';
+            return;
+        }
+
+        Debug.log('Token found, initializing model...');
         UI.updateLoadingStatus('Loading model...');
-        
-        const startTime = performance.now();
-        
-        // Use the imported pipeline
-        const generator = await pipeline('text-generation', CONFIG.model, {
+
+        // Set up auth headers
+        const modelConfig = {
             quantized: true,
             progress_callback: (data) => {
                 const progress = ((data.loaded / data.total) * 100).toFixed(2);
@@ -108,22 +118,26 @@ async function initializeModel() {
                 
                 UI.updateProgressBar(progress);
                 UI.updateLoadingStatus(`Loading: ${progress}%`);
-            }
-        });
+            },
+            use_auth_token: token // Add auth token to requests
+        };
+
+        const generator = await pipeline('text-generation', CONFIG.model, modelConfig);
         
-        const endTime = performance.now();
-        const loadTime = ((endTime - startTime) / 1000).toFixed(2);
-        Debug.log(`Model loaded successfully in ${loadTime} seconds`);
-        
-        // Enable UI
+        // Hide auth container if successful
+        document.getElementById('authContainer').style.display = 'none';
         document.getElementById('loadingContainer').style.display = 'none';
         document.getElementById('sendButton').disabled = false;
         document.getElementById('userInput').disabled = false;
-        
+
         return generator;
     } catch (err) {
         Debug.error('Error loading model:', err);
-        UI.updateLoadingStatus('Error loading model. Please refresh and try again.');
+        if (err.message.includes('Unauthorized')) {
+            localStorage.removeItem('hf_token'); // Clear invalid token
+            document.getElementById('authContainer').style.display = 'block';
+            UI.updateLoadingStatus('Authentication required. Please login.');
+        }
         throw err;
     }
 }
