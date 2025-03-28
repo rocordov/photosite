@@ -70,12 +70,12 @@
   background: var(--card);
   border-radius: 12px;
   overflow: hidden;
-  height: 400px; /* Fixed height for consistency */
+  height: 600px; /* Fixed height for consistency */
 }
 
 /* Card Image Container */
 .experiment-image {
-  height: 90%; /* 60% of card height for image */
+  height: 60%; /* 60% of card height for image */
   overflow: hidden;
 }
 
