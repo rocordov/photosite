@@ -11,8 +11,8 @@
 //import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/+esm';
 //import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0';
 //import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@3.0.0';
-import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers';
-
+//import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers';
+import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.4.1';
 
 // Configuration object
 const CONFIG = {
