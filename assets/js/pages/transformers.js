@@ -139,8 +139,8 @@ async function initializeModel() {
                 const downloadedMB = (data.loaded / (1024 * 1024)).toFixed(2);
                 const totalMB = (data.total / (1024 * 1024)).toFixed(2);
 
-                Debug.log(`Loading: ${progress}% (${downloadedMB}MB / ${totalMB}MB)`);
-                Debug.log(`Status: ${data.status || 'downloading'}`);
+                //Debug.log(`Loading: ${progress}% (${downloadedMB}MB / ${totalMB}MB)`);
+                //Debug.log(`Status: ${data.status || 'downloading'}`);
 
                 UI.updateProgressBar(progress);
                 UI.updateLoadingStatus(`Loading: ${progress}%`);
