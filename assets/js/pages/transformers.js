@@ -28,6 +28,9 @@ const CONFIG = {
     auth_token: localStorage.getItem('hf_token') // Get token from localStorage
 };
 
+// Load saved settings first
+loadSavedSettings();
+
 // Add this after the CONFIG object definition
 function loadSavedSettings() {
     // Load each setting from localStorage, falling back to default values
@@ -620,8 +623,7 @@ function formatBytes(bytes, decimals = 2) {
 
 // Update the initChatbot function
 async function initChatbot() {
-    // Load saved settings first
-    loadSavedSettings();
+    
     
     // Insert settings panel HTML into chat container
     const chatContainer = document.getElementById('chatContainer');
