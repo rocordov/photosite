@@ -8,8 +8,8 @@
  * All processing happens locally in the browser without sending data to external servers.
  */
 
-import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/+esm';
-
+//import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/+esm';
+import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0';
 // Configuration object
 const CONFIG = {
     model: 'Xenova/SmolLM2-135M-Instruct',
