@@ -141,11 +141,8 @@ async function initializeModel() {
         UI.updateLoadingStatus('Checking authentication...');
 
         const token = CONFIG.auth_token;
-        
-        // Log token status (hide actual token for security)
-        if (token) {
-            Debug.log(`Using authentication token: ${token.substring(0, 5)}...${token.substring(token.length - 5)}`);
-        } else {
+
+        if (!token) {
             Debug.log('No authentication token found. Protected model assets may not load correctly.');
             document.getElementById('authContainer').style.display = 'block';
             Debug.log('Showing login prompt...');
@@ -158,11 +155,7 @@ async function initializeModel() {
         const modelConfig = {
             quantized: true,
             progress_callback: (data) => {
-                // Handle undefined values for clean percentage calculations
-                if (!data.total) data.total = 100;
-                if (!data.loaded) data.loaded = 0;
-                
-                const progress = Math.min(Math.round((data.loaded / data.total) * 100), 100);
+                const progress = Math.min(Math.round((data.loaded / (data.total || 1)) * 100), 100);
                 const downloadedMB = (data.loaded / (1024 * 1024)).toFixed(2);
                 const totalMB = (data.total / (1024 * 1024)).toFixed(2);
 
@@ -172,8 +165,6 @@ async function initializeModel() {
                 UI.updateProgressBar(progress);
                 UI.updateLoadingStatus(`Loading model: ${progress}%`);
             },
-            // The token is applied via our custom fetch implementation
-            // But we also include it here for direct config access by the library
             auth_token: token,
             use_auth_token: token
         };
@@ -188,7 +179,11 @@ async function initializeModel() {
             document.getElementById('userInput').disabled = false;
             return generator;
         } catch (err) {
-            if (err.message && (
+            if (err.message && err.message.includes('Could not locate file')) {
+                Debug.error('Model file not found:', err);
+                UI.updateLoadingStatus('Error: Required model files are missing.');
+                elements.loadingInfo.textContent = 'Please check the model repository or try a different model.';
+            } else if (err.message && (
                 err.message.includes('Unauthorized') || 
                 err.message.includes('401') || 
                 err.message.includes('auth')
@@ -197,11 +192,6 @@ async function initializeModel() {
                 localStorage.removeItem('hf_token'); // Clear invalid token
                 document.getElementById('authContainer').style.display = 'block';
                 UI.updateLoadingStatus('Authentication failed. Please login again.');
-                
-                // Show error in the loading container
-                const loadingContainer = document.getElementById('loadingContainer');
-                loadingContainer.style.display = 'block';
-                loadingContainer.style.backgroundColor = 'rgba(254, 226, 226, 0.9)';
             } else {
                 Debug.error('Error loading model:', err);
             }
@@ -269,7 +259,9 @@ function modelError(error) {
     elements.modelStatus.classList.add('model-error');
     elements.statusText.textContent = 'Error';
 
-    if (error.message.includes('Unauthorized')) {
+    if (error.message.includes('Could not locate file')) {
+        elements.loadingInfo.textContent = 'Required model files are missing. Please check the model repository.';
+    } else if (error.message.includes('Unauthorized')) {
         elements.loadingInfo.textContent = 'Authentication failed. Please login again.';
     }
 
