@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Game</title>
+    <link rel="stylesheet" href="../assets/css/pages/tetris.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Tetris</h1>
+            <div class="score-container">
+                <div class="score">
+                    <p>Score: <span id="score">0</span></p>
+                </div>
+                <div class="level">
+                    <p>Level: <span id="level">1</span></p>
+                </div>
+                <div class="lines">
+                    <p>Lines: <span id="lines">0</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="game-play">
+            <div id="tetrisContainer" class="tetris-container">
+                <!-- Game grid will be generated here by JavaScript -->
+            </div>
+            <div class="game-info">
+                <div class="next-piece-container">
+                    <h3>Next Piece</h3>
+                    <div id="nextPiece" class="next-piece"></div>
+                </div>
+                <div class="controls-container">
+                    <h3>Controls</h3>
+                    <ul>
+                        <li>← → : Move left/right</li>
+                        <li>↑ : Rotate piece</li>
+                        <li>↓ : Soft drop</li>
+                        <li>Space : Hard drop</li>
+                        <li>P : Pause</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="game-buttons">
+            <button id="startButton">Start Game</button>
+            <button id="pauseButton">Pause</button>
+            <button id="resetButton">Reset</button>
+        </div>
+    </div>
+
+    <script src="../assets/js/pages/tetris.js"></script>
+</body>
+</html>
