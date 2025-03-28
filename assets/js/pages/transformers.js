@@ -16,12 +16,8 @@ import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers
 
 // Configuration object
 const CONFIG = {
-    model: 'HuggingFaceH4/zephyr-7b-beta',  // Use a known working model
-    modelFallbacks: [
-        'HuggingFaceH4/zephyr-7b-beta',
-        'HuggingFaceTB/SmolLM2-135M-Instruct',
-        'Xenova/SmolLM2-135M-Instruct'
-    ],
+    //model: 'Xenova/SmolLM2-135M-Instruct',
+    model: 'onnx-community/SmolLM2-135M-Instruct-ONNX-GQA',
     max_new_tokens: 512,
     temperature: 0.7,
     top_p: 0.9,
@@ -29,10 +25,7 @@ const CONFIG = {
     typingSpeed: 20,
     useTypingEffect: true,
     systemPrompt: `You are a helpful, friendly AI assistant running directly in the user's browser using the Transformers.js library. You're designed to be concise but informative.`,
-    debugMode: true,
-    get auth_token() {
-        return localStorage.getItem('hf_token');
-    }
+    auth_token: localStorage.getItem('hf_token') // Get token from localStorage
 };
 
 // Suppress source map warnings specifically
@@ -124,51 +117,49 @@ async function initializeModel() {
         Debug.log('Token found, initializing model...');
         UI.updateLoadingStatus('Loading model...');
 
-        // Try models in sequence until one works
-        for (const modelId of CONFIG.modelFallbacks) {
-            try {
-                Debug.log(`Attempting to load model: ${modelId}`);
-                const modelConfig = {
-                    quantized: false, // Start with non-quantized version
-                    progress_callback: (data) => {
-                        if (!data.total) data.total = 100; // Provide default total
-                        if (!data.loaded) data.loaded = 0;
-                        
-                        const progress = Math.min(Math.round((data.loaded / data.total) * 100), 100);
-                        const downloadedMB = (data.loaded / (1024 * 1024)).toFixed(2);
-                        const totalMB = (data.total / (1024 * 1024)).toFixed(2);
+        const modelConfig = {
+        //quantized: true,
+        quantized: true,
+            progress_callback: (data) => {
+                const progress = ((data.loaded / (data.total || 1)) * 100).toFixed(2);
+                const downloadedMB = (data.loaded / (1024 * 1024)).toFixed(2);
+                const totalMB = (data.total / (1024 * 1024)).toFixed(2);
 
-                        Debug.log(`Loading ${modelId}: ${progress}% (${downloadedMB}MB / ${totalMB}MB)`);
-                        Debug.log(`Status: ${data.status || 'downloading'}`);
+                Debug.log(`Loading: ${progress}% (${downloadedMB}MB / ${totalMB}MB)`);
+                Debug.log(`Status: ${data.status || 'downloading'}`);
 
-                        UI.updateProgressBar(progress);
-                        UI.updateLoadingStatus(`Loading ${modelId}: ${progress}%`);
-                    },
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                };
+                UI.updateProgressBar(progress);
+                UI.updateLoadingStatus(`Loading: ${progress}%`);
+            },
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        };
 
-                const generator = await pipeline('text-generation', modelId, modelConfig);
-                Debug.log(`Successfully loaded model: ${modelId}`);
-                CONFIG.model = modelId; // Update the active model
-                
-                document.getElementById('authContainer').style.display = 'none';
-                document.getElementById('loadingContainer').style.display = 'none';
-                document.getElementById('sendButton').disabled = false;
-                document.getElementById('userInput').disabled = false;
-                return generator;
-            } catch (err) {
-                Debug.error(`Failed to load model ${modelId}:`, err);
-                // Continue to next model if this one fails
-                continue;
+        try {
+            const generator = await pipeline('text-generation', CONFIG.model, modelConfig);
+            Debug.log('Model pipeline created successfully!');
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('loadingContainer').style.display = 'none';
+            document.getElementById('sendButton').disabled = false;
+            document.getElementById('userInput').disabled = false;
+            return generator;
+        } catch (err) {
+            if (err.message.includes('Unauthorized')) {
+                Debug.error('Authentication failed. Clearing token.', err);
+                localStorage.removeItem('hf_token'); // Clear invalid token
+                document.getElementById('authContainer').style.display = 'block';
+                UI.updateLoadingStatus('Authentication required. Please login.');
+
+                // Prompt user to re-enter token
+                promptForToken();
+            } else {
+                Debug.error('Error loading model:', err);
             }
+            throw err;
         }
-
-        // If we get here, all models failed
-        throw new Error('All model loading attempts failed');
     } catch (err) {
-        Debug.error('Model initialization failed:', err);
+        Debug.error('Unexpected error during model initialization:', err);
         throw err;
     }
 }
