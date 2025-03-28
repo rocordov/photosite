@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Text Entry Demo</title>
+    <!-- Firebase SDK v9 via CDN -->
+    <script type="module">
+        // Import Firebase modules using CDN imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        /**
+         * Firebase Configuration
+         * 
+         * IMPORTANT: Replace these placeholder values with your actual Firebase project configuration
+         * You can find these values in your Firebase project settings:
+         * 1. Go to https://console.firebase.google.com/
+         * 2. Select your project
+         * 3. Click on the gear icon (⚙️) next to "Project Overview" to access Project Settings
+         * 4. Scroll down to "Your apps" section and find your web app
+         * 5. Copy the firebaseConfig object
+         */
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY", // Replace with actual API key
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com", // Replace with your project ID
+            projectId: "YOUR_PROJECT_ID", // Replace with your project ID
+            storageBucket: "YOUR_PROJECT_ID.appspot.com", // Replace with your project ID
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Replace with your messaging sender ID
+            appId: "YOUR_APP_ID" // Replace with your app ID
+        };
+
+        // Initialize Firebase app
+        const app = initializeApp(firebaseConfig);
+        
+        // Initialize Firebase services
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Wait for DOM content to be loaded before attaching event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // References to DOM elements
+            const entryForm = document.getElementById('entryForm');
+            const entryInput = document.getElementById('entryInput');
+            const submitButton = document.getElementById('submitEntry');
+            const statusMessage = document.getElementById('statusMessage');
+            const authStatus = document.getElementById('authStatus');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            let currentUser = null; // Track the current authenticated user
+
+            // Set up authentication state observer
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in
+                    currentUser = user;
+                    authStatus.textContent = `Authenticated (Anonymous User: ${user.uid})`;
+                    authStatus.className = 'auth-status authenticated';
+                    submitButton.disabled = false;
+                    
+                    console.log("Authenticated anonymously with UID:", user.uid);
+                } else {
+                    // User is signed out
+                    currentUser = null;
+                    authStatus.textContent = 'Not authenticated';
+                    authStatus.className = 'auth-status unauthenticated';
+                    submitButton.disabled = true;
+                    
+                    // Automatically sign in anonymously
+                    signInAnonymously(auth)
+                        .catch((error) => {
+                            console.error("Authentication failed:", error);
+                            statusMessage.textContent = `Authentication error: ${error.message}`;
+                            statusMessage.className = 'status-message error';
+                        });
+                }
+            });
+
+            // Handle form submission
+            entryForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Prevent default form submission
+                
+                const entryText = entryInput.value.trim();
+                
+                // Simple validation
+                if (!entryText) {
+                    statusMessage.textContent = 'Please enter some text';
+                    statusMessage.className = 'status-message error';
+                    return;
+                }
+                
+                // Disable form during submission
+                submitButton.disabled = true;
+                loadingIndicator.style.display = 'inline-block';
+                statusMessage.textContent = '';
+                
+                try {
+                    // Check if user is authenticated
+                    if (!currentUser) {
+                        // If not authenticated, try to sign in anonymously
+                        await signInAnonymously(auth);
+                    }
+                    
+                    // Add the entry to Firestore
+                    const docRef = await addDoc(collection(db, "textEntries"), {
+                        text: entryText,
+                        userId: currentUser.uid,
+                        createdAt: serverTimestamp()
+                    });
+                    
+                    console.log("Document written with ID: ", docRef.id);
+                    
+                    // Show success message
+                    statusMessage.textContent = 'Entry saved successfully!';
+                    statusMessage.className = 'status-message success';
+                    
+                    // Clear the input field
+                    entryInput.value = '';
+                } catch (error) {
+                    console.error("Error adding document: ", error);
+                    
+                    // Show error message
+                    statusMessage.textContent = `Error saving entry: ${error.message}`;
+                    statusMessage.className = 'status-message error';
+                } finally {
+                    // Re-enable form
+                    submitButton.disabled = false;
+                    loadingIndicator.style.display = 'none';
+                }
+            });
+        });
+
+        /**
+         * GitHub Pages Deployment Instructions:
+         * 
+         * 1. Create a GitHub repository (or use an existing one)
+         * 2. Enable GitHub Pages in the repository settings:
+         *    - Go to repository "Settings" > "Pages"
+         *    - Select the branch to deploy from (usually "main" or "master")
+         *    - Choose the root folder or "/docs" as the source
+         * 3. Upload this HTML file to your repository 
+         *    (if using /docs as source, put it in that folder)
+         * 4. After committing, GitHub will automatically deploy the site
+         *    (you'll see the URL in the GitHub Pages settings)
+         * 
+         * Important Firebase Setup Steps:
+         * 
+         * 1. Create a Firebase project at https://console.firebase.google.com/
+         * 2. Add a web app to your project
+         * 3. Enable Anonymous Authentication:
+         *    - Go to "Authentication" > "Sign-in method" > Enable "Anonymous"
+         * 4. Create a Firestore database:
+         *    - Go to "Firestore Database" > "Create database"
+         *    - Start in test mode or with appropriate security rules
+         * 5. Update the firebaseConfig object above with your actual configuration
+         * 6. Update Firestore Security Rules to allow anonymous users to write entries:
+         *    rules_version = '2';
+         *    service cloud.firestore {
+         *      match /databases/{database}/documents {
+         *        match /textEntries/{entry} {
+         *          allow read, write: if request.auth != null;
+         *        }
+         *      }
+         *    }
+         * 
+         * Firebase Documentation References:
+         * - Firebase Web SDK: https://firebase.google.com/docs/web/setup
+         * - Anonymous Auth: https://firebase.google.com/docs/auth/web/anonymous-auth
+         * - Firestore: https://firebase.google.com/docs/firestore/quickstart
+         * - Security Rules: https://firebase.google.com/docs/firestore/security/get-started
+         */
+    </script>
+    
+    <style>
+        /* Base styles */
+        :root {
+            --primary-color: #4285F4; /* Google Blue */
+            --success-color: #0F9D58; /* Google Green */
+            --error-color: #DB4437;   /* Google Red */
+            --warning-color: #F4B400; /* Google Yellow */
+            --light-gray: #f1f3f4;
+            --dark-gray: #5f6368;
+            --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+        
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            color: #202124;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: var(--dark-gray);
+            font-weight: normal;
+            font-size: 1rem;
+        }
+        
+        /* Firebase status indicator */
+        .auth-container {
+            margin-bottom: 1.5rem;
+            padding: 10px;
+            background-color: var(--light-gray);
+            border-radius: 4px;
+        }
+        
+        .auth-heading {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .auth-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        
+        .auth-status.authenticated {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .auth-status.unauthenticated {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        /* Form styles */
+        .entry-form {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d3d3d3;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        
+        button:hover {
+            background-color: #3367D6; /* Darker blue */
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        button:disabled {
+            background-color: #A8A8A8;
+            cursor: not-allowed;
+        }
+        
+        /* Status message styles */
+        .status-message {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: none; /* Hidden by default, shown when content is added */
+        }
+        
+        .status-message:not(:empty) {
+            display: block;
+        }
+        
+        .status-message.success {
+            background-color: rgba(15, 157, 88, 0.1); /* Light green */
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+        
+        .status-message.error {
+            background-color: rgba(219, 68, 55, 0.1); /* Light red */
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+        
+        /* Loading indicator */
+        .loading-indicator {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Card styling */
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 2rem;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+            color: var(--dark-gray);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Firebase Text Entry Demo</h1>
+        <p class="subtitle">A simple example of Firebase Authentication and Firestore integration</p>
+    </header>
+    
+    <main>
+        <section class="auth-container card">
+            <h2 class="auth-heading">Authentication Status</h2>
+            <div id="authStatus" class="auth-status unauthenticated">
+                Initializing...
+            </div>
+        </section>
+        
+        <section class="entry-section card">
+            <h2>Add a Text Entry</h2>
+            <p>Enter your text below to store it in Firebase Firestore:</p>
+            
+            <form id="entryForm" class="entry-form">
+                <div class="form-group">
+                    <label for="entryInput">Your Text Entry:</label>
+                    <input 
+                        type="text" 
+                        id="entryInput" 
+                        placeholder="Enter your text here..." 
+                        autocomplete="off"
+                        required
+                    >
+                </div>
+                
+                <button type="submit" id="submitEntry" disabled>
+                    Save Entry
+                    <span id="loadingIndicator" class="loading-indicator"></span>
+                </button>
+                
+                <div id="statusMessage" class="status-message"></div>
+            </form>
+        </section>
+        
+        <section class="info-section card">
+            <h2>About This Demo</h2>
+            <p>This page demonstrates how to:</p>
+            <ul>
+                <li>Initialize Firebase in a static HTML page</li>
+                <li>Use anonymous authentication</li>
+                <li>Store user input in Cloud Firestore</li>
+                <li>Handle asynchronous operations with modern JavaScript</li>
+            </ul>
+            <p>All operations happen client-side, making this ideal for static hosting like GitHub Pages.</p>
+        </section>
+    </main>
+    
+    <footer>
+        <p>
+            This is a demonstration of Firebase integration for static websites.
+            <br>
+            For more information, see the 
+            <a href="https://firebase.google.com/docs" target="_blank">Firebase Documentation</a>.
+        </p>
+    </footer>
+</body>
+</html>
