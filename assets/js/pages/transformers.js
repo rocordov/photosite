@@ -12,21 +12,16 @@
 env.allowLocalModels = false;  // Disallow local models for security
 env.useBrowserCache = true;    // Use browser cache to speed up subsequent loads
 
-// Configuration for the chatbot
+// Configuration object
 const CONFIG = {
-    // Model settings
-    model: 'Xenova/SmolLM2-135M-Instruct',  // Small instruction-tuned model suitable for browsers
-    max_new_tokens: 512,                    // Maximum number of tokens to generate
-    temperature: 0.7,                       // Controls randomness: lower = more deterministic
-    top_p: 0.9,                             // Top-p (nucleus) sampling
-    repetition_penalty: 1.2,                // Penalty for repeating tokens
-    
-    // UI-related settings
-    typingSpeed: 20,                        // Milliseconds per character when displaying AI response
-    useTypingEffect: true,                  // Whether to show typing effect or instant responses
-    
-    // System prompt to give the model context about its role
-    systemPrompt: `You are a helpful, friendly AI assistant running directly in the user's browser using the Transformers.js library. You're designed to be concise but informative. When you don't know something, admit it rather than making up information. Respond in a conversational style and focus on being helpful.`
+    model: 'Xenova/SmolLM2-135M-Instruct',
+    max_new_tokens: 512,
+    temperature: 0.7,
+    top_p: 0.9,
+    repetition_penalty: 1.2,
+    typingSpeed: 20,
+    useTypingEffect: true,
+    systemPrompt: `You are a helpful, friendly AI assistant running directly in the user's browser using the Transformers.js library. You're designed to be concise but informative.`
 };
 
 // DOM Elements
@@ -50,23 +45,31 @@ let chatHistory = [];
 // Reference to the pipeline once loaded
 let generator = null;
 
-const modelId = 'Xenova/SmolLM2-135M-Instruct';
-let pipeline = transformersPipeline;
+// Single instance of loading status function
+function updateLoadingStatus(status) {
+    const loadingText = document.getElementById('loadingText');
+    if (loadingText) {
+        loadingText.textContent = status;
+    }
+}
 
-/**
- * Initialize the chatbot - this is our entry point
- */
 async function initializeModel() {
     try {
-        // Add loading status updates
         updateLoadingStatus('Loading model...');
         
-        pipeline = await window.pipeline('text-generation', modelId, {
-            quantized: true, // Use quantized model for better performance
-            progress_callback: function(data) {
-                // Update progress bar
+        // Wait for Transformers to be available
+        while (!window.pipeline) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
+        const pipeline = await window.pipeline('text-generation', CONFIG.model, {
+            quantized: true,
+            progress_callback: (data) => {
                 const progress = ((data.loaded / data.total) * 100).toFixed(2);
-                document.getElementById('progressBar').style.width = `${progress}%`;
+                const progressBar = document.getElementById('progressBar');
+                if (progressBar) {
+                    progressBar.style.width = `${progress}%`;
+                }
                 updateLoadingStatus(`Loading: ${progress}%`);
             }
         });
@@ -75,17 +78,13 @@ async function initializeModel() {
         document.getElementById('loadingContainer').style.display = 'none';
         document.getElementById('sendButton').disabled = false;
         document.getElementById('userInput').disabled = false;
-        updateModelStatus('Ready');
         
+        return pipeline;
     } catch (err) {
         console.error('Error loading model:', err);
-        updateLoadingStatus('Error loading model. Please check console and refresh.');
-        document.getElementById('loadingInfo').textContent = err.message;
+        updateLoadingStatus('Error loading model. Please refresh and try again.');
+        throw err;
     }
-}
-
-function updateLoadingStatus(status) {
-    document.getElementById('loadingText').textContent = status;
 }
 
 function updateModelStatus(status) {
