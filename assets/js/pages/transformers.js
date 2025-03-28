@@ -8,8 +8,8 @@
  * All processing happens locally in the browser without sending data to external servers.
  */
 
-// Import the Transformers.js library from CDN
-import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.8.0';
+// Access Transformers.js library from the global namespace
+const { pipeline, env } = window.Transformers;
 
 // Set environment variables for Transformers.js
 env.allowLocalModels = false;  // Disallow local models for security
