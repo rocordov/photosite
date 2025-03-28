@@ -8,9 +8,6 @@
  * All processing happens locally in the browser without sending data to external servers.
  */
 
-// Access Transformers.js library from the global namespace
-const { pipeline, env } = window.Transformers;
-
 // Set environment variables for Transformers.js
 env.allowLocalModels = false;  // Disallow local models for security
 env.useBrowserCache = true;    // Use browser cache to speed up subsequent loads
@@ -53,38 +50,54 @@ let chatHistory = [];
 // Reference to the pipeline once loaded
 let generator = null;
 
+const modelId = 'Xenova/SmolLM2-135M-Instruct';
+let pipeline = transformersPipeline;
+
 /**
  * Initialize the chatbot - this is our entry point
  */
-async function initChatbot() {
+async function initializeModel() {
     try {
-        // Initialize UI
-        updateLoadingStatus('Loading model...', 'This may take a minute on first run');
-        setupEventListeners();
+        // Add loading status updates
+        updateLoadingStatus('Loading model...');
         
-        // Check for WebGPU support
-        if (navigator.gpu) {
-            updateLoadingStatus('WebGPU supported! Loading optimized model...', 
-                              'Performance will be better with your GPU');
-        } else {
-            updateLoadingStatus('Loading model (WebGPU not detected)...', 
-                              'Running on CPU - responses may be slower');
-            console.log('WebGPU not detected, using CPU fallback');
-        }
-        
-        // Create the pipeline with progress callbacks
-        generator = await pipeline('text-generation', CONFIG.model, {
-            progress_callback: progressCallback
+        pipeline = await window.pipeline('text-generation', modelId, {
+            quantized: true, // Use quantized model for better performance
+            progress_callback: function(data) {
+                // Update progress bar
+                const progress = ((data.loaded / data.total) * 100).toFixed(2);
+                document.getElementById('progressBar').style.width = `${progress}%`;
+                updateLoadingStatus(`Loading: ${progress}%`);
+            }
         });
         
-        // Model loaded successfully
-        modelReady();
-    } catch (error) {
-        // Handle initialization errors
-        console.error('Error initializing chatbot:', error);
-        modelError(error);
+        // Enable UI once model is loaded
+        document.getElementById('loadingContainer').style.display = 'none';
+        document.getElementById('sendButton').disabled = false;
+        document.getElementById('userInput').disabled = false;
+        updateModelStatus('Ready');
+        
+    } catch (err) {
+        console.error('Error loading model:', err);
+        updateLoadingStatus('Error loading model. Please check console and refresh.');
+        document.getElementById('loadingInfo').textContent = err.message;
     }
 }
+
+function updateLoadingStatus(status) {
+    document.getElementById('loadingText').textContent = status;
+}
+
+function updateModelStatus(status) {
+    const statusEl = document.querySelector('.status-text');
+    const indicator = document.querySelector('.status-indicator');
+    
+    statusEl.textContent = status;
+    indicator.className = 'status-indicator ' + status.toLowerCase();
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', initializeModel);
 
 /**
  * Called when model loading progress updates
@@ -453,6 +466,34 @@ function formatBytes(bytes, decimals = 2) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+// Wait for Transformers library to load
+async function waitForTransformers() {
+    while (!window.Transformers) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+}
+
+// Main initialization function
+async function initChatbot() {
+    try {
+        await waitForTransformers();
+        const { pipeline } = window.Transformers;
+        
+        // Update loading status
+        updateLoadingStatus('Loading model...');
+        
+        // Initialize the pipeline
+        generator = await pipeline('text-generation', CONFIG.model, {
+            quantized: true,
+            progress_callback: progressCallback
+        });
+        
+        modelReady();
+    } catch (error) {
+        modelError(error);
+    }
 }
 
 // Initialize the chatbot when the DOM is fully loaded
