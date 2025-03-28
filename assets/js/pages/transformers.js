@@ -304,7 +304,18 @@ async function handleSendMessage() {
     const userMessage = elements.userInput.value.trim();
     
     // Don't send empty messages
-    if (!userMessage || !generator) return;
+    if (!userMessage) {
+        Debug.log('Empty message, ignoring');
+        return;
+    }
+    
+    if (!generator) {
+        Debug.error('Model not initialized', 'Cannot send message');
+        addMessageToChat('assistant', 'Sorry, the model is not ready yet. Please wait or try refreshing the page.');
+        return;
+    }
+    
+    Debug.log(`Sending message: ${userMessage.substring(0, 50)}...`);
     
     // Add user message to display
     addMessageToChat('user', userMessage);
@@ -317,32 +328,34 @@ async function handleSendMessage() {
     elements.sendButton.disabled = true;
     elements.userInput.disabled = true;
     
-    // Add user message to chat history
-    chatHistory.push({ role: 'user', content: userMessage });
-    
     try {
         // Show typing indicator
         const typingIndicator = showTypingIndicator();
+        Debug.log('Generating response...');
         
         // Generate response
         const response = await generateResponse(userMessage);
+        Debug.log('Response generated successfully');
         
         // Remove typing indicator
         if (typingIndicator) {
             typingIndicator.remove();
         }
         
-        // Add AI response to chat history
-        chatHistory.push({ role: 'assistant', content: response });
+        // Add messages to chat history
+        chatHistory.push(
+            { role: 'user', content: userMessage },
+            { role: 'assistant', content: response }
+        );
         
-        // Display AI response with typing effect if enabled
+        // Display AI response
         if (CONFIG.useTypingEffect) {
             await displayWithTypingEffect(response);
         } else {
             addMessageToChat('assistant', response);
         }
     } catch (error) {
-        console.error('Error generating response:', error);
+        Debug.error('Error generating response:', error);
         addMessageToChat('assistant', 'I encountered an error generating a response. Please try again.');
     } finally {
         // Re-enable input
@@ -584,10 +597,18 @@ function formatBytes(bytes, decimals = 2) {
 // Main initialization function
 async function initChatbot() {
     try {
+        Debug.log('Initializing chatbot...');
+        // Set up event listeners first
+        setupEventListeners();
+        Debug.log('Event listeners set up');
+        
         const token = CONFIG.auth_token;
         if (token) {
             generator = await initializeModel(); // Use authenticated model load
-            if (generator) modelReady();
+            if (generator) {
+                modelReady();
+                Debug.log('Model and chat interface ready');
+            }
         } else {
             Debug.log('No token found, showing login prompt...');
             document.getElementById('authContainer').style.display = 'block';
