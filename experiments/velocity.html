@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velocity.js Animation Demo | Rois Cordova</title>
+  <meta name="description" content="Interactive animations using Velocity.js, demonstrating smooth motion sequences and effects.">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Global and Component CSS -->
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/components/header.css">
+  <link rel="stylesheet" href="../assets/css/components/footer.css">
+  <link rel="stylesheet" href="../assets/css/components/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/components/command-palette.css">
+  
+  <!-- Page-specific CSS -->
+  <link rel="stylesheet" href="../assets/css/pages/velocity.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <noscript>
+      <div class="fallback-message">
+        <h2>This experiment requires JavaScript to run.</h2>
+        <p>Please enable JavaScript in your browser settings to view these animations.</p>
+      </div>
+    </noscript>
+    
+    <div class="experiment-container">
+      <h1 class="experiment-title">Velocity.js Animation Demo</h1>
+      
+      <p class="experiment-description">
+        This demo showcases smooth animations created with Velocity.js, a fast JavaScript animation engine.
+        The animations below demonstrate various properties and sequences that can be achieved.
+      </p>
+      
+      <div class="animation-stage">
+        <!-- The main animation element -->
+        <div id="animateBox" class="animate-box">
+          <span class="animate-box-text">Velocity.js</span>
+        </div>
+        
+        <!-- Controls for restarting the animation -->
+        <div class="animation-controls">
+          <button id="restartAnimation" class="animation-button">
+            <i class="fas fa-redo"></i> Restart Animation
+          </button>
+        </div>
+      </div>
+      
+      <div class="code-explanation">
+        <h2>Animation Sequence</h2>
+        <p>The animation demonstrates a multi-step sequence:</p>
+        <ol>
+          <li>Element slides in from the left</li>
+          <li>Element scales up and rotates</li>
+          <li>Element changes color</li>
+          <li>Element bounces with elastic easing</li>
+          <li>Element completes with a subtle pulsing effect</li>
+        </ol>
+        <p>These effects showcase Velocity's capabilities for creating smooth, complex animations.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer (loaded dynamically) -->
+  <footer id="site-footer"></footer>
+
+  <!-- Component Loader Script -->
+  <script src="../assets/js/components/component-loader.js" type="module"></script>
+  
+  <!-- Component scripts -->
+  <script src="../assets/js/components/theme-toggle.js" type="module"></script>
+  <script src="../assets/js/components/command-palette.js" type="module"></script>
+  
+  <!-- Velocity.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.2/velocity.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.2/velocity.ui.min.js"></script>
+  
+  <!-- Page-specific Animation Script -->
+  <script src="../assets/js/pages/velocity.js" type="module"></script>
+</body>
+</html>
