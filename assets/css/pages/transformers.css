@@ -322,6 +322,11 @@ footer a:hover {
     border-color: var(--primary-light);
 }
 
+#userInput:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
 #sendButton {
     background-color: var(--primary-color);
     color: white;
@@ -341,8 +346,15 @@ footer a:hover {
 }
 
 #sendButton:disabled {
-    background-color: var(--secondary-color);
+    opacity: 0.5;
     cursor: not-allowed;
+    background-color: var(--text-secondary);
+}
+
+#sendButton.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--text-secondary);
 }
 
 .debug-panel {

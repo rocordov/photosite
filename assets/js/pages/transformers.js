@@ -301,6 +301,12 @@ function setupEventListeners() {
  * Handle sending a message from the user
  */
 async function handleSendMessage() {
+    // Prevent multiple submissions
+    if (elements.sendButton.disabled) {
+        Debug.log('Message submission in progress, ignoring...');
+        return;
+    }
+
     const userMessage = elements.userInput.value.trim();
     
     // Don't send empty messages
@@ -315,20 +321,21 @@ async function handleSendMessage() {
         return;
     }
     
-    Debug.log(`Sending message: ${userMessage.substring(0, 50)}...`);
-    
-    // Add user message to display
-    addMessageToChat('user', userMessage);
-    
-    // Clear input field and reset its height
-    elements.userInput.value = '';
-    elements.userInput.style.height = 'auto';
-    
-    // Disable input while generating response
+    // Disable input and button immediately
     elements.sendButton.disabled = true;
     elements.userInput.disabled = true;
+    elements.sendButton.classList.add('disabled');
+    
+    Debug.log(`Sending message: ${userMessage.substring(0, 50)}...`);
     
     try {
+        // Add user message to display
+        addMessageToChat('user', userMessage);
+        
+        // Clear input field and reset its height
+        elements.userInput.value = '';
+        elements.userInput.style.height = 'auto';
+        
         // Show typing indicator
         const typingIndicator = showTypingIndicator();
         Debug.log('Generating response...');
@@ -358,9 +365,10 @@ async function handleSendMessage() {
         Debug.error('Error generating response:', error);
         addMessageToChat('assistant', 'I encountered an error generating a response. Please try again.');
     } finally {
-        // Re-enable input
+        // Re-enable input and button
         elements.sendButton.disabled = false;
         elements.userInput.disabled = false;
+        elements.sendButton.classList.remove('disabled');
         elements.userInput.focus();
     }
 }
