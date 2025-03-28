@@ -1,0 +1,376 @@
+/**
+ * 2048 Game Specific CSS
+ * Styles for the game grid, tiles, and controls
+ */
+
+/* Main game container */
+.game-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+}
+
+/* Game header with title and scores */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.game-header h1 {
+  font-size: 4rem;
+  font-weight: bold;
+  color: var(--accent);
+  margin: 0;
+}
+
+/* Score containers */
+.scores-container {
+  display: flex;
+  gap: 10px;
+}
+
+.score-box {
+  background-color: var(--card);
+  padding: 8px 15px;
+  border-radius: 6px;
+  min-width: 80px;
+  text-align: center;
+  box-shadow: var(--shadow-standard);
+}
+
+.score-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: bold;
+}
+
+.score-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Game introduction and instructions */
+.game-intro {
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.game-instructions {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Game actions and buttons */
+.game-actions {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.button {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.button:hover {
+  background-color: var(--accent-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+  transform: translateY(0);
+}
+
+/* Game over message */
+.game-message {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.game-message.game-won {
+  background-color: rgba(0, 188, 212, 0.5);
+  display: flex;
+}
+
+.game-message.game-over {
+  background-color: rgba(244, 67, 54, 0.5);
+  display: flex;
+}
+
+.game-message.keep-playing {
+  display: none;
+}
+
+.game-message-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Grid and cells */
+.grid-container {
+  position: relative;
+  background-color: var(--card);
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%; /* Create a square aspect ratio */
+  border-radius: 8px;
+  box-shadow: var(--shadow-standard);
+  margin-bottom: 20px;
+}
+
+.grid-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  grid-gap: 15px;
+  border-radius: 8px;
+}
+
+.grid-cell {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+}
+
+.grid-tiles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+/* Tile styling */
+.tile {
+  position: absolute;
+  width: calc(25% - 15px);
+  height: calc(25% - 15px);
+  border-radius: 4px;
+  background-color: #eee4da;
+  color: #776e65;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.tile.new-tile {
+  animation: appear 0.2s ease-in-out;
+}
+
+.tile.merged {
+  animation: pop 0.2s ease;
+}
+
+/* Individual tile colors based on value */
+.tile-2 {
+  background-color: #eee4da;
+  color: #776e65;
+}
+
+.tile-4 {
+  background-color: #ede0c8;
+  color: #776e65;
+}
+
+.tile-8 {
+  background-color: #f2b179;
+  color: #f9f6f2;
+}
+
+.tile-16 {
+  background-color: #f59563;
+  color: #f9f6f2;
+}
+
+.tile-32 {
+  background-color: #f67c5f;
+  color: #f9f6f2;
+}
+
+.tile-64 {
+  background-color: #f65e3b;
+  color: #f9f6f2;
+}
+
+.tile-128 {
+  background-color: #edcf72;
+  color: #f9f6f2;
+  font-size: 1.2rem;
+}
+
+.tile-256 {
+  background-color: #edcc61;
+  color: #f9f6f2;
+  font-size: 1.2rem;
+}
+
+.tile-512 {
+  background-color: #edc850;
+  color: #f9f6f2;
+  font-size: 1.2rem;
+}
+
+.tile-1024 {
+  background-color: #edc53f;
+  color: #f9f6f2;
+  font-size: 1rem;
+}
+
+.tile-2048 {
+  background-color: #edc22e;
+  color: #f9f6f2;
+  font-size: 1rem;
+}
+
+/* For tiles beyond 2048 */
+.tile-super {
+  background-color: #3c3a32;
+  color: #f9f6f2;
+  font-size: 0.8rem;
+}
+
+/* Animation keyframes */
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Game explanation footer */
+.game-explanation {
+  margin-top: 20px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.game-explanation a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.game-explanation a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 520px) {
+  .game-header h1 {
+    font-size: 3rem;
+  }
+  
+  .score-value {
+    font-size: 1.2rem;
+  }
+  
+  .tile {
+    font-size: 1.2rem;
+  }
+  
+  .tile-128, .tile-256, .tile-512 {
+    font-size: 1rem;
+  }
+  
+  .tile-1024, .tile-2048 {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .game-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .grid-background, .grid-tiles {
+    padding: 10px;
+  }
+  
+  .grid-background {
+    grid-gap: 10px;
+  }
+  
+  .tile {
+    width: calc(25% - 10px);
+    height: calc(25% - 10px);
+  }
+}
+
+/* Dark/Light mode adaptations */
+:root.light-mode .tile-2, :root.light-mode .tile-4 {
+  color: #776e65;
+}
+
+:root.light-mode .score-value {
+  color: #333;
+}
