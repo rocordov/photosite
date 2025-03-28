@@ -1,0 +1,64 @@
+/**
+ * Chart.js Page Specific Styles
+ */
+
+/* Chart container with theme-aware styling */
+.chart-container {
+  width: 90%;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: var(--card);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-standard);
+  transition: var(--transition-standard);
+}
+
+.chart-container:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-5px);
+}
+
+.chart-title {
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--accent);
+}
+
+/* Chart canvas element */
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* Fallback message */
+.fallback-message {
+  display: none;
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--card);
+  border-radius: var(--border-radius);
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+/* Chart controls section */
+.chart-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .chart-container {
+    width: 95%;
+  }
+  
+  .chart-title {
+    font-size: 1.5rem;
+  }
+}
