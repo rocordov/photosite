@@ -126,6 +126,6 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .experiment-card {
-    height: 350px; /* Slightly shorter on mobile */
+    height: auto;/*350px; /* Slightly shorter on mobile */
   }
 }
