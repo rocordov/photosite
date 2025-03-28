@@ -70,7 +70,7 @@
   background: var(--card);
   border-radius: 12px;
   overflow: hidden;
-  height: 600px; /* Fixed height for consistency */
+  height: auto; /* Fixed height for consistency */
 }
 
 /* Card Image Container */
