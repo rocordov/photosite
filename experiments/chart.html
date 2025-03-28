@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart.js Example | Rois Cordova</title>
+  <meta name="description" content="Interactive data visualization using Chart.js.">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Global and Component CSS -->
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/components/header.css">
+  <link rel="stylesheet" href="../assets/css/components/footer.css">
+  <link rel="stylesheet" href="../assets/css/components/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/components/command-palette.css">
+  
+  <style>
+    /* Chart Container Styles */
+    .chart-container {
+      width: 90%;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-standard);
+      transition: var(--transition-standard);
+    }
+    
+    .chart-container:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-5px);
+    }
+    
+    .chart-title {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--accent);
+    }
+    
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+    
+    /* Fallback message */
+    .fallback-message {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      background-color: var(--card);
+      border-radius: var(--border-radius);
+      margin: 2rem auto;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <noscript>
+      <div class="fallback-message">
+        <h2>This experiment requires JavaScript to run.</h2>
+        <p>Please enable JavaScript in your browser settings to view this chart.</p>
+      </div>
+    </noscript>
+    
+    <div class="chart-container">
+      <h2 class="chart-title">Monthly Sales Data</h2>
+      <canvas id="myChart"></canvas>
+    </div>
+  </main>
+
+  <!-- Footer (loaded dynamically) -->
+  <footer id="site-footer"></footer>
+
+  <!-- Component Loader Script -->
+  <script src="../assets/js/components/component-loader.js" type="module"></script>
+  
+  <!-- Component scripts -->
+  <script src="../assets/js/components/theme-toggle.js" type="module"></script>
+  <script src="../assets/js/components/command-palette.js" type="module"></script>
+  
+  <!-- Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Page-specific Chart.js Script -->
+  <script src="../assets/js/pages/chart.js" type="module"></script>
+</body>
+</html>
