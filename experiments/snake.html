@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake Game | Rois Cordova</title>
+  <meta name="description" content="A classic Snake Game implemented with JavaScript and HTML5 Canvas.">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Global and Component CSS -->
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/components/header.css">
+  <link rel="stylesheet" href="../assets/css/components/footer.css">
+  <link rel="stylesheet" href="../assets/css/components/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/components/command-palette.css">
+  
+  <!-- Page-specific CSS -->
+  <link rel="stylesheet" href="../assets/css/pages/snake.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <div class="game-container">
+      <div class="game-header">
+        <h1>Snake Game</h1>
+        <div class="score-container">
+          <span class="score-label">Score:</span>
+          <span id="score">0</span>
+        </div>
+      </div>
+      
+      <div class="game-wrapper">
+        <!-- The game canvas -->
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        
+        <!-- Game controls -->
+        <div class="game-controls">
+          <button id="startButton" class="game-button">Start Game</button>
+          <button id="restartButton" class="game-button" disabled>Restart</button>
+          <div class="mobile-controls">
+            <div class="mobile-controls-row">
+              <button id="upButton" class="direction-button"><i class="fas fa-arrow-up"></i></button>
+            </div>
+            <div class="mobile-controls-row">
+              <button id="leftButton" class="direction-button"><i class="fas fa-arrow-left"></i></button>
+              <button id="rightButton" class="direction-button"><i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="mobile-controls-row">
+              <button id="downButton" class="direction-button"><i class="fas fa-arrow-down"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Game instructions -->
+      <div class="game-instructions">
+        <h2>How to Play</h2>
+        <ul>
+          <li>Use the <strong>Arrow Keys</strong> to control the snake's direction.</li>
+          <li>Eat the food to grow longer and score points.</li>
+          <li>Avoid hitting the walls or your own tail.</li>
+          <li>On mobile devices, use the on-screen direction buttons.</li>
+        </ul>
+      </div>
+      
+      <!-- Game over modal -->
+      <div id="gameOverModal" class="modal">
+        <div class="modal-content">
+          <h2>Game Over!</h2>
+          <p>Your final score: <span id="finalScore">0</span></p>
+          <button id="newGameButton" class="game-button">Play Again</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer (loaded dynamically) -->
+  <footer id="site-footer"></footer>
+
+  <!-- Component Loader Script -->
+  <script src="../assets/js/components/component-loader.js" type="module"></script>
+  
+  <!-- Component scripts -->
+  <script src="../assets/js/components/theme-toggle.js" type="module"></script>
+  <script src="../assets/js/components/command-palette.js" type="module"></script>
+  
+  <!-- Page-specific Game Script -->
+  <script src="../assets/js/pages/snake.js" type="module"></script>
+</body>
+</html>
