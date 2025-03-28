@@ -6,12 +6,10 @@
  * in the browser and uses it to generate responses to user messages.
  * 
  * All processing happens locally in the browser without sending data to external servers.
+ * 
+ * Update: This implementation includes Hugging Face authentication for accessing protected models.
  */
 
-//import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/+esm';
-//import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0';
-//import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@3.0.0';
-//import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers';
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.4.1';
 
 // Configuration object
@@ -24,7 +22,10 @@ const CONFIG = {
     typingSpeed: 20,
     useTypingEffect: true,
     systemPrompt: `You are a helpful, friendly AI assistant running directly in the user's browser using the Transformers.js library. You're designed to be concise but informative.`,
-    auth_token: localStorage.getItem('hf_token') // Get token from localStorage
+    debugMode: true, // Enable debug mode for detailed logging
+    get auth_token() { // Dynamic getter to always return the current token
+        return localStorage.getItem('hf_token');
+    }
 };
 
 // Suppress source map warnings specifically in production
@@ -46,10 +47,31 @@ if (!CONFIG.debugMode) {
     };
 }
 
-// Ensure debugMode is defined in CONFIG
-if (typeof CONFIG.debugMode === 'undefined') {
-    CONFIG.debugMode = false; // Default to production mode
-}
+// Custom fetch implementation for Hugging Face API calls
+// This is used to ensure all requests include the authentication token
+window.originalFetch = window.fetch;
+window.fetch = async function(url, options = {}) {
+    // Only intercept requests to Hugging Face domains
+    if (typeof url === 'string' && (
+        url.includes('huggingface.co') || 
+        url.includes('hf.co') || 
+        url.includes('cdn-lfs') ||
+        url.includes('Xenova/SmolLM2-135M-Instruct')
+    )) {
+        const token = CONFIG.auth_token;
+        if (token) {
+            options = options || {};
+            options.headers = options.headers || {};
+            options.headers['Authorization'] = `Bearer ${token}`;
+            
+            Debug.log(`Adding auth token to request: ${url.substring(0, 50)}...`);
+        } else {
+            Debug.log(`No auth token available for request: ${url.substring(0, 50)}...`);
+        }
+    }
+    
+    return window.originalFetch(url, options);
+};
 
 // DOM Elements
 const elements = {
@@ -118,48 +140,68 @@ async function initializeModel() {
         Debug.log('Starting model initialization...');
         UI.updateLoadingStatus('Checking authentication...');
 
-        const token = localStorage.getItem('hf_token');
-        if (!token) {
-            Debug.log('No authentication token found');
+        const token = CONFIG.auth_token;
+        
+        // Log token status (hide actual token for security)
+        if (token) {
+            Debug.log(`Using authentication token: ${token.substring(0, 5)}...${token.substring(token.length - 5)}`);
+        } else {
+            Debug.log('No authentication token found. Protected model assets may not load correctly.');
             document.getElementById('authContainer').style.display = 'block';
-            document.getElementById('loadingContainer').style.display = 'none';
-            return;
+            Debug.log('Showing login prompt...');
+            return null;
         }
 
-        Debug.log('Token found, initializing model...');
-        UI.updateLoadingStatus('Loading model...');
+        Debug.log('Initializing model with authentication...');
+        UI.updateLoadingStatus('Loading model with authentication...');
 
         const modelConfig = {
             quantized: true,
             progress_callback: (data) => {
-                const progress = ((data.loaded / data.total) * 100).toFixed(2);
+                // Handle undefined values for clean percentage calculations
+                if (!data.total) data.total = 100;
+                if (!data.loaded) data.loaded = 0;
+                
+                const progress = Math.min(Math.round((data.loaded / data.total) * 100), 100);
                 const downloadedMB = (data.loaded / (1024 * 1024)).toFixed(2);
                 const totalMB = (data.total / (1024 * 1024)).toFixed(2);
 
                 Debug.log(`Loading: ${progress}% (${downloadedMB}MB / ${totalMB}MB)`);
-                Debug.log(`Status: ${data.status}`);
+                Debug.log(`Status: ${data.status || 'downloading'}`);
 
                 UI.updateProgressBar(progress);
-                UI.updateLoadingStatus(`Loading: ${progress}%`);
+                UI.updateLoadingStatus(`Loading model: ${progress}%`);
             },
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+            // The token is applied via our custom fetch implementation
+            // But we also include it here for direct config access by the library
+            auth_token: token,
+            use_auth_token: token
         };
 
+        Debug.log('Creating text-generation pipeline...');
         try {
             const generator = await pipeline('text-generation', CONFIG.model, modelConfig);
+            Debug.log('Model pipeline created successfully!');
             document.getElementById('authContainer').style.display = 'none';
             document.getElementById('loadingContainer').style.display = 'none';
             document.getElementById('sendButton').disabled = false;
             document.getElementById('userInput').disabled = false;
             return generator;
         } catch (err) {
-            if (err.message.includes('Unauthorized')) {
+            if (err.message && (
+                err.message.includes('Unauthorized') || 
+                err.message.includes('401') || 
+                err.message.includes('auth')
+            )) {
                 Debug.error('Authentication failed. Clearing token.', err);
                 localStorage.removeItem('hf_token'); // Clear invalid token
                 document.getElementById('authContainer').style.display = 'block';
-                UI.updateLoadingStatus('Authentication required. Please login.');
+                UI.updateLoadingStatus('Authentication failed. Please login again.');
+                
+                // Show error in the loading container
+                const loadingContainer = document.getElementById('loadingContainer');
+                loadingContainer.style.display = 'block';
+                loadingContainer.style.backgroundColor = 'rgba(254, 226, 226, 0.9)';
             } else {
                 Debug.error('Error loading model:', err);
             }
@@ -562,17 +604,66 @@ function formatBytes(bytes, decimals = 2) {
 // Main initialization function
 async function initChatbot() {
     try {
-    const token = localStorage.getItem('hf_token');
-        if (token) {
+        Debug.log('Initializing chatbot...');
+        // Set up event listeners first
+        setupEventListeners();
+        
+        // Listen for localStorage changes to detect token updates
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'hf_token') {
+                Debug.log('Token updated in another tab/window. Reloading...');
+                location.reload();
+            }
+        });
+        
+        // Check for token in localStorage
+        if (CONFIG.auth_token) {
+            Debug.log('Token found, loading model...');
             generator = await initializeModel(); // Use authenticated model load
-            if (generator) modelReady();
+            if (generator) {
+                modelReady();
+                Debug.log('Model is ready!');
+            }
         } else {
             Debug.log('No token found, showing login prompt...');
             document.getElementById('authContainer').style.display = 'block';
             document.getElementById('loadingContainer').style.display = 'none';
+            
+            // Add token refresh listener
+            listenForTokenRefresh();
         }
     } catch (error) {
         modelError(error);
+    }
+}
+
+// Listen for manual token entry
+function listenForTokenRefresh() {
+    const loginButton = document.getElementById('loginButton');
+    if (loginButton) {
+        Debug.log('Setting up login button listener');
+        loginButton.addEventListener('click', async () => {
+            const token = prompt("Enter your Hugging Face access token:");
+            if (token) {
+                Debug.log('New token entered, saving...');
+                localStorage.setItem('hf_token', token);
+                
+                // Try to initialize the model with the new token
+                try {
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('loadingContainer').style.display = 'block';
+                    UI.updateLoadingStatus('Loading model with new token...');
+                    
+                    generator = await initializeModel();
+                    if (generator) {
+                        modelReady();
+                        Debug.log('Model loaded successfully with new token!');
+                    }
+                } catch (error) {
+                    modelError(error);
+                }
+            }
+        });
     }
 }
 
