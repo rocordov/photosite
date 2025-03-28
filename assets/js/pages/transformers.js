@@ -606,6 +606,73 @@ function formatBytes(bytes, decimals = 2) {
 
 // Main initialization function
 async function initChatbot() {
+    // Insert settings panel HTML into chat container
+    const chatContainer = document.getElementById('chatContainer');
+    if (chatContainer) {
+        chatContainer.insertAdjacentHTML('afterbegin', `
+  <div id="settingsPanel" class="settings-panel hidden">
+      <label>Model:
+          <input type="text" id="settingModel" value="onnx-community/SmolLM2-135M-Instruct-ONNX-GQA">
+      </label>
+      <label>Max New Tokens:
+          <input type="number" id="settingMaxTokens" value="512">
+      </label>
+      <label>Temperature:
+          <input type="number" step="0.1" id="settingTemperature" value="0.4">
+      </label>
+      <label>Top P:
+          <input type="number" step="0.1" id="settingTopP" value="0.8">
+      </label>
+      <label>Repetition Penalty:
+          <input type="number" step="0.1" id="settingRepetition" value="1.2">
+      </label>
+      <label>Typing Speed (ms):
+          <input type="number" id="settingTypingSpeed" value="20">
+      </label>
+      <label>System Prompt:
+          <textarea id="settingSystemPrompt">You are a helpful, friendly AI assistant running directly in the user's browser using the Transformers.js library. You're designed to be concise but informative.</textarea>
+      </label>
+      <button id="saveSettingsButton">Apply Settings</button>
+  </div>
+  <button id="toggleSettingsButton">⚙️ Settings</button>
+        `);
+    }
+
+    // Inject CSS for settings panel
+    const style = document.createElement('style');
+    style.textContent = `
+  .settings-panel.hidden {
+      display: none;
+  }
+  .settings-panel {
+      padding: 1em;
+      border: 1px solid #ccc;
+      margin: 1em 0;
+      background: #f9f9f9;
+  }
+  .settings-panel label {
+      display: block;
+      margin-bottom: 0.5em;
+  }
+    `;
+    document.head.appendChild(style);
+
+    // Set up settings panel event listeners
+    document.getElementById('toggleSettingsButton').addEventListener('click', () => {
+        document.getElementById('settingsPanel').classList.toggle('hidden');
+    });
+
+    document.getElementById('saveSettingsButton').addEventListener('click', () => {
+        CONFIG.model = document.getElementById('settingModel').value;
+        CONFIG.max_new_tokens = parseInt(document.getElementById('settingMaxTokens').value);
+        CONFIG.temperature = parseFloat(document.getElementById('settingTemperature').value);
+        CONFIG.top_p = parseFloat(document.getElementById('settingTopP').value);
+        CONFIG.repetition_penalty = parseFloat(document.getElementById('settingRepetition').value);
+        CONFIG.typingSpeed = parseInt(document.getElementById('settingTypingSpeed').value);
+        CONFIG.systemPrompt = document.getElementById('settingSystemPrompt').value;
+        Debug.log('Updated CONFIG from UI.');
+    });
+
     try {
         Debug.log('Initializing chatbot...');
         // Set up event listeners first
