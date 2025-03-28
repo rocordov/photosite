@@ -89,7 +89,7 @@
 /* Card Content Area */
 .experiment-content {
   padding: var(--spacing-md);
-  /*height: 60%; /* 40% of card height for content */
+  height: auto; /* 40% of card height for content */
   display: flex;
   flex-direction: column;
 }
