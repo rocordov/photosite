@@ -381,6 +381,7 @@ async function generateResponse(userMessage) {
     try {
         // Combine chat history into a formatted prompt
         const formattedPrompt = formatPrompt(userMessage);
+        Debug.log('Formatted prompt:\n' + formattedPrompt); // <-- Add this line
         
         // Generate text using the pipeline
         const result = await generator(formattedPrompt, {
