@@ -28,6 +28,20 @@ const CONFIG = {
     auth_token: localStorage.getItem('hf_token') // Get token from localStorage
 };
 
+// Add this after the CONFIG object definition
+function loadSavedSettings() {
+    // Load each setting from localStorage, falling back to default values
+    CONFIG.model = localStorage.getItem('CONFIG_model') || 'onnx-community/SmolLM2-135M-Instruct-ONNX-GQA';
+    CONFIG.max_new_tokens = parseInt(localStorage.getItem('CONFIG_max_new_tokens')) || 512;
+    CONFIG.temperature = parseFloat(localStorage.getItem('CONFIG_temperature')) || 0.4;
+    CONFIG.top_p = parseFloat(localStorage.getItem('CONFIG_top_p')) || 0.8;
+    CONFIG.repetition_penalty = parseFloat(localStorage.getItem('CONFIG_repetition_penalty')) || 1.2;
+    CONFIG.typingSpeed = parseInt(localStorage.getItem('CONFIG_typingSpeed')) || 20;
+    CONFIG.systemPrompt = localStorage.getItem('CONFIG_systemPrompt') || CONFIG.systemPrompt;
+    
+    Debug.log('Loaded saved settings from localStorage');
+}
+
 // Suppress source map warnings specifically
 if (!CONFIG.debugMode) {
     const originalConsoleError = console.error;
@@ -604,8 +618,11 @@ function formatBytes(bytes, decimals = 2) {
 //    pipeline = window.Transformers.pipeline;
 //}
 
-// Main initialization function
+// Update the initChatbot function
 async function initChatbot() {
+    // Load saved settings first
+    loadSavedSettings();
+    
     // Insert settings panel HTML into chat container
     const chatContainer = document.getElementById('chatContainer');
     if (chatContainer) {
@@ -613,25 +630,25 @@ async function initChatbot() {
       <button id="toggleSettingsButton" style="margin: 10px; float: right;">⚙️ Settings</button>
       <div id="settingsPanel" class="settings-panel hidden">
         <label>Model:
-            <input type="text" id="settingModel" value="onnx-community/SmolLM2-135M-Instruct-ONNX-GQA">
+            <input type="text" id="settingModel" value="${CONFIG.model}">
         </label>
         <label>Max New Tokens:
-            <input type="number" id="settingMaxTokens" value="512">
+            <input type="number" id="settingMaxTokens" value="${CONFIG.max_new_tokens}">
         </label>
         <label>Temperature:
-            <input type="number" step="0.1" id="settingTemperature" value="0.4">
+            <input type="number" step="0.1" id="settingTemperature" value="${CONFIG.temperature}">
         </label>
         <label>Top P:
-            <input type="number" step="0.1" id="settingTopP" value="0.8">
+            <input type="number" step="0.1" id="settingTopP" value="${CONFIG.top_p}">
         </label>
         <label>Repetition Penalty:
-            <input type="number" step="0.1" id="settingRepetition" value="1.2">
+            <input type="number" step="0.1" id="settingRepetition" value="${CONFIG.repetition_penalty}">
         </label>
         <label>Typing Speed (ms):
-            <input type="number" id="settingTypingSpeed" value="20">
+            <input type="number" id="settingTypingSpeed" value="${CONFIG.typingSpeed}">
         </label>
         <label>System Prompt:
-            <textarea id="settingSystemPrompt">You are a helpful, friendly AI assistant running directly in the user's browser using the Transformers.js library. You're designed to be concise but informative.</textarea>
+            <textarea id="settingSystemPrompt">${CONFIG.systemPrompt}</textarea>
         </label>
         <button id="saveSettingsButton">Apply Settings</button>
       </div>
@@ -662,15 +679,33 @@ async function initChatbot() {
         document.getElementById('settingsPanel').classList.toggle('hidden');
     });
 
+    // Update the save settings event listener
     document.getElementById('saveSettingsButton').addEventListener('click', () => {
-        CONFIG.model = document.getElementById('settingModel').value;
-        CONFIG.max_new_tokens = parseInt(document.getElementById('settingMaxTokens').value);
-        CONFIG.temperature = parseFloat(document.getElementById('settingTemperature').value);
-        CONFIG.top_p = parseFloat(document.getElementById('settingTopP').value);
-        CONFIG.repetition_penalty = parseFloat(document.getElementById('settingRepetition').value);
-        CONFIG.typingSpeed = parseInt(document.getElementById('settingTypingSpeed').value);
-        CONFIG.systemPrompt = document.getElementById('settingSystemPrompt').value;
-        Debug.log('Updated CONFIG from UI.');
+        // Save all settings to localStorage
+        const newSettings = {
+            model: document.getElementById('settingModel').value,
+            max_new_tokens: document.getElementById('settingMaxTokens').value,
+            temperature: document.getElementById('settingTemperature').value,
+            top_p: document.getElementById('settingTopP').value,
+            repetition_penalty: document.getElementById('settingRepetition').value,
+            typingSpeed: document.getElementById('settingTypingSpeed').value,
+            systemPrompt: document.getElementById('settingSystemPrompt').value
+        };
+        
+        // Validate settings before saving
+        if (!newSettings.model || !newSettings.max_new_tokens || !newSettings.systemPrompt) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        // Save to localStorage
+        Object.entries(newSettings).forEach(([key, value]) => {
+            localStorage.setItem(`CONFIG_${key}`, value);
+        });
+        
+        Debug.log('Settings saved to localStorage');
+        alert('Settings saved. The chat will now reload to apply the new configuration.');
+        location.reload();
     });
 
     try {
