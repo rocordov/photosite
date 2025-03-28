@@ -511,7 +511,7 @@ let pipeline;
 // Main initialization function
 async function initChatbot() {
     try {
-        await waitForTransformers();
+        //await waitForTransformers();
         
         // Update loading status
         updateLoadingStatus('Loading model...');
