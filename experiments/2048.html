@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2048 Clone Game | Rois Cordova</title>
+  <meta name="description" content="A clone of the popular 2048 sliding puzzle game implemented with vanilla JavaScript.">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Global and Component CSS -->
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/components/header.css">
+  <link rel="stylesheet" href="../assets/css/components/footer.css">
+  <link rel="stylesheet" href="../assets/css/components/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/components/command-palette.css">
+  
+  <!-- Page-specific CSS -->
+  <link rel="stylesheet" href="../assets/css/pages/2048.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Navigation (loaded dynamically) -->
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <div class="game-container">
+      <div class="game-header">
+        <h1>2048</h1>
+        <div class="scores-container">
+          <div class="score-box">
+            <div class="score-label">SCORE</div>
+            <div id="score" class="score-value">0</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">BEST</div>
+            <div id="best-score" class="score-value">0</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="game-intro">
+        <p>Join the tiles, get to <strong>2048!</strong></p>
+        <div class="game-instructions">
+          <p><strong>HOW TO PLAY:</strong> Use your <strong>arrow keys</strong> to move the tiles. 
+          When two tiles with the same number touch, they <strong>merge into one!</strong></p>
+        </div>
+      </div>
+      
+      <div class="game-actions">
+        <button id="new-game" class="button">New Game</button>
+      </div>
+      
+      <div class="game-message">
+        <p></p>
+        <div class="game-message-buttons">
+          <button id="try-again" class="button">Try again</button>
+          <button id="keep-playing" class="button">Keep going</button>
+        </div>
+      </div>
+      
+      <div class="grid-container">
+        <!-- Game grid background -->
+        <div class="grid-background">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        
+        <!-- Game tiles will be dynamically inserted here -->
+        <div class="grid-tiles"></div>
+      </div>
+      
+      <p class="game-explanation">
+        <strong>Note:</strong> This is a clone of the popular <a href="https://play2048.co" target="_blank" rel="noopener">2048 game</a> 
+        created by <a href="https://gabrielecirulli.com" target="_blank" rel="noopener">Gabriele Cirulli</a>, 
+        which was inspired by <a href="https://asherv.com/threes/" target="_blank" rel="noopener">Threes by Asher Vollmer</a>.
+      </p>
+    </div>
+  </main>
+
+  <!-- Footer (loaded dynamically) -->
+  <footer id="site-footer"></footer>
+
+  <!-- Component Loader Script -->
+  <script src="../assets/js/components/component-loader.js" type="module"></script>
+  
+  <!-- Component scripts -->
+  <script src="../assets/js/components/theme-toggle.js" type="module"></script>
+  <script src="../assets/js/components/command-palette.js" type="module"></script>
+  
+  <!-- Page-specific Game Script -->
+  <script src="../assets/js/pages/2048.js" type="module"></script>
+</body>
+</html>
