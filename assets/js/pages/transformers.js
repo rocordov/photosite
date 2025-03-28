@@ -610,31 +610,31 @@ async function initChatbot() {
     const chatContainer = document.getElementById('chatContainer');
     if (chatContainer) {
         chatContainer.insertAdjacentHTML('afterbegin', `
-  <div id="settingsPanel" class="settings-panel hidden">
-      <label>Model:
-          <input type="text" id="settingModel" value="onnx-community/SmolLM2-135M-Instruct-ONNX-GQA">
-      </label>
-      <label>Max New Tokens:
-          <input type="number" id="settingMaxTokens" value="512">
-      </label>
-      <label>Temperature:
-          <input type="number" step="0.1" id="settingTemperature" value="0.4">
-      </label>
-      <label>Top P:
-          <input type="number" step="0.1" id="settingTopP" value="0.8">
-      </label>
-      <label>Repetition Penalty:
-          <input type="number" step="0.1" id="settingRepetition" value="1.2">
-      </label>
-      <label>Typing Speed (ms):
-          <input type="number" id="settingTypingSpeed" value="20">
-      </label>
-      <label>System Prompt:
-          <textarea id="settingSystemPrompt">You are a helpful, friendly AI assistant running directly in the user's browser using the Transformers.js library. You're designed to be concise but informative.</textarea>
-      </label>
-      <button id="saveSettingsButton">Apply Settings</button>
-  </div>
-  <button id="toggleSettingsButton">⚙️ Settings</button>
+      <button id="toggleSettingsButton" style="margin: 10px; float: right;">⚙️ Settings</button>
+      <div id="settingsPanel" class="settings-panel hidden">
+        <label>Model:
+            <input type="text" id="settingModel" value="onnx-community/SmolLM2-135M-Instruct-ONNX-GQA">
+        </label>
+        <label>Max New Tokens:
+            <input type="number" id="settingMaxTokens" value="512">
+        </label>
+        <label>Temperature:
+            <input type="number" step="0.1" id="settingTemperature" value="0.4">
+        </label>
+        <label>Top P:
+            <input type="number" step="0.1" id="settingTopP" value="0.8">
+        </label>
+        <label>Repetition Penalty:
+            <input type="number" step="0.1" id="settingRepetition" value="1.2">
+        </label>
+        <label>Typing Speed (ms):
+            <input type="number" id="settingTypingSpeed" value="20">
+        </label>
+        <label>System Prompt:
+            <textarea id="settingSystemPrompt">You are a helpful, friendly AI assistant running directly in the user's browser using the Transformers.js library. You're designed to be concise but informative.</textarea>
+        </label>
+        <button id="saveSettingsButton">Apply Settings</button>
+      </div>
         `);
     }
 
