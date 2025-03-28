@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformers.js Chatbot Demo</title>
+    <meta name="description" content="An interactive AI chatbot powered by Hugging Face Transformers.js running completely in your browser">
+    <link rel="stylesheet" href="../assets/css/pages/transformers.css">
+</head>
+<body>
+    <header>
+        <h1>AI Chatbot</h1>
+        <p class="subtitle">Powered by Transformers.js</p>
+    </header>
+
+    <main>
+        <div id="chatContainer">
+            <div id="chatHeader">
+                <div class="model-info">
+                    <span class="model-name">Xenova/SmolLM2-135M-Instruct</span>
+                    <div id="modelStatus" class="model-status">
+                        <span class="status-text">Initializing</span>
+                        <div class="status-indicator"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="conversationContainer">
+                <div id="conversation">
+                    <div class="message system">
+                        <div class="message-content">
+                            <p>Hello! I'm a lightweight AI assistant running completely in your browser using Transformers.js. How can I help you today?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="loadingContainer">
+                <div class="loading-spinner"></div>
+                <div id="loadingText">Loading AI model...</div>
+                <div id="loadingProgress">
+                    <div id="progressBar"></div>
+                </div>
+                <div id="loadingInfo">This may take a minute on first run</div>
+            </div>
+            
+            <div id="inputContainer">
+                <textarea id="userInput" placeholder="Type your message here..." rows="1"></textarea>
+                <button id="sendButton" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Note: All processing happens locally in your browser. No data is sent to external servers.</p>
+        <p class="tech-info">Using <a href="https://huggingface.co/Xenova/SmolLM2-135M-Instruct" target="_blank">SmolLM2-135M-Instruct</a> model via Hugging Face Transformers.js</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="../assets/js/pages/transformers.js"></script>
+</body>
+</html>
