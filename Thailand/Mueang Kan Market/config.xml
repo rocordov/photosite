@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
-				enableAutoPlay="true"
-					maxThumbRows="2"
-					imageScaleMode="SCALE"
-					audioUrlMp3="https://cdn.pixabay.com/audio/2024/10/12/audio_7dd52a2e33.mp3"
-					randomizeImages="true"
-					useFullscreenExpand="true"
-					autoPlayOnLoad="true"
-					galleryTitle="Mueang Kan Market"
-					imageTransitionType="CROSS_FADE"
+		enableAutoPlay="true"
+		maxThumbRows="2"
+		imageScaleMode="SCALE"
+		audioUrlMp3="https://cdn.pixabay.com/audio/2022/01/21/audio_8a0725a104.mp3"
+		randomizeImages="true"
+		useFullscreenExpand="true"
+		autoPlayOnLoad="true"
+		galleryTitle="Mueang Kan Market"
+		imageTransitionType="CROSS_FADE"
 		>
 			<image imageURL="images/_DSC4532_HDR.jpg" thumbURL="thumbs/_DSC4532_HDR.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
