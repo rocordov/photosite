@@ -11,33 +11,7 @@ Requirements:
 """
 
 import os
-from supabase import create_client, Client
-#!/usr/bin/env python3
-"""
-Supabase Connection Test Script
-
-This script demonstrates how to connect to a Supabase database using the
-supabase-py library and perform basic operations.
-
-Requirements:
-- supabase-py: pip install supabase
-- python-dotenv (optional, for loading credentials from .env file)
-"""
-
-#!/usr/bin/env python3
-"""
-Supabase Connection Test Script
-
-This script demonstrates how to connect to a Supabase database using the
-supabase-py library and perform basic operations.
-
-Requirements:
-- supabase-py: pip install supabase
-- python-dotenv (optional, for loading credentials from .env file)
-"""
-
-import os
-from supabase import create_client, Client
+from supabase import create_client
 
 # Supabase credentials
 SUPABASE_URL = 'https://yyfypeedlmgqqhukjhbe.supabase.co'
@@ -48,7 +22,7 @@ class SupabaseManager:
     
     def __init__(self, url=SUPABASE_URL, key=SUPABASE_KEY):
         """Initialize the Supabase client with the provided credentials."""
-        self.supabase: Client = create_client(url, key)
+        self.supabase = create_client(url, key)
         print(f"Connected to Supabase project: {url}")
     
     def test_connection(self):
@@ -99,8 +73,6 @@ def main():
     
     if connection_success:
         # If the connection test is successful, demonstrate some operations
-        # Uncomment these lines to test creating and listing entries
-        
         # Create a sample text entry
         sample_text = "This is a test entry from Python!"
         supabase_manager.create_text_entry(sample_text)
