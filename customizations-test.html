@@ -149,13 +149,9 @@
       updateDebugOutput('Session storage has been reset.');
     }
     
-    // Set up event listeners
-    document.getElementById('manualTest').addEventListener('click', testDataCollection);
-    document.getElementById('resetSession').addEventListener('click', resetSessionStorage);
-    
     // Initialize page
     document.addEventListener('DOMContentLoaded', () => {
-      updateDebugOutput('Click "Manually Test Data Collection & Storage" to begin testing.');
+      testDataCollection();
     });
   </script>
   
