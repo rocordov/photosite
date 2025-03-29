@@ -32,11 +32,22 @@
             measurementId: "G-HNBNZJC509"
         };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+        // Initialize Firebase with explicit auth domain handling
+        const app = initializeApp({
+            ...firebaseConfig,
+            authDomain: window.location.hostname === 'localhost' 
+                ? window.location.host 
+                : firebaseConfig.authDomain
+        });
+
         const auth = getAuth(app);
+        const analytics = getAnalytics(app);
         const db = getFirestore(app);
+
+        // Add debug logging for authentication
+        auth.onAuthStateChanged((user) => {
+            console.log('Auth state changed:', user ? `User: ${user.uid}` : 'No user');
+        });
 
         // Wait for DOM content to be loaded before attaching event listeners
         document.addEventListener('DOMContentLoaded', () => {
