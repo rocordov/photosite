@@ -49,41 +49,23 @@ class SupabaseManager:
         self.supabase = create_client(url, key)
         print(f"Connected to Supabase project: {url}")
     
-    def execute_sql(self, sql):
-        """Execute a raw SQL query against the Supabase database."""
-        try:
-            # Use the rpc method to execute raw SQL
-            # The 'rest' function is a REST endpoint that allows executing SQL directly
-            response = self.supabase.rpc('execute_sql', {'query': sql}).execute()
-            print(f"SQL execution successful")
-            return True
-        except Exception as e:
-            print(f"Error executing SQL: {e}")
-            return False
-    
-    def init_database(self):
-        """Initialize the database by creating the table and setting up RLS."""
-        print("Initializing database...")
-        
-        # Execute the table creation SQL
-        print("Creating text_entries table...")
-        table_created = self.execute_sql(SQL_CREATE_TABLE)
-        
-        if not table_created:
-            print("Failed to create table. The table might already exist or there's an error.")
-        else:
-            print("Table created successfully.")
-        
-        # Execute the RLS setup SQL
-        print("Setting up Row Level Security...")
-        rls_setup = self.execute_sql(SQL_SETUP_RLS)
-        
-        if not rls_setup:
-            print("Failed to set up RLS. Policies might already exist or there's an error.")
-        else:
-            print("RLS policies set up successfully.")
-        
-        return table_created or rls_setup
+    def print_table_creation_instructions(self):
+        """Print instructions for creating the table manually in Supabase."""
+        print("\n" + "="*80)
+        print("TABLE CREATION INSTRUCTIONS")
+        print("="*80)
+        print("The 'text_entries' table doesn't exist. To create it:")
+        print("1. Log in to your Supabase dashboard at https://app.supabase.com/")
+        print("2. Select your project (yyfypeedlmgqqhukjhbe)")
+        print("3. Navigate to the SQL Editor in the left sidebar")
+        print("4. Create a new query and paste the following SQL:")
+        print("\n```sql")
+        print(SQL_CREATE_TABLE)
+        print("\n" + SQL_SETUP_RLS)
+        print("```\n")
+        print("5. Run the query to create the table and set up RLS")
+        print("6. Run this script again to test the connection and add data")
+        print("="*80 + "\n")
     
     def test_connection(self):
         """Test the connection to Supabase."""
@@ -95,23 +77,17 @@ class SupabaseManager:
             
             # If we get here, the table exists
             print("Connection successful! The text_entries table exists.")
-            print(f"Response data: {response}")
+            if response.data:
+                print(f"Found {len(response.data)} entries in the table.")
+            else:
+                print("The table exists but is empty.")
             return True
         except Exception as e:
-            # If we get an error about the table not existing, try to create it
+            # If we get an error about the table not existing, show instructions
             if 'text_entries' in str(e) and 'does not exist' in str(e):
-                print("Connected successfully, but 'text_entries' table doesn't exist.")
-                print("Attempting to create the table...")
-                
-                # Try to initialize the database
-                db_initialized = self.init_database()
-                
-                if db_initialized:
-                    print("Database initialized successfully!")
-                    return True
-                else:
-                    print("Failed to initialize database. Check permissions or if the table already exists.")
-                    return False
+                print("Connected successfully to Supabase, but the 'text_entries' table doesn't exist.")
+                self.print_table_creation_instructions()
+                return False
             else:
                 print(f"Error testing connection: {e}")
                 return False
