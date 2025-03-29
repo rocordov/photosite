@@ -268,7 +268,14 @@
         
         // IMPORTANT: Replace with your actual Supabase URL and anon key
         const SUPABASE_URL = 'https://yyfypeedlmgqqhukjhbe.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5ZnlwZWVkbG1ncXFodWtqaGJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMyMDk1MzYsImV4cCI6MjA1ODc4NTUzNn0.8qkf2crtzNOUCNpzEm0zMG9eUEkK0ldj48oeN3vdbiQ';
+        // Load Supabase key from local file
+        const SUPABASE_ANON_KEY = await fetch('../secrets/supabase.key')
+            .then(response => response.text())
+            .then(key => key.trim())
+            .catch(error => {
+            console.error('Error loading Supabase key:', error);
+            return '';
+            });
         
         // Initialize the Supabase client
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
