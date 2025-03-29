@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
 				enableAutoPlay="true"
+					showAutoPlayButton="true"
 					captionPosition="BELOW_IMAGE"
 					autohideThumbs="true"
 					playAudioOnLoad="true"
 					showImageNumber="false"
-					showAudioButton="true"
 					showNavButtons="true"
 					buttonBarPosition="TOP"
 					maxThumbRows="2"
