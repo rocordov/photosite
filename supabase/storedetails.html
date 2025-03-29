@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Details Collector</title>
+    
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2a5885;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #2a5885;
+            margin-top: 30px;
+        }
+        
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        table th, table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        table th {
+            background-color: #f2f2f2;
+        }
+        
+        .details-row:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+        
+        button {
+            background-color: #2a5885;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #1e4b6d;
+        }
+        
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .status-message {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+        
+        .instructions {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+        }
+        
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Browser Details Collector</h1>
+    
+    <div class="instructions">
+        <h3>Setup Instructions</h3>
+        <p>Before using this page, make sure to:</p>
+        <ol>
+            <li>Create the <code>client_session_details</code> table in your Supabase project using the provided SQL script:
+                <pre>supabase db query -f create_client_session_details.sql</pre>
+            </li>
+            <li>Update the Supabase configuration in the JavaScript section below with your project URL and anon key.</li>
+        </ol>
+    </div>
+    
+    <div class="card">
+        <h2>Your Browser Details</h2>
+        <table id="detailsTable">
+            <tbody>
+                <!-- Browser details will be displayed here -->
+            </tbody>
+        </table>
+        
+        <button id="storeButton">Store Details in Supabase</button>
+        <div id="statusMessage" class="status-message" style="display: none;"></div>
+    </div>
+    
+    <div class="instructions">
+        <h3>How It Works</h3>
+        <p>This page collects various browser and system details using JavaScript's built-in capabilities. The details are displayed in the table above and can be stored in your Supabase database when you click the "Store Details" button.</p>
+        <p>Data is stored in the <code>client_session_details</code> table with the structure specified in the SQL script.</p>
+    </div>
+
+    <script>
+        // ===================================================
+        // Supabase Configuration
+        // ===================================================
+        
+        // IMPORTANT: Replace with your actual Supabase URL and anon key
+        const SUPABASE_URL = 'https://yyfypeedlmgqqhukjhbe.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5ZnlwZWVkbG1ncXFodWtqaGJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMyMDk1MzYsImV4cCI6MjA1ODc4NTUzNn0.8qkf2crtzNOUCNpzEm0zMG9eUEkK0ldj48oeN3vdbiQ';
+        
+        // Initialize the Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // ===================================================
+        // Browser Detail Detection Functions
+        // ===================================================
+        
+        /**
+         * Gets detailed browser information from the user agent string
+         * @returns {Object} Browser name and version
+         */
+        function getBrowserDetails() {
+            const userAgent = navigator.userAgent;
+            let browserName = "Unknown";
+            let browserVersion = "";
+            
+            // Detect browser name and version
+            if (userAgent.indexOf("Firefox") > -1) {
+                browserName = "Mozilla Firefox";
+                browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)[1];
+            } else if (userAgent.indexOf("SamsungBrowser") > -1) {
+                browserName = "Samsung Internet";
+                browserVersion = userAgent.match(/SamsungBrowser\/([0-9.]+)/)[1];
+            } else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
+                browserName = "Opera";
+                browserVersion = userAgent.indexOf("Opera") > -1 
+                    ? userAgent.match(/Opera\/([0-9.]+)/)[1]
+                    : userAgent.match(/OPR\/([0-9.]+)/)[1];
+            } else if (userAgent.indexOf("Edg") > -1) {
+                browserName = "Microsoft Edge";
+                browserVersion = userAgent.match(/Edg\/([0-9.]+)/)[1];
+            } else if (userAgent.indexOf("Chrome") > -1) {
+                browserName = "Google Chrome";
+                browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)[1];
+            } else if (userAgent.indexOf("Safari") > -1) {
+                browserName = "Apple Safari";
+                browserVersion = userAgent.match(/Safari\/([0-9.]+)/)[1];
+            } else if (userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident") > -1) {
+                browserName = "Internet Explorer";
+                browserVersion = userAgent.indexOf("MSIE") > -1 
+                    ? userAgent.match(/MSIE ([0-9.]+)/)[1]
+                    : userAgent.match(/rv:([0-9.]+)/)[1];
+            }
+            
+            return {
+                name: browserName,
+                version: browserVersion
+            };
+        }
+        
+        /**
+         * Gets the operating system information
+         * @returns {String} Operating system name and version if available
+         */
+        function getOSDetails() {
+            const userAgent = navigator.userAgent;
+            let osName = "Unknown";
+            let osVersion = "";
+            
+            if (userAgent.indexOf("Win") > -1) {
+                osName = "Windows";
+                if (userAgent.indexOf("Windows NT 10.0") > -1) osVersion = "10";
+                else if (userAgent.indexOf("Windows NT 6.3") > -1) osVersion = "8.1";
+                else if (userAgent.indexOf("Windows NT 6.2") > -1) osVersion = "8";
+                else if (userAgent.indexOf("Windows NT 6.1") > -1) osVersion = "7";
+                else if (userAgent.indexOf("Windows NT 6.0") > -1) osVersion = "Vista";
+                else if (userAgent.indexOf("Windows NT 5.1") > -1) osVersion = "XP";
+                else if (userAgent.indexOf("Windows NT 5.0") > -1) osVersion = "2000";
+            } else if (userAgent.indexOf("Mac") > -1) {
+                osName = "macOS";
+                // Attempt to extract macOS version
+                const macOSVersionMatch = userAgent.match(/Mac OS X ([0-9_]+)/);
+                if (macOSVersionMatch) {
+                    osVersion = macOSVersionMatch[1].replace(/_/g, '.');
+                }
+            } else if (userAgent.indexOf("Android") > -1) {
+                osName = "Android";
+                const match = userAgent.match(/Android ([0-9.]+)/);
+                if (match) osVersion = match[1];
+            } else if (userAgent.indexOf("iOS") > -1 || userAgent.indexOf("iPhone") > -1 || userAgent.indexOf("iPad") > -1) {
+                osName = "iOS";
+                // Attempt to extract iOS version
+                const iosVersionMatch = userAgent.match(/OS ([0-9_]+)/);
+                if (iosVersionMatch) {
+                    osVersion = iosVersionMatch[1].replace(/_/g, '.');
+                }
+            } else if (userAgent.indexOf("Linux") > -1) {
+                osName = "Linux";
+            }
+            
+            return osVersion ? `${osName} ${osVersion}` : osName;
+        }
+        
+        /**
+         * Gets screen resolution details
+         * @returns {String} Screen resolution
+         */
+        function getScreenResolution() {
+            return `${window.screen.width}x${window.screen.height} (${window.innerWidth}x${window.innerHeight} viewport)`;
+        }
+        
+        /**
+         * Gets language preferences
+         * @returns {String} Browser language settings
+         */
+        function getLanguageSettings() {
+            return navigator.language || navigator.userLanguage || "Unknown";
+        }
+        
+        /**
+         * Gets timezone information
+         * @returns {String} Timezone and offset
+         */
+        function getTimezone() {
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const offset = new Date().getTimezoneOffset();
+            const hours = Math.abs(Math.floor(offset / 60));
+            const minutes = Math.abs(offset % 60);
+            const sign = offset < 0 ? "+" : "-";
+            return `${timezone} (UTC${sign}${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")})`;
+        }
+        
+        /**
+         * Collects all browser details
+         * @returns {Object} All browser and system details
+         */
+        function collectBrowserDetails() {
+            const browser = getBrowserDetails();
+            const data = {
+                browser: `${browser.name} ${browser.version}`,
+                os: getOSDetails(),
+                screen_resolution: getScreenResolution(),
+                language: getLanguageSettings(),
+                user_agent: navigator.userAgent,
+                color_depth: `${window.screen.colorDepth}-bit`,
+                timezone: getTimezone(),
+                cookies_enabled: navigator.cookieEnabled,
+                referring_url: document.referrer || "Direct navigation",
+                // Note: IP address will be collected server-side by Supabase
+            };
+            return data;
+        }
+        
+        // ===================================================
+        // UI Interaction Functions
+        // ===================================================
+        
+        /**
+         * Displays browser details in the table
+         * @param {Object} details - Browser and system details
+         */
+        function displayBrowserDetails(details) {
+            const table = document.getElementById("detailsTable");
+            table.innerHTML = ""; // Clear existing content
+            
+            // Create table headers
+            const thead = document.createElement("thead");
+            thead.innerHTML = `
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement("tbody");
+            
+            // Add each detail to the table
+            for (const [key, value] of Object.entries(details)) {
+                // Format key from snake_case to Title Case
+                const formattedKey = key
+                    .split('_')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+                
+                const row = document.createElement("tr");
+                row.className = "details-row";
+                row.innerHTML = `
+                    <td><strong>${formattedKey}</strong></td>
+                    <td>${value}</td>
+                `;
+                tbody.appendChild(row);
+            }
+            
+            table.appendChild(tbody);
+        }
+        
+        /**
+         * Shows a status message with the specified type
+         * @param {String} message - The message to display
+         * @param {String} type - The message type (success or error)
+         */
+        function showStatus(message, type) {
+            const statusElement = document.getElementById("statusMessage");
+            statusElement.textContent = message;
+            statusElement.className = `status-message ${type}`;
+            statusElement.style.display = "block";
+        }
+        
+        /**
+         * Stores browser details in Supabase
+         * @param {Object} details - Browser and system details to store
+         */
+        async function storeBrowserDetails(details) {
+            try {
+                const { data, error } = await supabase
+                    .from('client_session_details')
+                    .insert([details]);
+                
+                if (error) throw error;
+                
+                console.log("Data stored successfully:", data);
+                showStatus("Browser details were successfully stored in the database.", "success");
+                
+                // Disable the store button to prevent duplicate submissions
+                document.getElementById("storeButton").disabled = true;
+                
+            } catch (error) {
+                console.error("Error storing browser details:", error);
+                showStatus(`Error: ${error.message || "Failed to store browser details."}`, "error");
+            }
+        }
+        
+        // ===================================================
+        // Initialize the page
+        // ===================================================
+        
+        // When the DOM is fully loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            // Collect and display browser details
+            const browserDetails = collectBrowserDetails();
+            displayBrowserDetails(browserDetails);
+            
+            // Set up store button click handler
+            document.getElementById("storeButton").addEventListener("click", function() {
+                this.disabled = true; // Prevent multiple clicks
+                this.textContent = "Storing...";
+                
+                // Store the details in Supabase
+                storeBrowserDetails(browserDetails)
+                    .finally(() => {
+                        this.textContent = "Store Details in Supabase";
+                    });
+            });
+        });
+    </script>
+
+    <div class="instructions">
+        <h3>Production Deployment Notes</h3>
+        <p>For production use:</p>
+        <ol>
+            <li>Store your Supabase URL and anon key in environment variables</li>
+            <li>Consider implementing more robust error handling and retry logic</li>
+            <li>Add privacy notices and user consent for data collection</li>
+            <li>Add data retention policies for the collected information</li>
+        </ol>
+    </div>
+</body>
+</html>
