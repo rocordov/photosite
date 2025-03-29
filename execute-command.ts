@@ -1,4 +1,9 @@
 /**
+ * NOTE: The TypeScript errors shown in VSCode are expected and can be ignored.
+ * This code is designed to run in Deno's runtime environment provided by Supabase
+ * Edge Functions, not in a typical Node.js environment. When deployed to Supabase,
+ * these imports and Deno-specific APIs will work correctly.
+ * 
  * Secure Command Execution Intermediary (Supabase Edge Function)
  * 
  * This edge function serves as a secure intermediary between an AI system and a Supabase project.
