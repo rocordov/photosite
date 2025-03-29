@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <juiceboxgallery
-				playAudioOnLoad="true"
-					audioUrlMp3="https://cdn.pixabay.com/audio/2024/10/29/audio_0ef8bb6cf5.mp3"
+				enableAutoPlay="true"
+					captionPosition="BELOW_IMAGE"
+					autohideThumbs="true"
+					playAudioOnLoad="true"
+					showImageNumber="false"
+					showNavButtons="true"
+					maxThumbRows="2"
+					imageScaleMode="SCALE"
+					audioUrlMp3="https://cdn.pixabay.com/audio/2023/12/21/audio_9a762c312f.mp3"
+					randomizeImages="true"
+					useFullscreenExpand="true"
+					autoPlayOnLoad="true"
+					galleryTitle="Tempe Town Lake"
+					imageTransitionType="CROSS_FADE"
 		>
+			<image imageURL="images/IMG_5061.jpg" thumbURL="thumbs/IMG_5061.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_DSC5386_stack.jpg" thumbURL="thumbs/_DSC5386_stack.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
 			<image imageURL="images/IMG_4685.jpg" thumbURL="thumbs/IMG_4685.jpg" linkURL="" linkTarget="_blank">
 			<title><![CDATA[]]></title>
 			<caption><![CDATA[]]></caption>
