@@ -122,6 +122,18 @@ function loadCustomizationsScript() {
 
 // Initialize components on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
+  // Load client.js and execute functions
+  const script = document.createElement('script');
+  script.src = `${rootPath}assets/js/client.js`;
+  script.onload = () => {
+    resetSessionStorage();
+    dataCollection();
+  };
+  document.head.appendChild(script);
+  
+  console.log('Component loader initialized');
+  loadLayoutComponents();
+  loadCustomizationsScript();
   console.log('Component loader initialized');
   loadLayoutComponents();
   loadCustomizationsScript();
