@@ -18,7 +18,8 @@
     'use strict';
 
     // Control whether to log debug information to console
-    const DEBUG = false;
+    // Can be overridden by setting window.SESSION_TRACKER_DEBUG
+    const DEBUG = window.SESSION_TRACKER_DEBUG || false;
 
     // Session storage key to prevent multiple submissions per session
     const SESSION_STORAGE_KEY = 'session_details_stored';
@@ -38,6 +39,15 @@
     function logDebug(message, data) {
         if (DEBUG) {
             console.log(`[SessionTracker] ${message}`, data || '');
+            
+            // If in debug mode, also save last session data to localStorage for testing
+            if (data && message.includes('Collected session details')) {
+                try {
+                    localStorage.setItem('debug_session_data', JSON.stringify(data, null, 2));
+                } catch (e) {
+                    console.error('Failed to save debug data to localStorage', e);
+                }
+            }
         }
     }
 
