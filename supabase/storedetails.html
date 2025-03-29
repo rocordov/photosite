@@ -269,7 +269,7 @@
         // IMPORTANT: Replace with your actual Supabase URL and anon key
         const SUPABASE_URL = 'https://yyfypeedlmgqqhukjhbe.supabase.co';
         // Load Supabase key from local file
-        const SUPABASE_ANON_KEY = await fetch('../secrets/supabase.key')
+        const SUPABASE_ANON_KEY =  fetch('../secrets/supabase.key')
             .then(response => response.text())
             .then(key => key.trim())
             .catch(error => {
