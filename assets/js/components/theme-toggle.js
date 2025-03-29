@@ -9,10 +9,10 @@ export function initThemeToggle() {
   const themeToggle = document.querySelector('.theme-toggle');
   const root = document.documentElement;
   
-  if (!themeToggle) {
+  //if (!themeToggle) {
     //console.error('Theme toggle button not found in DOM');
-    return;
-  }
+    //return;
+  //}
 
   // Set initial theme
   const savedTheme = localStorage.getItem('theme') || 'dark';
