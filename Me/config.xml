@@ -5,6 +5,7 @@
 					autohideThumbs="true"
 					playAudioOnLoad="true"
 					showImageNumber="false"
+					showAudioButton="true"
 					showNavButtons="true"
 					maxThumbRows="2"
 					imageScaleMode="SCALE"
