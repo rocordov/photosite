@@ -76,15 +76,15 @@ def main():
         # Uncomment these lines to test creating and listing entries
         
         # Create a sample text entry
-        # sample_text = "This is a test entry from Python!"
-        # supabase_manager.create_text_entry(sample_text)
+        sample_text = "This is a test entry from Python!"
+        supabase_manager.create_text_entry(sample_text)
         
         # List existing entries
-        # entries = supabase_manager.list_text_entries()
-        # if entries:
-        #     print("\nText Entries:")
-        #     for i, entry in enumerate(entries, 1):
-        #         print(f"{i}. {entry.get('content', 'No content')} - {entry.get('created_at', 'Unknown date')}")
+        entries = supabase_manager.list_text_entries()
+        if entries:
+            print("\nText Entries:")
+            for i, entry in enumerate(entries, 1):
+                print(f"{i}. {entry.get('content', 'No content')} - {entry.get('created_at', 'Unknown date')}")
     
     print("\nConnection test complete.")
 
