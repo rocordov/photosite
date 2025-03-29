@@ -148,11 +148,8 @@
       showStatus('Session storage reset. You can now test data collection again.', 'success');
       updateDebugOutput('Session storage has been reset.');
     }
-    
-    // Initialize page
-    document.addEventListener('DOMContentLoaded', () => {
-      testDataCollection();
-    });
+    testDataCollection();
+   
   </script>
   
   <!-- Load our customizations script - this simulates what component-loader.js does -->
