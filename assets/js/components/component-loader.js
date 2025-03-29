@@ -1,4 +1,4 @@
-//import { initThemeToggle } from './theme-toggle.js';
+import { initThemeToggle } from './theme-toggle.js';
 
 /**
  * Component Loader
