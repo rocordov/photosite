@@ -265,25 +265,41 @@
         // ===================================================
         // Supabase Configuration
         // ===================================================
-        
-        // IMPORTANT: Replace with your actual Supabase URL and anon key
-        const SUPABASE_URL = 'https://yyfypeedlmgqqhukjhbe.supabase.co';
-        // Load Supabase key from local file
-        const SUPABASE_ANON_KEY = fetch('../secrets/supabase.key')
-            .then(response => response.text())
-            .then(key => {
-            const trimmedKey = key.trim();
-            console.log('SUPABASE_ANON_KEY:', trimmedKey); // Debug log
-            return trimmedKey;
-            })
-            .catch(error => {
-            console.error('Error loading Supabase key:', error);
-            return '';
-            });
-        
-        // Initialize the Supabase client
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
+
+        let supabase;
+
+        async function initializeSupabase() {
+            try {
+                // Load Supabase key from local file
+                const response = await fetch('../secrets/supabase.key');
+                const SUPABASE_ANON_KEY = (await response.text()).trim();
+                
+                if (!SUPABASE_ANON_KEY) {
+                    throw new Error('Failed to load Supabase key');
+                }
+
+                // Initialize the Supabase client
+                supabase = window.supabase.createClient(
+                    'https://yyfypeedlmgqqhukjhbe.supabase.co',
+                    SUPABASE_ANON_KEY,
+                    {
+                        auth: {
+                            autoRefreshToken: true,
+                            persistSession: true,
+                            detectSessionInUrl: true
+                        }
+                    }
+                );
+
+                console.log('Supabase client initialized successfully');
+                return true;
+            } catch (error) {
+                console.error('Error initializing Supabase:', error);
+                showStatus('Failed to initialize database connection', 'error');
+                return false;
+            }
+        }
+
         // Store the current user object
         let currentUser = null;
         
@@ -647,20 +663,24 @@
         // Initialize the page
         // ===================================================
         
-        // When the DOM is fully loaded
-        document.addEventListener("DOMContentLoaded", function() {
-            // Initialize authentication
-            initializeAuth();
+        // Update the DOMContentLoaded event listener
+        document.addEventListener("DOMContentLoaded", async function() {
+            // Initialize Supabase first
+            const initialized = await initializeSupabase();
+            if (!initialized) {
+                showStatus('Failed to initialize. Check console for details.', 'error');
+                return;
+            }
+            
+            // Initialize authentication after Supabase is ready
+            await initializeAuth();
             
             // Initial details collection and display
             refreshDetailsDisplay();
             
             // Set up store button click handler
             document.getElementById("storeButton").addEventListener("click", function() {
-                // Collect latest details including authentication status
                 const allDetails = collectAllDetails();
-                
-                // Store in Supabase
                 storeDetails(allDetails);
             });
         });
