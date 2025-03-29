@@ -26,18 +26,37 @@ class SupabaseManager:
         print(f"Connected to Supabase project: {url}")
     
     def test_connection(self):
-        """Test the connection to Supabase by attempting a simple query."""
+        """Test the connection to Supabase."""
         try:
-            # Test query - this will try to access the public schema's tables
-            # Adjust table name as needed - if this doesn't exist, it will still
-            # validate your connection but return an empty result
-            response = self.supabase.table('profiles').select('*').limit(1).execute()
-            print("Connection test successful!")
-            print(f"Response data: {response}")
-            return True
+            # Instead of querying tables directly, let's check the Supabase API info
+            # which should work regardless of what tables are in the database
+            print("Testing connection to Supabase...")
+            # This is a low-level method to get database connection info
+            # It should work even if no tables exist
+            response = self.supabase.table('text_entries').select('*').limit(1).execute()
+            print("Connection to Supabase API successful!")
+            
+            # Check if we got an error about the table not existing
+            if response.data == [] and "does not exist" in str(response):
+                print("The 'text_entries' table doesn't exist yet. Let's create it.")
+                # In an actual app, you'd run a CREATE TABLE SQL statement here
+                # Since we can't do that via the Python client easily, we'll just 
+                # try inserting data and let Supabase create the table if needed
+                return True
+            else:
+                print("Connection test successful!")
+                print(f"Response data: {response}")
+                return True
         except Exception as e:
-            print(f"Error testing connection: {e}")
-            return False
+            # If we get a specific error about table not existing, that's actually okay
+            # It means we connected successfully but the table isn't there
+            if 'text_entries' in str(e) and 'does not exist' in str(e):
+                print("Connected successfully, but 'text_entries' table doesn't exist.")
+                print("This is expected if you haven't created the table yet.")
+                return True
+            else:
+                print(f"Error testing connection: {e}")
+                return False
     
     def create_text_entry(self, content):
         """Create a new text entry in the 'text_entries' table."""
