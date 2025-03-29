@@ -418,15 +418,30 @@
             try {
                 console.log('Initializing Supabase client...');
                 
-                // Create Supabase client
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                // Create Supabase client with additional options
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: {
+                        autoRefreshToken: true,
+                        persistSession: true,
+                        detectSessionInUrl: true
+                    }
+                });
                 
+                // Test the connection and auth configuration
+                supabaseClient.auth.getSession().then(({ data, error }) => {
+                    if (error) {
+                        console.error('Auth configuration test failed:', error);
+                    } else {
+                        console.log('Auth configuration test successful');
+                    }
+                });
+
                 // Set up auth state change listener
                 supabaseClient.auth.onAuthStateChange((event, session) => {
-                    console.log('Auth state changed:', event);
+                    console.log('Auth state changed:', event, session);
                     
                     if (event === 'SIGNED_IN') {
-                        console.log('User signed in');
+                        console.log('User signed in:', session?.user?.email);
                         getUserProfile(session.user);
                     } else if (event === 'SIGNED_OUT') {
                         console.log('User signed out');
@@ -435,12 +450,14 @@
                 });
                 
                 console.log('Supabase client initialized successfully');
+                return true;
             } catch (error) {
                 console.error('Failed to initialize Supabase client:', error);
                 showError('Failed to initialize Supabase client. Please check your configuration.');
+                return false;
             }
         }
-        
+
         /**
          * Check for an existing session
          */
@@ -472,24 +489,27 @@
         async function handleGoogleSignIn() {
             try {
                 showLoading(true);
-                showStatus('Redirecting to Google...', 'success');
+                showStatus('Initiating Google sign-in...', 'success');
                 
-                // Initiate Google OAuth flow
-                const { error } = await supabaseClient.auth.signInWithOAuth({
+                const { data, error } = await supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: window.location.href
+                        redirectTo: window.location.origin + window.location.pathname,
+                        queryParams: {
+                            access_type: 'offline',
+                            prompt: 'consent'
+                        }
                     }
                 });
-                
+
                 if (error) {
                     throw error;
                 }
-                
-                // Redirecting to Google login...
+
+                console.log('Google sign-in initiated:', data);
             } catch (error) {
-                console.error('Error signing in with Google:', error);
-                showError('Failed to authenticate with Google: ' + error.message);
+                console.error('Google sign-in error:', error);
+                showError(`Authentication failed: ${error.message}`);
                 showLoading(false);
             }
         }
