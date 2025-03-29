@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browser Details Collector</title>
+    <title>Browser & User Details Collector</title>
     
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
@@ -66,6 +66,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
+            margin-right: 10px;
         }
         
         button:hover {
@@ -124,10 +125,88 @@
             color: #0277bd;
             border: 1px solid #81d4fa;
         }
+
+        .auth-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            border-left: 4px solid #4285f4;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            border: 2px solid #4285f4;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .profile-email {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .google-sign-in {
+            background-color: #4285F4;
+        }
+
+        .google-sign-in:hover {
+            background-color: #3367D6;
+        }
+
+        .sign-out-btn {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .sign-out-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .auth-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .section-divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 15px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <h1>Browser Details Collector</h1>
+    <h1>Browser & User Details Collector</h1>
     
     <div class="instructions">
         <h3>Setup Instructions</h3>
@@ -137,7 +216,30 @@
                 <pre>supabase db query -f create_client_session_details.sql</pre>
             </li>
             <li>Update the Supabase configuration in the JavaScript section below with your project URL and anon key.</li>
+            <li>Configure authentication providers in your Supabase project dashboard (e.g., Google OAuth).</li>
         </ol>
+    </div>
+    
+    <div class="card auth-section" id="authSection">
+        <h2>Authentication</h2>
+        <div id="unauthenticated" class="auth-status">
+            <p>You are not authenticated. Sign in to associate your details with your user profile.</p>
+            <div class="auth-buttons">
+                <button id="googleSignInBtn" class="google-sign-in">Sign in with Google</button>
+            </div>
+        </div>
+        <div id="authenticated" class="hidden">
+            <div class="profile-container">
+                <img id="profileAvatar" class="profile-avatar" src="https://www.gravatar.com/avatar/?d=mp" alt="Profile Avatar">
+                <div class="profile-info">
+                    <div id="profileName" class="profile-name">User Name</div>
+                    <div id="profileEmail" class="profile-email">user@example.com</div>
+                </div>
+            </div>
+            <div class="auth-buttons">
+                <button id="signOutBtn" class="sign-out-btn">Sign Out</button>
+            </div>
+        </div>
     </div>
     
     <div class="card">
@@ -155,6 +257,7 @@
     <div class="instructions">
         <h3>How It Works</h3>
         <p>This page collects various browser and system details using JavaScript's built-in capabilities. The details are displayed in the table above and can be stored in your Supabase database when you click the "Store Details" button.</p>
+        <p>If you sign in, your user information will be associated with the browser details in the database.</p>
         <p>Data is stored in the <code>client_session_details</code> table with the structure specified in the SQL script.</p>
     </div>
 
@@ -169,6 +272,114 @@
         
         // Initialize the Supabase client
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Store the current user object
+        let currentUser = null;
+        
+        // ===================================================
+        // Authentication Functions
+        // ===================================================
+        
+        /**
+         * Initialize authentication state and setup listeners
+         */
+        async function initializeAuth() {
+            // Set up auth state change listener
+            supabase.auth.onAuthStateChange(handleAuthStateChange);
+            
+            // Check if user is already signed in
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                const { user } = session;
+                currentUser = user;
+                updateAuthUI(true, user);
+            } else {
+                updateAuthUI(false);
+            }
+            
+            // Set up sign in/out buttons
+            document.getElementById('googleSignInBtn').addEventListener('click', signInWithGoogle);
+            document.getElementById('signOutBtn').addEventListener('click', signOut);
+        }
+        
+        /**
+         * Handle authentication state changes
+         * @param {string} event - Auth event name
+         * @param {object} session - User session
+         */
+        function handleAuthStateChange(event, session) {
+            console.log('Auth state changed:', event);
+            
+            if (event === 'SIGNED_IN') {
+                currentUser = session.user;
+                updateAuthUI(true, session.user);
+                showStatus('You are now signed in', 'success');
+            } else if (event === 'SIGNED_OUT') {
+                currentUser = null;
+                updateAuthUI(false);
+                showStatus('You have signed out', 'info');
+            }
+        }
+        
+        /**
+         * Sign in with Google
+         */
+        async function signInWithGoogle() {
+            try {
+                const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.href
+                    }
+                });
+                
+                if (error) throw error;
+                
+                // Redirect will happen automatically
+            } catch (error) {
+                console.error('Error signing in with Google:', error);
+                showStatus('Error signing in with Google: ' + error.message, 'error');
+            }
+        }
+        
+        /**
+         * Sign out the current user
+         */
+        async function signOut() {
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+            } catch (error) {
+                console.error('Error signing out:', error);
+                showStatus('Error signing out: ' + error.message, 'error');
+            }
+        }
+        
+        /**
+         * Update the authentication UI based on auth state
+         * @param {boolean} isAuthenticated - Whether user is authenticated
+         * @param {object} user - User object if authenticated
+         */
+        function updateAuthUI(isAuthenticated, user = null) {
+            const unauthenticatedEl = document.getElementById('unauthenticated');
+            const authenticatedEl = document.getElementById('authenticated');
+            
+            if (isAuthenticated && user) {
+                unauthenticatedEl.classList.add('hidden');
+                authenticatedEl.classList.remove('hidden');
+                
+                // Update profile information
+                document.getElementById('profileName').textContent = user.user_metadata?.full_name || 'User';
+                document.getElementById('profileEmail').textContent = user.email || '';
+                
+                // Update avatar if available
+                const avatarUrl = user.user_metadata?.avatar_url || 'https://www.gravatar.com/avatar/?d=mp';
+                document.getElementById('profileAvatar').src = avatarUrl;
+            } else {
+                unauthenticatedEl.classList.remove('hidden');
+                authenticatedEl.classList.add('hidden');
+            }
+        }
         
         // ===================================================
         // Browser Detail Detection Functions
@@ -290,12 +501,13 @@
         }
         
         /**
-         * Collects all browser details
-         * @returns {Object} All browser and system details
+         * Collects all browser and user details
+         * @returns {Object} All browser, system and user details
          */
-        function collectBrowserDetails() {
+        function collectAllDetails() {
             const browser = getBrowserDetails();
             const data = {
+                // System data
                 browser: `${browser.name} ${browser.version}`,
                 os: getOSDetails(),
                 screen_resolution: getScreenResolution(),
@@ -305,8 +517,16 @@
                 timezone: getTimezone(),
                 cookies_enabled: navigator.cookieEnabled,
                 referring_url: document.referrer || "Direct navigation",
-                // Note: IP address will be collected server-side by Supabase
+                
+                // Authentication data
+                is_authenticated: !!currentUser,
+                user_id: currentUser?.id || null,
+                auth_provider: currentUser?.app_metadata?.provider || null,
+                email: currentUser?.email || null,
+                display_name: currentUser?.user_metadata?.full_name || null,
+                avatar_url: currentUser?.user_metadata?.avatar_url || null
             };
+            
             return data;
         }
         
@@ -315,10 +535,10 @@
         // ===================================================
         
         /**
-         * Displays browser details in the table
+         * Displays browser and user details in the table
          * @param {Object} details - Browser and system details
          */
-        function displayBrowserDetails(details) {
+        function displayDetails(details) {
             const table = document.getElementById("detailsTable");
             table.innerHTML = ""; // Clear existing content
             
@@ -337,6 +557,9 @@
             
             // Add each detail to the table
             for (const [key, value] of Object.entries(details)) {
+                // Skip null values
+                if (value === null) continue;
+                
                 // Format key from snake_case to Title Case
                 const formattedKey = key
                     .split('_')
@@ -347,7 +570,7 @@
                 row.className = "details-row";
                 row.innerHTML = `
                     <td><strong>${formattedKey}</strong></td>
-                    <td>${value}</td>
+                    <td>${value === true ? 'Yes' : value === false ? 'No' : value}</td>
                 `;
                 tbody.appendChild(row);
             }
@@ -358,7 +581,7 @@
         /**
          * Shows a status message with the specified type
          * @param {String} message - The message to display
-         * @param {String} type - The message type (success or error)
+         * @param {String} type - The message type (success, error, or info)
          */
         function showStatus(message, type) {
             const statusElement = document.getElementById("statusMessage");
@@ -368,16 +591,16 @@
         }
         
         /**
-         * Stores browser details in Supabase
+         * Stores browser and user details in Supabase
          * @param {Object} details - Browser and system details to store
          */
-        async function storeBrowserDetails(details) {
+        async function storeDetails(details) {
             try {
                 // Show loading state
                 const button = document.getElementById("storeButton");
                 button.disabled = true;
                 button.textContent = "Storing...";
-                showStatus("Storing browser details...", "info");
+                showStatus("Storing details...", "info");
 
                 const { data, error } = await supabase
                     .from('client_session_details')
@@ -395,11 +618,11 @@
                 }
 
                 console.log("Data stored successfully:", data);
-                showStatus("Browser details were successfully stored in the database.", "success");
+                showStatus("Details were successfully stored in the database.", "success");
                 button.textContent = "Details Stored ✓";
 
             } catch (error) {
-                console.error("Error storing browser details:", error);
+                console.error("Error storing details:", error);
                 showStatus(`Error: ${error.message}`, "error");
                 
                 // Re-enable button for retry
@@ -415,22 +638,29 @@
         
         // When the DOM is fully loaded
         document.addEventListener("DOMContentLoaded", function() {
-            // Collect and display browser details
-            const browserDetails = collectBrowserDetails();
-            displayBrowserDetails(browserDetails);
+            // Initialize authentication
+            initializeAuth();
+            
+            // Initial details collection and display
+            refreshDetailsDisplay();
             
             // Set up store button click handler
             document.getElementById("storeButton").addEventListener("click", function() {
-                this.disabled = true; // Prevent multiple clicks
-                this.textContent = "Storing...";
+                // Collect latest details including authentication status
+                const allDetails = collectAllDetails();
                 
-                // Store the details in Supabase
-                storeBrowserDetails(browserDetails)
-                    .finally(() => {
-                        this.textContent = "Store Details in Supabase";
-                    });
+                // Store in Supabase
+                storeDetails(allDetails);
             });
         });
+        
+        /**
+         * Refresh the details display with current information
+         */
+        function refreshDetailsDisplay() {
+            const allDetails = collectAllDetails();
+            displayDetails(allDetails);
+        }
     </script>
 
     <div class="instructions">
@@ -438,9 +668,10 @@
         <p>For production use:</p>
         <ol>
             <li>Store your Supabase URL and anon key in environment variables</li>
-            <li>Consider implementing more robust error handling and retry logic</li>
+            <li>Configure additional authentication providers as needed</li>
             <li>Add privacy notices and user consent for data collection</li>
-            <li>Add data retention policies for the collected information</li>
+            <li>Consider adding user management and data viewing capabilities</li>
+            <li>Implement data retention policies for the collected information</li>
         </ol>
     </div>
 </body>
