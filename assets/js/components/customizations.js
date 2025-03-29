@@ -19,6 +19,7 @@
 
     // Control whether to log debug information to console
     // Can be overridden by setting window.SESSION_TRACKER_DEBUG
+    window.SESSION_TRACKER_DEBUG = false 
     const DEBUG = window.SESSION_TRACKER_DEBUG || false;
 
     // Session storage key to prevent multiple submissions per session
