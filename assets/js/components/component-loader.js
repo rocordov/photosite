@@ -12,6 +12,8 @@ import { initThemeToggle } from './theme-toggle.js';
  * @param {Object} [replacements={}] - Variables to replace in the component
  * @returns {Promise} - Promise that resolves when component is loaded
  */
+const rootPath = window.location.origin; 
+
 function loadComponent(elementId, componentPath, replacements = {}) {
   return new Promise((resolve, reject) => {
     const element = document.getElementById(elementId);
