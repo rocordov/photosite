@@ -8,17 +8,17 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 -- Create the client_session_details table
 CREATE TABLE IF NOT EXISTS client_session_details (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  browser TEXT NOT NULL,
-  os TEXT NOT NULL,
-  screen_resolution TEXT NOT NULL,
-  language TEXT NOT NULL,
-  user_agent TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  browser TEXT,
+  os TEXT,
+  screen_resolution TEXT,
+  language TEXT,
+  user_agent TEXT,
   color_depth TEXT,
   timezone TEXT,
   cookies_enabled BOOLEAN,
   referring_url TEXT,
-  ip_address TEXT,
-  session_time TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  ip_address TEXT
 );
 
 -- Add comment to table
@@ -35,11 +35,11 @@ CREATE POLICY "Allow anonymous inserts"
   WITH CHECK (true);
 
 -- Create policy for querying data (restricted to authenticated users)
-CREATE POLICY "Allow authenticated select"
+CREATE POLICY "Allow authenticated users to view own entries"
   ON client_session_details
   FOR SELECT
   TO authenticated
-  USING (true);
+  USING (auth.uid() IS NOT NULL);
 
 -- Add indexes for common query patterns
 CREATE INDEX IF NOT EXISTS idx_client_session_details_browser ON client_session_details (browser);
