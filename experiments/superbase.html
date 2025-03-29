@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supabase Text Entry Demo</title>
+    <title>Supabase Auth Demo</title>
     
     <!-- 
     =====================================================================
@@ -24,8 +24,8 @@
     you select a region for your database (e.g., us-east-1, eu-west-1, etc.).
     This determines where your data is physically stored on AWS servers.
     
-    For this demo, we're using a simple text entry form that stores data in a
-    'text_entries' table in your Supabase PostgreSQL database.
+    For this demo, we're using Google OAuth authentication and verifying the
+    authenticated user's email against a user_table in the database.
     =====================================================================
     -->
     
@@ -48,6 +48,7 @@
                 Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --radius: 8px; /* Border radius */
+            --google-blue: #4285F4;   /* Google brand color */
         }
         
         body {
@@ -103,34 +104,80 @@
             font-size: 1.5rem;
         }
         
-        /* Form styling */
-        .form-group {
+        /* Authentication section styling */
+        .auth-container {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .profile-container {
+            display: none; /* Initially hidden, shown after authentication */
+            text-align: center;
+        }
+        
+        .profile-info {
             margin-bottom: 1.5rem;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--dark-color);
-        }
-        
-        textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
+            padding: 1rem;
+            background-color: #F1F5F9;
             border-radius: var(--radius);
-            font-family: var(--font-family);
-            font-size: 1rem;
-            min-height: 100px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            box-sizing: border-box;
         }
         
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(62, 207, 142, 0.2);
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-email {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        /* Google sign-in button styling */
+        .google-btn {
+            background-color: white;
+            color: #757575;
+            border: 1px solid #DADCE0;
+            border-radius: 4px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            padding: 0;
+            overflow: hidden;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .google-btn:hover {
+            background-color: #f1f3f4;
+        }
+        
+        .google-icon-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: white;
+        }
+        
+        .google-icon {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .btn-text {
+            padding: 0 16px;
+            font-size: 14px;
         }
         
         button {
@@ -159,6 +206,16 @@
         button:disabled {
             background-color: #A1A1AA;
             cursor: not-allowed;
+        }
+        
+        .logout-btn {
+            background-color: #E2E8F0;
+            color: var(--text-color);
+            margin-top: 1rem;
+        }
+        
+        .logout-btn:hover {
+            background-color: #CBD5E1;
         }
         
         /* Loading spinner */
@@ -203,15 +260,6 @@
             display: block;
         }
         
-        /* Info section styling */
-        .info-list {
-            padding-left: 1.5rem;
-        }
-        
-        .info-list li {
-            margin-bottom: 0.5rem;
-        }
-        
         /* Footer styling */
         footer {
             margin-top: auto;
@@ -231,16 +279,6 @@
             text-decoration: underline;
         }
         
-        /* Code block styling */
-        .code-block {
-            background-color: #F1F5F9;
-            padding: 1rem;
-            border-radius: var(--radius);
-            font-family: monospace;
-            margin: 1rem 0;
-            overflow-x: auto;
-        }
-        
         /* Responsive adjustments */
         @media (max-width: 600px) {
             .container {
@@ -256,246 +294,340 @@
             }
         }
     </style>
-    
-    <!-- Load Supabase first -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.2/dist/umd/supabase.min.js"></script>
-    
-    <!-- Your script loaded after -->
-    <script>
-        // Wait for Supabase to be available
-        let supabaseClient;
-
-        /**
-         * SUPABASE CONFIGURATION
-         */
-        const SUPABASE_URL = 'https://yyfypeedlmgqqhukjhbe.supabase.co';
-        // Load the Supabase anon key from an external file
-        let SUPABASE_ANON_KEY;
-
-        fetch('../secrets/supabase.key')
-            .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to load Supabase key file');
-            }
-            return response.text();
-            })
-            .then(key => {
-            SUPABASE_ANON_KEY = key.trim();
-            console.log('Supabase key loaded successfully');
-            })
-            .catch(error => {
-            console.error('Error loading Supabase key:', error);
-            });
-
-        // Initialize Supabase client after ensuring library is loaded
-        function initializeSupabase() {
-            if (typeof supabase === 'undefined') {
-                console.error('Supabase library not loaded');
-                return false;
-            }
-            
-            try {
-                console.log('Initializing Supabase client...');
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                
-                // Test the connection
-                supabaseClient
-                    .from('text_entries')
-                    .select('count(*)', { count: 'exact' })
-                    .limit(0)
-                    .then(({ error }) => {
-                        if (error) {
-                            console.error('Database connection test failed:', error);
-                            showStatus('Database connection failed. Check console for details.', 'error');
-                        } else {
-                            console.log('Database connection successful');
-                        }
-                    });
-                    
-                return true;
-            } catch (error) {
-                console.error('Failed to initialize Supabase client:', error);
-                return false;
-            }
-        }
-
-        // Wait for the DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            // Get references to DOM elements
-            const entryForm = document.getElementById('entryForm');
-            const textEntry = document.getElementById('textEntry');
-            const submitButton = document.getElementById('submitButton');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            const statusMessage = document.getElementById('statusMessage');
-
-            // Initialize Supabase
-            if (!initializeSupabase()) {
-                showStatus('Failed to initialize database connection. Please check the console for details.', 'error');
-                submitButton.disabled = true;
-                return;
-            }
-
-            // Reset any previous form state
-            resetForm();
-
-            // Set up form submission event listener
-            entryForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const content = textEntry.value.trim();
-
-                if (!content) {
-                    showStatus('Please enter some text before submitting.', 'error');
-                    return;
-                }
-
-                setLoading(true);
-
-                try {
-                    const { data, error } = await supabaseClient
-                        .from('text_entries')
-                        .insert([{ content }])
-                        .select();
-
-                    if (error) throw error;
-
-                    showStatus('Text saved successfully!', 'success');
-                    textEntry.value = '';
-                    console.log('Entry saved:', data);
-                } catch (error) {
-                    console.error('Error saving entry:', error);
-                    handleError(error);
-                } finally {
-                    setLoading(false);
-                }
-            });
-
-            function handleError(error) {
-                console.error('Detailed error:', error);
-                
-                if (!error) {
-                    showStatus('An unknown error occurred. Please try again.', 'error');
-                    return;
-                }
-
-                // Specific error cases
-                switch (error.code) {
-                    case '42P01':
-                        showStatus('Database table not found. Please ensure the "text_entries" table exists.', 'error');
-                        break;
-                    case '23505':
-                        showStatus('This entry already exists.', 'error');
-                        break;
-                    case '23503':
-                        showStatus('Invalid data format.', 'error');
-                        break;
-                    case '42703':
-                        showStatus('Database column not found. Please check table structure.', 'error');
-                        break;
-                    case '28P01':
-                        showStatus('Database authentication failed. Check your credentials.', 'error');
-                        break;
-                    default:
-                        if (error.message?.includes('Failed to fetch')) {
-                            showStatus('Connection error. Please check your internet connection.', 'error');
-                        } else {
-                            showStatus(`Error: ${error.message || 'Failed to save entry. Please try again.'}`, 'error');
-                        }
-                }
-            }
-
-            /**
-             * Set the loading state of the form
-             * @param {boolean} isLoading - Whether the form is loading
-             */
-            function setLoading(isLoading) {
-                submitButton.disabled = isLoading;
-                loadingSpinner.style.display = isLoading ? 'inline-block' : 'none';
-            }
-
-            /**
-             * Show a status message to the user
-             * @param {string} message - The message to display
-             * @param {string} type - The type of message ('success' or 'error')
-             */
-            function showStatus(message, type) {
-                statusMessage.textContent = message;
-                statusMessage.className = `status-message ${type}`;
-                statusMessage.style.display = 'block';
-            }
-
-            /**
-             * Reset the form to its initial state
-             */
-            function resetForm() {
-                textEntry.value = '';
-                statusMessage.textContent = '';
-                statusMessage.style.display = 'none';
-                setLoading(false);
-            }
-        });
-    </script>
 </head>
 <body>
     <header>
-        <h1>Supabase Text Entry Demo</h1>
-        <p class="subtitle">Store text entries in a PostgreSQL database with Supabase</p>
+        <h1>Supabase OAuth Demo</h1>
+        <p class="subtitle">Google Authentication with Email Verification</p>
     </header>
 
     <div class="container">
         <div class="card">
-            <h2>Add a Text Entry</h2>
-            <p>Enter your text below to store it in your Supabase PostgreSQL database:</p>
-            
-            <form id="entryForm">
-                <div class="form-group">
-                    <label for="textEntry">Your Text:</label>
-                    <textarea 
-                        id="textEntry" 
-                        placeholder="Type your text here..."
-                        required
-                    ></textarea>
-                </div>
+            <div id="authContainer" class="auth-container">
+                <h2>Sign in with Google</h2>
+                <p>Click the button below to authenticate with your Google account</p>
                 
-                <button type="submit" id="submitButton">
-                    Save Entry
-                    <span id="loadingSpinner" class="loading-spinner"></span>
+                <button id="googleSignInBtn" class="google-btn">
+                    <div class="google-icon-wrapper">
+                        <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                            <path fill="none" d="M0 0h48v48H0z"/>
+                        </svg>
+                    </div>
+                    <span class="btn-text">Sign in with Google</span>
                 </button>
                 
-                <div id="statusMessage" class="status-message"></div>
-            </form>
+                <div id="authStatus" class="status-message"></div>
+            </div>
+            
+            <div id="profileContainer" class="profile-container">
+                <h2>User Profile</h2>
+                <div class="profile-info">
+                    <img id="userAvatar" class="user-avatar" src="" alt="User profile picture">
+                    <div id="userName" class="user-name"></div>
+                    <div id="userEmail" class="user-email"></div>
+                    <div id="accessStatus" class="status-message"></div>
+                </div>
+                <button id="logoutBtn" class="logout-btn">Sign Out</button>
+            </div>
         </div>
         
         <div class="card">
             <h2>How It Works</h2>
             <p>This demo showcases:</p>
             <ul class="info-list">
-                <li>Client-side integration with Supabase (PostgreSQL on AWS)</li>
-                <li>Simple form validation</li>
-                <li>Saving user-submitted data to a database with no backend code</li>
-                <li>Error handling and user feedback</li>
+                <li>Google OAuth authentication with Supabase</li>
+                <li>Email verification against a database table</li>
+                <li>Row-level security (RLS) for secure database operations</li>
+                <li>Comprehensive error handling for authentication flows</li>
             </ul>
             
-            <h3>Table Structure</h3>
-            <p>This demo uses a simple PostgreSQL table called <code>text_entries</code> with the following structure:</p>
+            <h3>Required Database Tables</h3>
+            <p>This demo requires a <code>user_table</code> in your Supabase database with at least an email column:</p>
             <div class="code-block">
-<pre>CREATE TABLE text_entries (
+<pre>CREATE TABLE user_table (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  content TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  ip_address TEXT
+  email TEXT UNIQUE NOT NULL,
+  name TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );</pre>
             </div>
-            
-            <p>Supabase provides Row Level Security (RLS) to control access to your data.
-            For simplicity, this demo assumes public insert permissions are enabled for the table.</p>
         </div>
     </div>
     
     <footer>
         <p>
-            A demonstration of Supabase integration for static websites.
-            <a href="https://supabase.com/docs" target="_blank">Learn more about Supabase</a>.
+            A demonstration of Supabase OAuth integration for static websites.
+            <a href="https://supabase.com/docs/guides/auth/social-login/auth-google" target="_blank">Learn more about Supabase Auth</a>.
         </p>
     </footer>
+
+    <script>
+        /**
+         * SUPABASE CONFIGURATION
+         * Replace these values with your actual Supabase project credentials
+         */
+        const SUPABASE_URL = 'https://yyfypeedlmgqqhukjhbe.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5ZnlwZWVkbG1ncXFodWtqaGJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMyMDk1MzYsImV4cCI6MjA1ODc4NTUzNn0.8qkf2crtzNOUCNpzEm0zMG9eUEkK0ldj48oeN3vdbiQ';
+        
+        // DOM elements
+        let authContainer;
+        let profileContainer;
+        let authStatus;
+        let accessStatus;
+        let googleSignInBtn;
+        let logoutBtn;
+        let userAvatar;
+        let userName;
+        let userEmail;
+        
+        // Supabase client
+        let supabaseClient;
+        
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize DOM elements
+            authContainer = document.getElementById('authContainer');
+            profileContainer = document.getElementById('profileContainer');
+            authStatus = document.getElementById('authStatus');
+            accessStatus = document.getElementById('accessStatus');
+            googleSignInBtn = document.getElementById('googleSignInBtn');
+            logoutBtn = document.getElementById('logoutBtn');
+            userAvatar = document.getElementById('userAvatar');
+            userName = document.getElementById('userName');
+            userEmail = document.getElementById('userEmail');
+            
+            // Initialize Supabase
+            initializeSupabase();
+            
+            // Set up event listeners
+            googleSignInBtn.addEventListener('click', handleGoogleSignIn);
+            logoutBtn.addEventListener('click', handleSignOut);
+            
+            // Check for existing session
+            checkSession();
+        });
+        
+        /**
+         * Initialize the Supabase client
+         */
+        function initializeSupabase() {
+            try {
+                console.log('Initializing Supabase client...');
+                
+                // Create Supabase client
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // Set up auth state change listener
+                supabaseClient.auth.onAuthStateChange((event, session) => {
+                    console.log('Auth state changed:', event);
+                    
+                    if (event === 'SIGNED_IN') {
+                        console.log('User signed in');
+                        getUserProfile(session.user);
+                    } else if (event === 'SIGNED_OUT') {
+                        console.log('User signed out');
+                        showAuthContainer();
+                    }
+                });
+                
+                console.log('Supabase client initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize Supabase client:', error);
+                showError('Failed to initialize Supabase client. Please check your configuration.');
+            }
+        }
+        
+        /**
+         * Check for an existing session
+         */
+        async function checkSession() {
+            try {
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                if (session) {
+                    console.log('Existing session found');
+                    getUserProfile(session.user);
+                } else {
+                    console.log('No existing session');
+                    showAuthContainer();
+                }
+            } catch (error) {
+                console.error('Error checking session:', error);
+                showError('Failed to check authentication status.');
+                showAuthContainer();
+            }
+        }
+        
+        /**
+         * Handle Google sign in
+         */
+        async function handleGoogleSignIn() {
+            try {
+                showLoading(true);
+                showStatus('Redirecting to Google...', 'success');
+                
+                // Initiate Google OAuth flow
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.href
+                    }
+                });
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // Redirecting to Google login...
+            } catch (error) {
+                console.error('Error signing in with Google:', error);
+                showError('Failed to authenticate with Google: ' + error.message);
+                showLoading(false);
+            }
+        }
+        
+        /**
+         * Handle sign out
+         */
+        async function handleSignOut() {
+            try {
+                showLoading(true);
+                
+                const { error } = await supabaseClient.auth.signOut();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                showAuthContainer();
+                showStatus('Successfully signed out', 'success');
+            } catch (error) {
+                console.error('Error signing out:', error);
+                showError('Failed to sign out: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        /**
+         * Get user profile after authentication
+         * @param {Object} user - The authenticated user object
+         */
+        async function getUserProfile(user) {
+            try {
+                console.log('Getting user profile for:', user.email);
+                
+                // Display the user's profile information
+                userAvatar.src = user.user_metadata?.avatar_url || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+                userName.textContent = user.user_metadata?.full_name || 'User';
+                userEmail.textContent = user.email;
+                
+                // Check if the user's email exists in the user_table
+                verifyUserAccess(user.email);
+                
+                // Show profile container
+                showProfileContainer();
+            } catch (error) {
+                console.error('Error getting user profile:', error);
+                showError('Failed to retrieve user profile.');
+            }
+        }
+        
+        /**
+         * Verify if the user's email exists in the user_table
+         * @param {string} email - The user's email
+         */
+        async function verifyUserAccess(email) {
+            try {
+                console.log('Verifying access for email:', email);
+                
+                // Query the user_table to check if the email exists
+                const { data, error } = await supabaseClient
+                    .from('user_table')
+                    .select('*')
+                    .eq('email', email)
+                    .single();
+                
+                if (error) {
+                    // Check if it's a "no rows returned" error, which means the email wasn't found
+                    if (error.code === 'PGRST116') {
+                        console.log('Email not found in user_table');
+                        showAccessStatus('Access Denied: Your email is not registered in our system.', 'error');
+                    } else {
+                        throw error;
+                    }
+                } else if (data) {
+                    console.log('Email found in user_table:', data);
+                    showAccessStatus('Access Granted: Your email is verified in our system.', 'success');
+                }
+            } catch (error) {
+                console.error('Error verifying user access:', error);
+                showAccessStatus('Error verifying access: ' + error.message, 'error');
+            }
+        }
+        
+        // UI Helper Functions
+        
+        /**
+         * Show the authentication container and hide the profile container
+         */
+        function showAuthContainer() {
+            authContainer.style.display = 'block';
+            profileContainer.style.display = 'none';
+        }
+        
+        /**
+         * Show the profile container and hide the authentication container
+         */
+        function showProfileContainer() {
+            authContainer.style.display = 'none';
+            profileContainer.style.display = 'block';
+        }
+        
+        /**
+         * Show a status message in the auth container
+         * @param {string} message - The message to display
+         * @param {string} type - The type of message ('success' or 'error')
+         */
+        function showStatus(message, type) {
+            authStatus.textContent = message;
+            authStatus.className = `status-message ${type}`;
+        }
+        
+        /**
+         * Show an error message
+         * @param {string} message - The error message to display
+         */
+        function showError(message) {
+            showStatus(message, 'error');
+        }
+        
+        /**
+         * Show an access status message in the profile container
+         * @param {string} message - The message to display
+         * @param {string} type - The type of message ('success' or 'error')
+         */
+        function showAccessStatus(message, type) {
+            accessStatus.textContent = message;
+            accessStatus.className = `status-message ${type}`;
+        }
+        
+        /**
+         * Toggle loading state
+         * @param {boolean} isLoading - Whether loading is in progress
+         */
+        function showLoading(isLoading) {
+            googleSignInBtn.disabled = isLoading;
+            logoutBtn.disabled = isLoading;
+        }
+    </script>
 </body>
 </html>
