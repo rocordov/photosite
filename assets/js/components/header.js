@@ -7,6 +7,7 @@
  * Initialize the site header by loading the header HTML and setting up navigation
  */
 function initHeader() {
+
   // Get the header container
   const headerContainer = document.getElementById('site-header');
   if (!headerContainer) return;
