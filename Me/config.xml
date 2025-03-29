@@ -7,7 +7,7 @@
 					showImageNumber="false"
 					showAudioButton="true"
 					showNavButtons="true"
-					buttonBarPosition="OVERLAY_IMAGE"
+					buttonBarPosition="TOP"
 					maxThumbRows="2"
 					imageScaleMode="SCALE"
 					audioUrlMp3="https://cdn.pixabay.com/audio/2023/12/21/audio_9a762c312f.mp3"
