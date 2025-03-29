@@ -118,6 +118,12 @@
             overflow-x: auto;
             font-family: monospace;
         }
+
+        .info {
+            background-color: #e1f5fe;
+            color: #0277bd;
+            border: 1px solid #81d4fa;
+        }
     </style>
 </head>
 <body>
@@ -367,21 +373,39 @@
          */
         async function storeBrowserDetails(details) {
             try {
+                // Show loading state
+                const button = document.getElementById("storeButton");
+                button.disabled = true;
+                button.textContent = "Storing...";
+                showStatus("Storing browser details...", "info");
+
                 const { data, error } = await supabase
                     .from('client_session_details')
-                    .insert([details]);
-                
-                if (error) throw error;
-                
+                    .insert([{
+                        ...details,
+                        created_at: new Date().toISOString()
+                    }])
+                    .select();
+
+                if (error) {
+                    if (error.code === '42501') {
+                        throw new Error('Permission denied. Please check database permissions.');
+                    }
+                    throw error;
+                }
+
                 console.log("Data stored successfully:", data);
                 showStatus("Browser details were successfully stored in the database.", "success");
-                
-                // Disable the store button to prevent duplicate submissions
-                document.getElementById("storeButton").disabled = true;
-                
+                button.textContent = "Details Stored ✓";
+
             } catch (error) {
                 console.error("Error storing browser details:", error);
-                showStatus(`Error: ${error.message || "Failed to store browser details."}`, "error");
+                showStatus(`Error: ${error.message}`, "error");
+                
+                // Re-enable button for retry
+                const button = document.getElementById("storeButton");
+                button.disabled = false;
+                button.textContent = "Retry Store Details";
             }
         }
         
