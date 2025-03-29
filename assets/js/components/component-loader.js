@@ -103,10 +103,28 @@ function initBackToTop() {
   });
 }
 
+/**
+ * Load the customizations script that collects and stores session data
+ */
+function loadCustomizationsScript() {
+  const inSubdirectory = window.location.pathname.includes('/experiments/');
+  const rootPath = inSubdirectory ? '../' : './';
+  
+  // Create and append the script element
+  const script = document.createElement('script');
+  script.src = `${rootPath}assets/js/customizations.js`;
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+  
+  console.log('Customizations script loaded');
+}
+
 // Initialize components on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Component loader initialized');
   loadLayoutComponents();
+  loadCustomizationsScript();
 });
 
 // Export functions for potential reuse
