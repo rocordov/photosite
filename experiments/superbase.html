@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Text Entry Demo</title>
+    
+    <!-- 
+    =====================================================================
+    SUPABASE OVERVIEW
+    =====================================================================
+    
+    Supabase is an open-source Firebase alternative that provides a PostgreSQL 
+    database, authentication, instant APIs, real-time subscriptions, and storage.
+    
+    Key components:
+    - PostgreSQL Database: Enterprise-grade relational database
+    - Authentication: Built-in auth with row-level security
+    - Instant APIs: Auto-generated RESTful and GraphQL APIs
+    - Real-time: Live data updates via websockets
+    
+    Data Hosting:
+    Supabase projects are hosted on AWS infrastructure. When creating a project,
+    you select a region for your database (e.g., us-east-1, eu-west-1, etc.).
+    This determines where your data is physically stored on AWS servers.
+    
+    For this demo, we're using a simple text entry form that stores data in a
+    'text_entries' table in your Supabase PostgreSQL database.
+    =====================================================================
+    -->
+    
+    <!-- Supabase JavaScript Client Library (via CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.2/dist/umd/supabase.min.js"></script>
+    
+    <style>
+        /* Base styling */
+        :root {
+            --primary-color: #3ECF8E; /* Supabase green */
+            --dark-color: #133929;    /* Dark green */
+            --accent-color: #6F5DF6;  /* Purple from Supabase branding */
+            --error-color: #F02D65;   /* Red for errors */
+            --success-color: #3ECF8E; /* Green for success */
+            --bg-color: #F8FAFC;      /* Light background */
+            --card-bg: #FFFFFF;       /* Card background */
+            --text-color: #1E293B;    /* Text color */
+            --border-color: #E2E8F0;  /* Border color */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, 
+                Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 8px; /* Border radius */
+        }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            margin-top: 0.5rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            color: var(--dark-color);
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        
+        /* Form styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-family: var(--font-family);
+            font-size: 1rem;
+            min-height: 100px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(62, 207, 142, 0.2);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button:hover {
+            background-color: var(--dark-color);
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        button:disabled {
+            background-color: #A1A1AA;
+            cursor: not-allowed;
+        }
+        
+        /* Loading spinner */
+        .loading-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Status messages */
+        .status-message {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-top: 1rem;
+            font-weight: 500;
+            display: none; /* Hidden by default */
+        }
+        
+        .status-message.success {
+            background-color: rgba(62, 207, 142, 0.1);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+        
+        .status-message.error {
+            background-color: rgba(240, 45, 101, 0.1);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+        
+        /* Show message when it has content */
+        .status-message:not(:empty) {
+            display: block;
+        }
+        
+        /* Info section styling */
+        .info-list {
+            padding-left: 1.5rem;
+        }
+        
+        .info-list li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Footer styling */
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 1.5rem 0;
+            font-size: 0.875rem;
+            color: #64748B;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Code block styling */
+        .code-block {
+            background-color: #F1F5F9;
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-family: monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Supabase Text Entry Demo</h1>
+        <p class="subtitle">Store text entries in a PostgreSQL database with Supabase</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Add a Text Entry</h2>
+            <p>Enter your text below to store it in your Supabase PostgreSQL database:</p>
+            
+            <form id="entryForm">
+                <div class="form-group">
+                    <label for="textEntry">Your Text:</label>
+                    <textarea 
+                        id="textEntry" 
+                        placeholder="Type your text here..."
+                        required
+                    ></textarea>
+                </div>
+                
+                <button type="submit" id="submitButton">
+                    Save Entry
+                    <span id="loadingSpinner" class="loading-spinner"></span>
+                </button>
+                
+                <div id="statusMessage" class="status-message"></div>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h2>How It Works</h2>
+            <p>This demo showcases:</p>
+            <ul class="info-list">
+                <li>Client-side integration with Supabase (PostgreSQL on AWS)</li>
+                <li>Simple form validation</li>
+                <li>Saving user-submitted data to a database with no backend code</li>
+                <li>Error handling and user feedback</li>
+            </ul>
+            
+            <h3>Table Structure</h3>
+            <p>This demo uses a simple PostgreSQL table called <code>text_entries</code> with the following structure:</p>
+            <div class="code-block">
+<pre>CREATE TABLE text_entries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  content TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  ip_address TEXT
+);</pre>
+            </div>
+            
+            <p>Supabase provides Row Level Security (RLS) to control access to your data.
+            For simplicity, this demo assumes public insert permissions are enabled for the table.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>
+            A demonstration of Supabase integration for static websites.
+            <a href="https://supabase.com/docs" target="_blank">Learn more about Supabase</a>.
+        </p>
+    </footer>
+
+    <script>
+        /**
+         * SUPABASE CONFIGURATION
+         * 
+         * IMPORTANT: Replace these placeholder values with your actual Supabase project credentials.
+         * You can find these in your Supabase dashboard:
+         * 1. Go to https://app.supabase.com/
+         * 2. Select your project
+         * 3. Go to Project Settings > API
+         * 4. Copy the URL and anon/public key
+         */
+        const SUPABASE_URL = 'https://your-project-url.supabase.co';  // Replace with your Supabase project URL
+        const SUPABASE_ANON_KEY = 'your-anon-key';                    // Replace with your anon/public key
+        
+        // Initialize the Supabase client
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get references to DOM elements
+            const entryForm = document.getElementById('entryForm');
+            const textEntry = document.getElementById('textEntry');
+            const submitButton = document.getElementById('submitButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            // Reset any previous form state
+            resetForm();
+            
+            // Set up form submission event listener
+            entryForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Prevent default form submission
+                
+                // Get and validate the text entry
+                const content = textEntry.value.trim();
+                
+                if (!content) {
+                    showStatus('Please enter some text before submitting.', 'error');
+                    return;
+                }
+                
+                // Show loading state
+                setLoading(true);
+                
+                try {
+                    // Insert the entry into the Supabase table
+                    const { data, error } = await supabase
+                        .from('text_entries')
+                        .insert([
+                            { content: content }
+                        ]);
+                    
+                    if (error) {
+                        throw error;
+                    }
+                    
+                    // Show success message
+                    showStatus('Your text has been successfully saved!', 'success');
+                    
+                    // Reset the form
+                    textEntry.value = '';
+                    
+                    console.log('Entry saved successfully');
+                } catch (error) {
+                    console.error('Error saving entry:', error);
+                    
+                    // Check if it's a connection error (likely incorrect credentials)
+                    if (error.message?.includes('Failed to fetch') || error.code === '20000') {
+                        showStatus('Connection error. Check your Supabase credentials in the code.', 'error');
+                    } else if (error.code === '42P01') {
+                        // Table doesn't exist
+                        showStatus('Error: The "text_entries" table does not exist. Please create it in your Supabase dashboard.', 'error');
+                    } else {
+                        // Generic error handling
+                        showStatus(`Error: ${error.message || 'Failed to save your entry. Please try again.'}`, 'error');
+                    }
+                } finally {
+                    // Reset loading state
+                    setLoading(false);
+                }
+            });
+            
+            /**
+             * Set the loading state of the form
+             * @param {boolean} isLoading - Whether the form is loading
+             */
+            function setLoading(isLoading) {
+                submitButton.disabled = isLoading;
+                loadingSpinner.style.display = isLoading ? 'inline-block' : 'none';
+            }
+            
+            /**
+             * Show a status message to the user
+             * @param {string} message - The message to display
+             * @param {string} type - The type of message ('success' or 'error')
+             */
+            function showStatus(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = `status-message ${type}`;
+                statusMessage.style.display = 'block';
+            }
+            
+            /**
+             * Reset the form to its initial state
+             */
+            function resetForm() {
+                textEntry.value = '';
+                statusMessage.textContent = '';
+                statusMessage.style.display = 'none';
+                setLoading(false);
+            }
+        });
+    </script>
+    
+    <!-- 
+    DEPLOYMENT INSTRUCTIONS:
+    
+    1. GitHub Pages Deployment:
+       a. Create/use a GitHub repository
+       b. Upload this HTML file to your repository
+       c. Go to repository Settings > Pages
+       d. Select the branch containing this file (usually "main" or "master")
+       e. Save to deploy your site
+       f. GitHub will provide a URL for your published site
+    
+    2. Supabase Configuration:
+       a. Create a Supabase account at https://supabase.com
+       b. Create a new project (this will provision a PostgreSQL database)
+       c. Create a table named "text_entries" with the following columns:
+          - id: UUID, primary key, default: gen_random_uuid()
+          - content: TEXT, not null
+          - created_at: TIMESTAMP WITH TIME ZONE, default: NOW()
+          - ip_address: TEXT (optional)
+       d. Update the table's Row Level Security (RLS) policies to allow inserts:
+          - Go to Authentication > Policies
+          - Enable RLS on the table
+          - Add a policy that allows inserts (e.g., using the default policy template)
+       e. Update the Supabase credentials in this file:
+          - Replace SUPABASE_URL with your project URL
+          - Replace SUPABASE_ANON_KEY with your anon/public key
+    -->
+</body>
+</html>
