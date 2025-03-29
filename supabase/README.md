@@ -44,8 +44,8 @@ supabase init
 supabase functions new execute-command
 
 # Set up the required secrets (environment variables)
-supabase secrets set API_SECRET_KEY=your-secure-api-key
-supabase secrets set SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+supabase secrets set API_SECRET_KEY=<getfrom https://supabase.com/dashboard/project/yyfypeedlmgqqhukjhbe/settings/api>
+supabase secrets set SERVICE_ROLE_KEY=your-service-role-key
 
 # Deploy the function without JWT verification
 supabase functions deploy execute-command --no-verify-jwt
@@ -68,12 +68,12 @@ Once deployed, you can call the Edge Function using HTTP requests:
 ### Example: Execute a SQL Query
 
 ```bash
-curl -X POST https://your-project-ref.supabase.co/functions/v1/execute-command \
+curl -X POST https://yyfypeedlmgqqhukjhbe.supabase.co/functions/v1/execute-command\
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_ANON_KEY" \
   -H "x-api-key: your-secure-api-key" \
   -d '{
-    "command": "SELECT * FROM your_table LIMIT 5",
+    "command": "SELECT * FROM user_table LIMIT 5",
     "type": "sql"
   }'
 ```
