@@ -256,70 +256,11 @@
             }
         }
     </style>
-</head>
-<body>
-    <header>
-        <h1>Supabase Text Entry Demo</h1>
-        <p class="subtitle">Store text entries in a PostgreSQL database with Supabase</p>
-    </header>
-
-    <div class="container">
-        <div class="card">
-            <h2>Add a Text Entry</h2>
-            <p>Enter your text below to store it in your Supabase PostgreSQL database:</p>
-            
-            <form id="entryForm">
-                <div class="form-group">
-                    <label for="textEntry">Your Text:</label>
-                    <textarea 
-                        id="textEntry" 
-                        placeholder="Type your text here..."
-                        required
-                    ></textarea>
-                </div>
-                
-                <button type="submit" id="submitButton">
-                    Save Entry
-                    <span id="loadingSpinner" class="loading-spinner"></span>
-                </button>
-                
-                <div id="statusMessage" class="status-message"></div>
-            </form>
-        </div>
-        
-        <div class="card">
-            <h2>How It Works</h2>
-            <p>This demo showcases:</p>
-            <ul class="info-list">
-                <li>Client-side integration with Supabase (PostgreSQL on AWS)</li>
-                <li>Simple form validation</li>
-                <li>Saving user-submitted data to a database with no backend code</li>
-                <li>Error handling and user feedback</li>
-            </ul>
-            
-            <h3>Table Structure</h3>
-            <p>This demo uses a simple PostgreSQL table called <code>text_entries</code> with the following structure:</p>
-            <div class="code-block">
-<pre>CREATE TABLE text_entries (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  content TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  ip_address TEXT
-);</pre>
-            </div>
-            
-            <p>Supabase provides Row Level Security (RLS) to control access to your data.
-            For simplicity, this demo assumes public insert permissions are enabled for the table.</p>
-        </div>
-    </div>
     
-    <footer>
-        <p>
-            A demonstration of Supabase integration for static websites.
-            <a href="https://supabase.com/docs" target="_blank">Learn more about Supabase</a>.
-        </p>
-    </footer>
-
+    <!-- Load Supabase first -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.2/dist/umd/supabase.min.js"></script>
+    
+    <!-- Your script loaded after -->
     <script>
         // Wait for Supabase to be available
         let supabaseClient;
@@ -439,33 +380,68 @@
             }
         });
     </script>
+</head>
+<body>
+    <header>
+        <h1>Supabase Text Entry Demo</h1>
+        <p class="subtitle">Store text entries in a PostgreSQL database with Supabase</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Add a Text Entry</h2>
+            <p>Enter your text below to store it in your Supabase PostgreSQL database:</p>
+            
+            <form id="entryForm">
+                <div class="form-group">
+                    <label for="textEntry">Your Text:</label>
+                    <textarea 
+                        id="textEntry" 
+                        placeholder="Type your text here..."
+                        required
+                    ></textarea>
+                </div>
+                
+                <button type="submit" id="submitButton">
+                    Save Entry
+                    <span id="loadingSpinner" class="loading-spinner"></span>
+                </button>
+                
+                <div id="statusMessage" class="status-message"></div>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h2>How It Works</h2>
+            <p>This demo showcases:</p>
+            <ul class="info-list">
+                <li>Client-side integration with Supabase (PostgreSQL on AWS)</li>
+                <li>Simple form validation</li>
+                <li>Saving user-submitted data to a database with no backend code</li>
+                <li>Error handling and user feedback</li>
+            </ul>
+            
+            <h3>Table Structure</h3>
+            <p>This demo uses a simple PostgreSQL table called <code>text_entries</code> with the following structure:</p>
+            <div class="code-block">
+<pre>CREATE TABLE text_entries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  content TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  ip_address TEXT
+);</pre>
+            </div>
+            
+            <p>Supabase provides Row Level Security (RLS) to control access to your data.
+            For simplicity, this demo assumes public insert permissions are enabled for the table.</p>
+        </div>
+    </div>
     
-    <!-- 
-    DEPLOYMENT INSTRUCTIONS:
-    
-    1. GitHub Pages Deployment:
-       a. Create/use a GitHub repository
-       b. Upload this HTML file to your repository
-       c. Go to repository Settings > Pages
-       d. Select the branch containing this file (usually "main" or "master")
-       e. Save to deploy your site
-       f. GitHub will provide a URL for your published site
-    
-    2. Supabase Configuration:
-       a. Create a Supabase account at https://supabase.com
-       b. Create a new project (this will provision a PostgreSQL database)
-       c. Create a table named "text_entries" with the following columns:
-          - id: UUID, primary key, default: gen_random_uuid()
-          - content: TEXT, not null
-          - created_at: TIMESTAMP WITH TIME ZONE, default: NOW()
-          - ip_address: TEXT (optional)
-       d. Update the table's Row Level Security (RLS) policies to allow inserts:
-          - Go to Authentication > Policies
-          - Enable RLS on the table
-          - Add a policy that allows inserts (e.g., using the default policy template)
-       e. Update the Supabase credentials in this file:
-          - Replace SUPABASE_URL with your project URL
-          - Replace SUPABASE_ANON_KEY with your anon/public key
-    -->
+    <footer>
+        <p>
+            A demonstration of Supabase integration for static websites.
+            <a href="https://supabase.com/docs" target="_blank">Learn more about Supabase</a>.
+        </p>
+    </footer>
 </body>
 </html>
