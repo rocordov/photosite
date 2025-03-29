@@ -321,22 +321,30 @@
     </footer>
 
     <script>
+        // Wait for Supabase to be available
+        let supabaseClient;
+
         /**
          * SUPABASE CONFIGURATION
-         * 
-         * IMPORTANT: Replace these placeholder values with your actual Supabase project credentials.
-         * You can find these in your Supabase dashboard:
-         * 1. Go to https://app.supabase.com/
-         * 2. Select your project
-         * 3. Go to Project Settings > API
-         * 4. Copy the URL and anon/public key
          */
-        const SUPABASE_URL = 'https://your-project-url.supabase.co';  // Replace with your Supabase project URL
-        const SUPABASE_ANON_KEY = 'your-anon-key';                    // Replace with your anon/public key
-        
-        // Initialize the Supabase client
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
+        const SUPABASE_URL = 'https://your-project-url.supabase.co';
+        const SUPABASE_ANON_KEY = 'your-anon-key';
+
+        // Initialize Supabase client after ensuring library is loaded
+        function initializeSupabase() {
+            if (typeof supabase === 'undefined') {
+                console.error('Supabase library not loaded');
+                return false;
+            }
+            try {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                return true;
+            } catch (error) {
+                console.error('Failed to initialize Supabase client:', error);
+                return false;
+            }
+        }
+
         // Wait for the DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', () => {
             // Get references to DOM elements
@@ -345,63 +353,61 @@
             const submitButton = document.getElementById('submitButton');
             const loadingSpinner = document.getElementById('loadingSpinner');
             const statusMessage = document.getElementById('statusMessage');
-            
+
+            // Initialize Supabase
+            if (!initializeSupabase()) {
+                showStatus('Failed to initialize database connection. Please check the console for details.', 'error');
+                submitButton.disabled = true;
+                return;
+            }
+
             // Reset any previous form state
             resetForm();
-            
+
             // Set up form submission event listener
             entryForm.addEventListener('submit', async (e) => {
-                e.preventDefault(); // Prevent default form submission
-                
-                // Get and validate the text entry
+                e.preventDefault();
+
                 const content = textEntry.value.trim();
-                
+
                 if (!content) {
                     showStatus('Please enter some text before submitting.', 'error');
                     return;
                 }
-                
-                // Show loading state
+
                 setLoading(true);
-                
+
                 try {
-                    // Insert the entry into the Supabase table
-                    const { data, error } = await supabase
+                    // Use supabaseClient instead of supabase
+                    const { data, error } = await supabaseClient
                         .from('text_entries')
                         .insert([
                             { content: content }
                         ]);
-                    
-                    if (error) {
-                        throw error;
-                    }
-                    
-                    // Show success message
+
+                    if (error) throw error;
+
                     showStatus('Your text has been successfully saved!', 'success');
-                    
-                    // Reset the form
                     textEntry.value = '';
-                    
                     console.log('Entry saved successfully');
                 } catch (error) {
                     console.error('Error saving entry:', error);
-                    
-                    // Check if it's a connection error (likely incorrect credentials)
-                    if (error.message?.includes('Failed to fetch') || error.code === '20000') {
-                        showStatus('Connection error. Check your Supabase credentials in the code.', 'error');
-                    } else if (error.code === '42P01') {
-                        // Table doesn't exist
-                        showStatus('Error: The "text_entries" table does not exist. Please create it in your Supabase dashboard.', 'error');
-                    } else {
-                        // Generic error handling
-                        showStatus(`Error: ${error.message || 'Failed to save your entry. Please try again.'}`, 'error');
-                    }
+                    handleError(error);
                 } finally {
-                    // Reset loading state
                     setLoading(false);
                 }
             });
-            
+
+            function handleError(error) {
+                if (error.message?.includes('Failed to fetch') || error.code === '20000') {
+                    showStatus('Connection error. Check your Supabase credentials in the code.', 'error');
+                } else if (error.code === '42P01') {
+                    showStatus('Error: The "text_entries" table does not exist. Please create it in your Supabase dashboard.', 'error');
+                } else {
+                    showStatus(`Error: ${error.message || 'Failed to save your entry. Please try again.'}`, 'error');
+                }
+            }
+
             /**
              * Set the loading state of the form
              * @param {boolean} isLoading - Whether the form is loading
@@ -410,7 +416,7 @@
                 submitButton.disabled = isLoading;
                 loadingSpinner.style.display = isLoading ? 'inline-block' : 'none';
             }
-            
+
             /**
              * Show a status message to the user
              * @param {string} message - The message to display
@@ -421,7 +427,7 @@
                 statusMessage.className = `status-message ${type}`;
                 statusMessage.style.display = 'block';
             }
-            
+
             /**
              * Reset the form to its initial state
              */
