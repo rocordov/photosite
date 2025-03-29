@@ -12,6 +12,32 @@ Requirements:
 
 import os
 from supabase import create_client, Client
+#!/usr/bin/env python3
+"""
+Supabase Connection Test Script
+
+This script demonstrates how to connect to a Supabase database using the
+supabase-py library and perform basic operations.
+
+Requirements:
+- supabase-py: pip install supabase
+- python-dotenv (optional, for loading credentials from .env file)
+"""
+
+#!/usr/bin/env python3
+"""
+Supabase Connection Test Script
+
+This script demonstrates how to connect to a Supabase database using the
+supabase-py library and perform basic operations.
+
+Requirements:
+- supabase-py: pip install supabase
+- python-dotenv (optional, for loading credentials from .env file)
+"""
+
+import os
+from supabase import create_client, Client
 
 # Supabase credentials
 SUPABASE_URL = 'https://yyfypeedlmgqqhukjhbe.supabase.co'
