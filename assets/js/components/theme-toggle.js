@@ -38,5 +38,5 @@ function applyTheme(theme) {
 }
 
 // Initialize theme toggle on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', initThemeToggle);
+//document.addEventListener('DOMContentLoaded', initThemeToggle);
 
