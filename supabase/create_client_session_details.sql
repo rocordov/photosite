@@ -5,8 +5,11 @@
 -- Enable the pgcrypto extension if not already enabled
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+-- Drop the table if it exists to start fresh
+DROP TABLE IF EXISTS client_session_details;
+
 -- Create the client_session_details table
-CREATE TABLE IF NOT EXISTS client_session_details (
+CREATE TABLE client_session_details (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   browser TEXT,
@@ -27,21 +30,25 @@ COMMENT ON TABLE client_session_details IS 'Stores browser and session details f
 -- Set up Row Level Security (RLS)
 ALTER TABLE client_session_details ENABLE ROW LEVEL SECURITY;
 
--- Create policy to allow anonymous inserts
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Allow anonymous inserts" ON client_session_details;
+DROP POLICY IF EXISTS "Allow authenticated users to view own entries" ON client_session_details;
+
+-- Create a more permissive policy for anonymous inserts
 CREATE POLICY "Allow anonymous inserts" 
   ON client_session_details 
   FOR INSERT 
-  TO anon
+  TO anon, authenticated
   WITH CHECK (true);
 
 -- Create policy for querying data (restricted to authenticated users)
-CREATE POLICY "Allow authenticated users to view own entries"
+CREATE POLICY "Allow authenticated users to view all entries"
   ON client_session_details
   FOR SELECT
   TO authenticated
-  USING (auth.uid() IS NOT NULL);
+  USING (true);
 
 -- Add indexes for common query patterns
 CREATE INDEX IF NOT EXISTS idx_client_session_details_browser ON client_session_details (browser);
 CREATE INDEX IF NOT EXISTS idx_client_session_details_os ON client_session_details (os);
-CREATE INDEX IF NOT EXISTS idx_client_session_details_session_time ON client_session_details (session_time);
+CREATE INDEX IF NOT EXISTS idx_client_session_details_created_at ON client_session_details (created_at);
