@@ -92,12 +92,12 @@
   
   <script>
     // Show status message
-    function showStatus(message, type) {
-      const statusElement = document.getElementById('statusMessage');
-      statusElement.textContent = message;
-      statusElement.className = `status-message ${type}`;
-      statusElement.style.display = 'block';
-    }
+    //function showStatus(message, type) {
+    //  const statusElement = document.getElementById('statusMessage');
+    //  statusElement.textContent = message;
+    //  statusElement.className = `status-message ${type}`;
+    //  statusElement.style.display = 'block';
+    //}
     
     // Update debug output
     function updateDebugOutput(text) {
@@ -123,7 +123,7 @@
           };
         });
         
-        showStatus('Script loaded successfully. Check console for debug logs.', 'success');
+        //showStatus('Script loaded successfully. Check console for debug logs.', 'success');
         
         // Set timeout to display collected data
         setTimeout(() => {
@@ -137,7 +137,7 @@
         
       } catch (error) {
         console.error('Test failed:', error);
-        showStatus(`Test failed: ${error.message}`, 'error');
+        //showStatus(`Test failed: ${error.message}`, 'error');
       }
     }
     
@@ -145,7 +145,7 @@
     function resetSessionStorage() {
       sessionStorage.removeItem('session_details_stored');
       localStorage.removeItem('debug_session_data');
-      showStatus('Session storage reset. You can now test data collection again.', 'success');
+      //showStatus('Session storage reset. You can now test data collection again.', 'success');
       updateDebugOutput('Session storage has been reset.');
     }
     resetSessionStorage();
