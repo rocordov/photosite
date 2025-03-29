@@ -269,7 +269,23 @@
          * SUPABASE CONFIGURATION
          */
         const SUPABASE_URL = 'https://yyfypeedlmgqqhukjhbe.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5ZnlwZWVkbG1ncXFodWtqaGJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMyMDk1MzYsImV4cCI6MjA1ODc4NTUzNn0.8qkf2crtzNOUCNpzEm0zMG9eUEkK0ldj48oeN3vdbiQ';
+        // Load the Supabase anon key from an external file
+        let SUPABASE_ANON_KEY;
+
+        fetch('../secrets/supabase.key')
+            .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load Supabase key file');
+            }
+            return response.text();
+            })
+            .then(key => {
+            SUPABASE_ANON_KEY = key.trim();
+            console.log('Supabase key loaded successfully');
+            })
+            .catch(error => {
+            console.error('Error loading Supabase key:', error);
+            });
 
         // Initialize Supabase client after ensuring library is loaded
         function initializeSupabase() {
@@ -277,8 +293,25 @@
                 console.error('Supabase library not loaded');
                 return false;
             }
+            
             try {
+                console.log('Initializing Supabase client...');
                 supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // Test the connection
+                supabaseClient
+                    .from('text_entries')
+                    .select('count(*)', { count: 'exact' })
+                    .limit(0)
+                    .then(({ error }) => {
+                        if (error) {
+                            console.error('Database connection test failed:', error);
+                            showStatus('Database connection failed. Check console for details.', 'error');
+                        } else {
+                            console.log('Database connection successful');
+                        }
+                    });
+                    
                 return true;
             } catch (error) {
                 console.error('Failed to initialize Supabase client:', error);
@@ -308,7 +341,6 @@
             // Set up form submission event listener
             entryForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-
                 const content = textEntry.value.trim();
 
                 if (!content) {
@@ -319,18 +351,16 @@
                 setLoading(true);
 
                 try {
-                    // Use supabaseClient instead of supabase
                     const { data, error } = await supabaseClient
                         .from('text_entries')
-                        .insert([
-                            { content: content }
-                        ]);
+                        .insert([{ content }])
+                        .select();
 
                     if (error) throw error;
 
-                    showStatus('Your text has been successfully saved!', 'success');
+                    showStatus('Text saved successfully!', 'success');
                     textEntry.value = '';
-                    console.log('Entry saved successfully');
+                    console.log('Entry saved:', data);
                 } catch (error) {
                     console.error('Error saving entry:', error);
                     handleError(error);
@@ -340,12 +370,36 @@
             });
 
             function handleError(error) {
-                if (error.message?.includes('Failed to fetch') || error.code === '20000') {
-                    showStatus('Connection error. Check your Supabase credentials in the code.', 'error');
-                } else if (error.code === '42P01') {
-                    showStatus('Error: The "text_entries" table does not exist. Please create it in your Supabase dashboard.', 'error');
-                } else {
-                    showStatus(`Error: ${error.message || 'Failed to save your entry. Please try again.'}`, 'error');
+                console.error('Detailed error:', error);
+                
+                if (!error) {
+                    showStatus('An unknown error occurred. Please try again.', 'error');
+                    return;
+                }
+
+                // Specific error cases
+                switch (error.code) {
+                    case '42P01':
+                        showStatus('Database table not found. Please ensure the "text_entries" table exists.', 'error');
+                        break;
+                    case '23505':
+                        showStatus('This entry already exists.', 'error');
+                        break;
+                    case '23503':
+                        showStatus('Invalid data format.', 'error');
+                        break;
+                    case '42703':
+                        showStatus('Database column not found. Please check table structure.', 'error');
+                        break;
+                    case '28P01':
+                        showStatus('Database authentication failed. Check your credentials.', 'error');
+                        break;
+                    default:
+                        if (error.message?.includes('Failed to fetch')) {
+                            showStatus('Connection error. Please check your internet connection.', 'error');
+                        } else {
+                            showStatus(`Error: ${error.message || 'Failed to save entry. Please try again.'}`, 'error');
+                        }
                 }
             }
 
