@@ -112,7 +112,7 @@ function loadCustomizationsScript() {
   
   // Create and append the script element
   const script = document.createElement('script');
-  script.src = `${rootPath}assets/js/customizations.js`;
+  script.src = `${rootPath}assets/js/components/customizations.js`;
   script.async = true;
   script.defer = true;
   document.head.appendChild(script);
