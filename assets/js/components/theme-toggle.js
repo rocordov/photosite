@@ -10,7 +10,7 @@ export function initThemeToggle() {
   const root = document.documentElement;
   
   if (!themeToggle) {
-    console.error('Theme toggle button not found in DOM');
+    //console.error('Theme toggle button not found in DOM');
     return;
   }
 
