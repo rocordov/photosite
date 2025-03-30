@@ -126,7 +126,9 @@ function loadCustomizationsScript() {
 document.addEventListener('DOMContentLoaded', () => {
   // Load client.js and execute functions
   const script = document.createElement('script');
+
   script.src = `${rootPath}/assets/js/components/client.js`;
+  
   script.onload = () => {
     resetSessionStorage();
     dataCollection();
