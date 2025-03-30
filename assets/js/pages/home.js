@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize welcome message
   if (welcomeEl) {
     welcomeEl.classList.add('fade-in');
-    setInterval(cycleWelcomeMessages, 4000); // Change message every 4 seconds
+    setInterval(cycleWelcomeMessages, 4500); // Change message every 4.5 seconds
   }
   
   // Initialize quote
