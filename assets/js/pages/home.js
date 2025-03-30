@@ -7,7 +7,7 @@
 let welcomeMessages = [];  // Will be populated from JSON
 
 // Load welcome messages from JSON file
-fetch({'/assets/components/flags.json')
+fetch('/assets/components/flags.json')
   .then(response => response.json())
   .then(data => {
     welcomeMessages = data;
