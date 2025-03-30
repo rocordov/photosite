@@ -22,33 +22,13 @@
 		<!--START JUICEBOX EMBED-->
 		<script src="jbcore/juicebox.js"></script>
 		<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Create gallery configuration
-    const config = {
-        backgroundColor: "rgba(34,34,34,1)",
-        containerId: "juicebox-container",
-        galleryHeight: "100%",
-        galleryWidth: "100%"
-    };
-
-    // Function to initialize gallery
-    function initGallery() {
-        new juicebox(config);
-        // Remove event listeners once initialized
-        document.removeEventListener('click', initGallery);
-        document.removeEventListener('keydown', initGallery);
-        document.removeEventListener('scroll', initGallery, { passive: true });
-    }
-
-    // Add event listeners with passive option for scroll
-    document.addEventListener('click', initGallery, { once: true });
-    document.addEventListener('keydown', initGallery, { once: true });
-    document.addEventListener('scroll', initGallery, { 
-        once: true,
-        passive: true 
-    });
-});
-</script>
+			new juicebox({
+				backgroundColor: "rgba(34,34,34,1)",
+				containerId: "juicebox-container",
+				galleryHeight: "100%",
+				galleryWidth: "100%"
+			});
+		</script>
 		<div id="juicebox-container">
 							<noscript>
 					<h1>Febuary</h1>
