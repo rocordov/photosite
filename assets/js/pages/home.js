@@ -4,22 +4,19 @@
  */
 
 // Welcome messages functionality
-const welcomeMessages = [
-  { text: "Welcome", flag: "🏳️‍🌈" },
-  { text: "Bienvenue", flag: "🇫🇷" },
-  { text: "Willkommen", flag: "🇩🇪" },
-  { text: "Benvenuto", flag: "🇮🇹" },
-  { text: "ยินดีต้อนรับ", flag: "🇹🇭" },
-  { text: "ようこそ", flag: "🇯🇵" },
-  { text: "환영합니다", flag: "🇰🇷" },
-  { text: "欢迎", flag: "🇨🇳" },
-  { text: "स्वागत है", flag: "🇮🇳" },
-  { text: "Добро пожаловать", flag: "🇷🇺" },
-  { text: "Bem-vindo", flag: "🇵🇹" },
-  { text: "Välkommen", flag: "🇸🇪" },
-  { text: "Aloha", flag: "🇺🇸" },
-  // Trimmed for brevity
-];
+let welcomeMessages = [];  // Will be populated from JSON
+
+// Load welcome messages from JSON file
+fetch('../components/flags.json')
+  .then(response => response.json())
+  .then(data => {
+    welcomeMessages = data;
+  })
+  .catch(error => {
+    console.error('Error loading welcome messages:', error);
+    // Fallback welcome message if loading fails
+    welcomeMessages = [{ text: "Welcome", flag: "👋" }];
+  });
 
 let currentIndex = 0;
 const welcomeEl = document.getElementById('animated-welcome');
