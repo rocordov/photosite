@@ -463,6 +463,8 @@ async function initGallery() {
   try {
     // Fetch the albums data from the JSON file
     const response = await fetch('albums.json');
+    console.debug('Response:', response);
+    
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
