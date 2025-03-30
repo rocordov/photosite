@@ -1,392 +1,182 @@
-const welcomeMessages = [
-    // 1. Afghanistan
+[
     { "text": "خوش آمدید", "flag": "🇦🇫" },
-    // 2. Albania
     { "text": "Mirë se vini", "flag": "🇦🇱" },
-    // 3. Algeria
     { "text": "مرحبا", "flag": "🇩🇿" },
-    // 4. Andorra
     { "text": "Benvingut", "flag": "🇦🇩" },
-    // 5. Angola
     { "text": "Bem-vindo", "flag": "🇦🇴" },
-    // 6. Antigua and Barbuda
     { "text": "Welcome", "flag": "🇦🇬" },
-    // 7. Argentina
     { "text": "¡Bienvenido!", "flag": "🇦🇷" },
-    // 8. Armenia
     { "text": "Բարի գալուստ", "flag": "🇦🇲" },
-    // 9. Australia
     { "text": "Welcome", "flag": "🇦🇺" },
-    // 10. Austria
     { "text": "Willkommen", "flag": "🇦🇹" },
-    // 11. Azerbaijan
     { "text": "Xoş gəlmisiniz", "flag": "🇦🇿" },
-    // 12. Bahamas
     { "text": "Welcome", "flag": "🇧🇸" },
-    // 13. Bahrain
     { "text": "مرحبا", "flag": "🇧🇭" },
-    // 14. Bangladesh
     { "text": "স্বাগতম", "flag": "🇧🇩" },
-    // 15. Barbados
     { "text": "Welcome", "flag": "🇧🇧" },
-    // 16. Belarus 
     { "text": "Сардэчна запрашаем", "flag": "🇧🇾" },
-    // 17. Belgium
     { "text": "Welkom", "flag": "🇧🇪" },
-    // 18. Belize
     { "text": "Welcome", "flag": "🇧🇿" },
-    // 19. Benin
     { "text": "Bienvenue", "flag": "🇧🇯" },
-    // 20. Bhutan
     { "text": "Tashi delek", "flag": "🇧🇹" },
-    // 21. Bolivia
     { "text": "¡Bienvenido!", "flag": "🇧🇴" },
-    // 22. Bosnia and Herzegovina
     { "text": "Dobrodošli", "flag": "🇧🇦" },
-    // 23. Botswana
     { "text": "Amogela", "flag": "🇧🇼" },
-    // 24. Brazil
     { "text": "Bem-vindo", "flag": "🇧🇷" },
-    // 25. Brunei
     { "text": "Selamat datang", "flag": "🇧🇳" },
-    // 26. Bulgaria
     { "text": "Добре дошли", "flag": "🇧🇬" },
-    // 27. Burkina Faso
     { "text": "Bienvenue", "flag": "🇧🇫" },
-    // 28. Burundi
     { "text": "Ikaze", "flag": "🇧🇮" },
-    // 29. Cabo Verde
     { "text": "Bem-vindo", "flag": "🇨🇻" },
-    // 30. Cambodia
     { "text": "សូមស្វាគមន៍", "flag": "🇰🇭" },
-    // 31. Cameroon
     { "text": "Bienvenue", "flag": "🇨🇲" },
-    // 32. Canada
     { "text": "Welcome", "flag": "🇨🇦" },
-    // 33. Central African Republic
     { "text": "Bienvenue", "flag": "🇨🇫" },
-    // 34. Chad
     { "text": "مرحبا", "flag": "🇹🇩" },
-    // 35. Chile
     { "text": "¡Bienvenido!", "flag": "🇨🇱" },
-    // 36. China
     { "text": "欢迎", "flag": "🇨🇳" },
-    // 37. Colombia
     { "text": "Bienvenido", "flag": "🇨🇴" },
-    // 38. Comoros
     { "text": "Bienvenue", "flag": "🇰🇲" },
-    // 39. Congo (Republic)
     { "text": "Bienvenue", "flag": "🇨🇬" },
-    // 40. Congo (DRC)
     { "text": "Bienvenue", "flag": "🇨🇩" },
-    // 41. Costa Rica
     { "text": "¡Bienvenido!", "flag": "🇨🇷" },
-    // 42. Côte d'Ivoire
     { "text": "Bienvenue", "flag": "🇨🇮" },
-    // 43. Croatia
     { "text": "Dobrodošli", "flag": "🇭🇷" },
-    // 44. Cuba
     { "text": "Bienvenido", "flag": "🇨🇺" },
-    // 45. Cyprus
     { "text": "Καλώς ήρθατε", "flag": "🇨🇾" },
-    // 46. Czech Republic
     { "text": "Vítejte", "flag": "🇨🇿" },
-    // 47. Denmark
     { "text": "Velkommen", "flag": "🇩🇰" },
-    // 48. Djibouti
     { "text": "مرحبا", "flag": "🇩🇯" },
-    // 49. Dominica
     { "text": "Welcome", "flag": "🇩🇲" },
-    // 50. Dominican Republic
     { "text": "Bienvenido", "flag": "🇩🇴" },
-    // 51. Ecuador
     { "text": "Bienvenido", "flag": "🇪🇨" },
-    // 52. Egypt
     { "text": "مرحبًا", "flag": "🇪🇬" },
-    // 53. El Salvador
     { "text": "Bienvenido", "flag": "🇸🇻" },
-    // 54. Equatorial Guinea
     { "text": "¡Bienvenido!", "flag": "🇬🇶" },
-    // 55. Eritrea
     { "text": "እንቋዕ ደሓን", "flag": "🇪🇷" },
-    // 56. Estonia
     { "text": "Tere tulemast", "flag": "🇪🇪" },
-    // 57. Eswatini
     { "text": "Siyakwemukela", "flag": "🇸🇿" },
-    // 58. Ethiopia
     { "text": "እንኳን ደህና መጡ", "flag": "🇪🇹" },
-    // 59. Fiji
     { "text": "Bula", "flag": "🇫🇯" },
-    // 60. Finland
     { "text": "Tervetuloa", "flag": "🇫🇮" },
-    // 61. France
     { "text": "Bienvenue", "flag": "🇫🇷" },
-    // 62. Gabon
     { "text": "Bienvenue", "flag": "🇬🇦" },
-    // 63. Gambia
     { "text": "Welcome", "flag": "🇬🇲" },
-    // 64. Georgia
     { "text": "კეთილი იყოს თქვენი მობრძანება", "flag": "🇬🇪" },
-    // 65. Germany
     { "text": "Willkommen", "flag": "🇩🇪" },
-    // 66. Ghana
     { "text": "Welcome", "flag": "🇬🇭" },
-    // 67. Greece
     { "text": "Καλώς ήρθατε", "flag": "🇬🇷" },
-    // 68. Grenada
     { "text": "Welcome", "flag": "🇬🇩" },
-    // 69. Guatemala
     { "text": "Bienvenido", "flag": "🇬🇹" },
-    // 70. Guinea
     { "text": "Bienvenue", "flag": "🇬🇳" },
-    // 71. Guinea-Bissau
     { "text": "Bem-vindo", "flag": "🇬🇼" },
-    // 72. Guyana
     { "text": "Welcome", "flag": "🇬🇾" },
-    // 73. Haiti
     { "text": "Byenveni", "flag": "🇭🇹" },
-    // 74. Honduras
     { "text": "Bienvenido", "flag": "🇭🇳" },
-    // 75. Hungary
-    { "text": "Üdvözöljük", "flag": "🇭🇺" },
-    // 76. Iceland
-    { "text": "Velkomin", "flag": "🇮🇸" },
-    // 77. India
-    { "text": "स्वागत है", "flag": "🇮🇳" },
-    // 78. Indonesia
-    { "text": "Selamat datang", "flag": "🇮🇩" },
-    // 79. Iran
-    { "text": "خوش آمدید", "flag": "🇮🇷" },
-    // 80. Iraq
-    { "text": "مرحبا", "flag": "🇮🇶" },
-    // 81. Ireland
-    { "text": "Fáilte", "flag": "🇮🇪" },
-    // 82. Israel
-    { "text": "ברוך הבא", "flag": "🇮🇱" },
-    // 83. Italy
-    { "text": "Benvenuto", "flag": "🇮🇹" },
-    // 84. Jamaica
-    { "text": "Welcome", "flag": "🇯🇲" },
-    // 85. Japan
-    { "text": "ようこそ", "flag": "🇯🇵" },
-    // 86. Jordan
-    { "text": "مرحبا", "flag": "🇯🇴" },
-    // 87. Kazakhstan
-    { "text": "Қош келдіңіз", "flag": "🇰🇿" },
-    // 88. Kenya
-    { "text": "Karibu", "flag": "🇰🇪" },
-    // 89. Kiribati
-    { "text": "Welcome", "flag": "🇰🇮" },
-    // 90. Kuwait
-    { "text": "مرحبا", "flag": "🇰🇼" },
-    // 91. Kyrgyzstan
-    { "text": "Кош келиңиз", "flag": "🇰🇬" },
-    // 92. Laos
-    { "text": "ຍິນດີຕ້ອນຮັບ", "flag": "🇱🇦" },
-    // 93. Latvia
-    { "text": "Laipni lūdzam", "flag": "🇱🇻" },
-    // 94. Lebanon
-    { "text": "مرحبا", "flag": "🇱🇧" },
-    // 95. Lesotho
-    { "text": "Rea u amohela", "flag": "🇱🇸" },
-    // 96. Liberia
-    { "text": "Welcome", "flag": "🇱🇷" },
-    // 97. Libya
-    { "text": "مرحبا", "flag": "🇱🇾" },
-    // 98. Liechtenstein
-    { "text": "Willkommen", "flag": "🇱🇮" },
-    // 99. Lithuania
-    { "text": "Sveiki atvykę", "flag": "🇱🇹" },
-    // 100. Luxembourg
-    { "text": "Wëllkomm", "flag": "🇱🇺" },
-    // 101. Madagascar
-    { "text": "Tonga soa", "flag": "🇲🇬" },
-    // 102. Malawi
-    { "text": "Takulandirani", "flag": "🇲🇼" },
-    // 103. Malaysia
-    { "text": "Selamat datang", "flag": "🇲🇾" },
-    // 104. Maldives
-    { "text": "ޝަނގަހައްޓާ", "flag": "🇲🇻" },
-    // 105. Malta
-    { "text": "Merħba", "flag": "🇲🇹" },
-    // 106. Marshall Islands
-    { "text": "Yokwe", "flag": "🇲🇭" },
-    // 107. Mauritania
-    { "text": "مرحبا", "flag": "🇲🇷" },
-    // 108. Mauritius
-    { "text": "Bienvenue", "flag": "🇲🇺" },
-    // 109. Mexico
-    { "text": "Bienvenido", "flag": "🇲🇽" },
-    // 110. Micronesia
-    { "text": "Welcome", "flag": "🇫🇲" },
-    // 111. Moldova
-    { "text": "Bine ați venit", "flag": "🇲🇩" },
-    // 112. Monaco
-    { "text": "Bienvenue", "flag": "🇲🇨" },
-    // 113. Mongolia
-    { "text": "Сайн байна уу", "flag": "🇲🇳" },
-    // 114. Montenegro
-    { "text": "Dobrodošli", "flag": "🇲🇪" },
-    // 115. Morocco
-    { "text": "مرحبا", "flag": "🇲🇦" },
-    // 116. Mozambique
-    { "text": "Bem-vindo", "flag": "🇲🇿" },
-    // 117. Myanmar
-    { "text": "ကြိုဆိုပါတယ်", "flag": "🇲🇲" },
-    // 118. Namibia
-    { "text": "Welcome", "flag": "🇳🇦" },
-    // 119. Nauru
-    { "text": "Welcome", "flag": "🇳🇷" },
-    // 120. Nepal
-    { "text": "स्वागत छ", "flag": "🇳🇵" },
-    // 121. Netherlands
-    { "text": "Welkom", "flag": "🇳🇱" },
-    // 122. New Zealand
-    { "text": "Welcome", "flag": "🇳🇿" },
-    // 123. Nicaragua
-    { "text": "Bienvenido", "flag": "🇳🇮" },
-    // 124. Niger
-    { "text": "Bienvenue", "flag": "🇳🇪" },
-    // 125. Nigeria
-    { "text": "Welcome", "flag": "🇳🇬" },
-    // 126. North Korea
-    { "text": "환영합니다", "flag": "🇰🇵" },
-    // 127. North Macedonia
-    { "text": "Добредојдовте", "flag": "🇲🇰" },
-    // 128. Norway
-    { "text": "Velkommen", "flag": "🇳🇴" },
-    // 129. Oman
-    { "text": "مرحبا", "flag": "🇴🇲" },
-    // 130. Pakistan
-    { "text": "خوش آمدید", "flag": "🇵🇰" },
-    // 131. Palau
-    { "text": "Welcome", "flag": "🇵🇼" },
-    // 132. Panama
-    { "text": "Bienvenido", "flag": "🇵🇦" },
-    // 133. Papua New Guinea
-    { "text": "Welkam", "flag": "🇵🇬" },
-    // 134. Paraguay
-    { "text": "Bienvenido", "flag": "🇵🇾" },
-    // 135. Peru
-    { "text": "Bienvenido", "flag": "🇵🇪" },
-    // 136. Philippines
-    { "text": "Maligayang pagdating", "flag": "🇵🇭" },
-    // 137. Poland
     { "text": "Witamy", "flag": "🇵🇱" },
-    // 138. Portugal
+    { "text": "Bienvenue", "flag": "🇭🇺" },
+    { "text": "Fáilte", "flag": "🇮🇪" },
+    { "text": "ברוך הבא", "flag": "🇮🇱" },
+    { "text": "Benvenuto", "flag": "🇮🇹" },
+    { "text": "Welcome", "flag": "🇯🇲" },
+    { "text": "ようこそ", "flag": "🇯🇵" },
+    { "text": "مرحبا", "flag": "🇯🇴" },
+    { "text": "Қош келдіңіз", "flag": "🇰🇿" },
+    { "text": "Karibu", "flag": "🇰🇪" },
+    { "text": "Welcome", "flag": "🇰🇮" },
+    { "text": "مرحبا", "flag": "🇰🇼" },
+    { "text": "Кош келиңиз", "flag": "🇰🇬" },
+    { "text": "ຍິນດີຕ້ອນຮັບ", "flag": "🇱🇦" },
+    { "text": "Laipni lūdzam", "flag": "🇱🇻" },
+    { "text": "مرحبا", "flag": "🇱🇧" },
+    { "text": "Rea u amohela", "flag": "🇱🇸" },
+    { "text": "Welcome", "flag": "🇱🇷" },
+    { "text": "مرحبا", "flag": "🇱🇾" },
+    { "text": "Willkommen", "flag": "🇱🇮" },
+    { "text": "Sveiki atvykę", "flag": "🇱🇹" },
+    { "text": "Wëllkomm", "flag": "🇱🇺" },
+    { "text": "Tonga soa", "flag": "🇲🇬" },
+    { "text": "Takulandirani", "flag": "🇲🇼" },
+    { "text": "Selamat datang", "flag": "🇲🇾" },
+    { "text": "ޝަނގަހައްޓާ", "flag": "🇲🇻" },
+    { "text": "Merħba", "flag": "🇲🇹" },
+    { "text": "Yokwe", "flag": "🇲🇭" },
+    { "text": "مرحبا", "flag": "🇲🇷" },
+    { "text": "Bienvenue", "flag": "🇲🇺" },
+    { "text": "Bienvenido", "flag": "🇲🇽" },
+    { "text": "Welcome", "flag": "🇫🇲" },
+    { "text": "Bine ați venit", "flag": "🇲🇩" },
+    { "text": "Bienvenue", "flag": "🇲🇨" },
+    { "text": "Сайн байна уу", "flag": "🇲🇳" },
+    { "text": "Dobrodošli", "flag": "🇲🇪" },
+    { "text": "مرحبا", "flag": "🇲🇦" },
+    { "text": "Bem-vindo", "flag": "🇲🇿" },
+    { "text": "ကြိုဆိုပါတယ်", "flag": "🇲🇲" },
+    { "text": "Welcome", "flag": "🇳🇦" },
+    { "text": "Welcome", "flag": "🇳🇷" },
+    { "text": "स्वागत छ", "flag": "🇳🇵" },
+    { "text": "Welkom", "flag": "🇳🇱" },
+    { "text": "Welcome", "flag": "🇳🇿" },
+    { "text": "Bienvenido", "flag": "🇳🇮" },
+    { "text": "Bienvenue", "flag": "🇳🇪" },
+    { "text": "Welcome", "flag": "🇳🇬" },
+    { "text": "환영합니다", "flag": "🇰🇵" },
+    { "text": "Добредојдовте", "flag": "🇲🇰" },
+    { "text": "Velkommen", "flag": "🇳🇴" },
+    { "text": "مرحبا", "flag": "🇴🇲" },
+    { "text": "خوش آمدید", "flag": "🇵🇰" },
+    { "text": "Welcome", "flag": "🇵🇼" },
+    { "text": "Bienvenido", "flag": "🇵🇦" },
+    { "text": "Welkam", "flag": "🇵🇬" },
+    { "text": "Bienvenido", "flag": "🇵🇾" },
+    { "text": "Bienvenido", "flag": "🇵🇪" },
+    { "text": "Maligayang pagdating", "flag": "🇵🇭" },
+    { "text": "Witamy", "flag": "🇵🇱" },
     { "text": "Bem-vindo", "flag": "🇵🇹" },
-    // 139. Qatar
     { "text": "مرحبا", "flag": "🇶🇦" },
-    // 140. Romania
     { "text": "Bun venit", "flag": "🇷🇴" },
-    // 141. Russia
     { "text": "Добро пожаловать", "flag": "🇷🇺" },
-    // 142. Rwanda
     { "text": "Murakaza neza", "flag": "🇷🇼" },
-    // 143. Saint Kitts and Nevis
     { "text": "Welcome", "flag": "🇰🇳" },
-    // 144. Saint Lucia
     { "text": "Welcome", "flag": "🇱🇨" },
-    // 145. Saint Vincent and the Grenadines
     { "text": "Welcome", "flag": "🇻🇨" },
-    // 146. Samoa
     { "text": "Talofa", "flag": "🇼🇸" },
-    // 147. San Marino
     { "text": "Benvenuto", "flag": "🇸🇲" },
-    // 148. São Tomé and Príncipe
     { "text": "Bem-vindo", "flag": "🇸🇹" },
-    // 149. Saudi Arabia
     { "text": "مرحبا", "flag": "🇸🇦" },
-    // 150. Senegal
     { "text": "Bienvenue", "flag": "🇸🇳" },
-    // 151. Serbia
     { "text": "Добродошли", "flag": "🇷🇸" },
-    // 152. Seychelles
     { "text": "Bienvenue", "flag": "🇸🇨" },
-    // 153. Sierra Leone
     { "text": "Welcome", "flag": "🇸🇱" },
-    // 154. Singapore
     { "text": "Selamat datang", "flag": "🇸🇬" },
-    // 155. Slovakia
-    { "text": "Vitajte", "flag": "🇸🇰" },
-    // 156. Slovenia
-    { "text": "Dobrodošli", "flag": "🇸🇮" },
-    // 157. Solomon Islands
-    { "text": "Welcome", "flag": "🇸🇧" },
-    // 158. Somalia
-    { "text": "Soo dhawoow", "flag": "🇸🇴" },
-    // 159. South Africa
-    { "text": "Welkom", "flag": "🇿🇦" },
-    // 160. South Korea
-    { "text": "환영합니다", "flag": "🇰🇷" },
-    // 161. South Sudan
-    { "text": "Welcome", "flag": "🇸🇸" },
-    // 162. Spain
-    { "text": "¡Bienvenido!", "flag": "🇪🇸" },
-    // 163. Sri Lanka
-    { "text": "ආයුබෝවන්", "flag": "🇱🇰" },
-    // 164. Sudan
-    { "text": "مرحبا", "flag": "🇸🇩" },
-    // 165. Suriname
-    { "text": "Welkom", "flag": "🇸🇷" },
-    // 166. Sweden
     { "text": "Välkommen", "flag": "🇸🇪" },
-    // 167. Switzerland
     { "text": "Bienvenue", "flag": "🇨🇭" },
-    // 168. Syria
     { "text": "مرحبا", "flag": "🇸🇾" },
-    // 169. Taiwan
     { "text": "欢迎", "flag": "🇹🇼" },
-    // 170. Tajikistan
     { "text": "Хуш омадед", "flag": "🇹🇯" },
-    // 171. Tanzania
     { "text": "Karibu", "flag": "🇹🇿" },
-    // 172. Thailand
     { "text": "ยินดีต้อนรับ", "flag": "🇹🇭" },
-    // 173. Timor-Leste
     { "text": "Bem-vindu", "flag": "🇹🇱" },
-    // 174. Togo
     { "text": "Bienvenue", "flag": "🇹🇬" },
-    // 175. Tonga
     { "text": "Mālō e lelei", "flag": "🇹🇴" },
-    // 176. Trinidad and Tobago
     { "text": "Welcome", "flag": "🇹🇹" },
-    // 177. Tunisia
     { "text": "مرحبا", "flag": "🇹🇳" },
-    // 178. Turkey
     { "text": "Hoş geldiniz", "flag": "🇹🇷" },
-    // 179. Turkmenistan
     { "text": "Hoş geldiňiz", "flag": "🇹🇲" },
-    // 180. Tuvalu
     { "text": "Welcome", "flag": "🇹🇻" },
-    // 181. Uganda
     { "text": "Welcome", "flag": "🇺🇬" },
-    // 182. Ukraine
     { "text": "Ласкаво просимо", "flag": "🇺🇦" },
-    // 183. United Arab Emirates
     { "text": "أهلاً وسهلاً", "flag": "🇦🇪" },
-    // 184. United Kingdom
     { "text": "Welcome", "flag": "🇬🇧" },
-    // 185. United States
-    { "text": "Aloha", "flag": "🇺🇸" },
-    // 186. Uruguay
+    { "text": "Aloha", "flag": "🏳️‍🌈" },
     { "text": "Bienvenido", "flag": "🇺🇾" },
-    // 187. Uzbekistan
     { "text": "Xush kelibsiz", "flag": "🇺🇿" },
-    // 188. Vanuatu
     { "text": "Welkam", "flag": "🇻🇺" },
-    // 189. Vatican City
     { "text": "Benvenuto", "flag": "🇻🇦" },
-    // 190. Venezuela
     { "text": "Bienvenido", "flag": "🇻🇪" },
-    // 191. Vietnam
     { "text": "Chào mừng", "flag": "🇻🇳" },
-    // 192. Yemen
     { "text": "مرحبا", "flag": "🇾🇪" },
-    // 193. Zambia
     { "text": "Welcome", "flag": "🇿🇲" },
-    // 194. Zimbabwe
     { "text": "Welcome", "flag": "🇿🇼" },
-    // 195. Palestine
     { "text": "أهلاً وسهلاً", "flag": "🇵🇸" }
-  ];
+  ]
