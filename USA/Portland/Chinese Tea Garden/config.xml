@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<juiceboxgallery
+				showInfoButton="true"
+					enableAutoPlay="true"
+					showAutoPlayButton="true"
+					captionPosition="BELOW_IMAGE"
+					autohideThumbs="true"
+					playAudioOnLoad="true"
+					showImageNumber="false"
+					showAudioButton="true"
+					backgroundUrl="https://downloadscdn7.freepik.com/1258/29/28384.jpg?filename=vintage-grunge-blue-concrete-texture-studio-wall-background-with-vignette&amp;token=exp=1743270632~hmac=13a06f1b87ffa4a88eaec65897563e3f"
+					showNavButtons="true"
+					buttonBarPosition="TOP"
+					maxThumbRows="2"
+					imageScaleMode="SCALE"
+					audioUrlMp3="https://cdn.pixabay.com/audio/2023/12/21/audio_9a762c312f.mp3"
+					randomizeImages="true"
+					useFullscreenExpand="true"
+					autoPlayOnLoad="true"
+					galleryTitle="Chinese Tea Garden"
+					imageTransitionType="CROSS_FADE"
+		>
+			<image imageURL="images/_7RV6705.jpg" thumbURL="thumbs/_7RV6705.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6714.jpg" thumbURL="thumbs/_7RV6714.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6720-HDR.jpg" thumbURL="thumbs/_7RV6720-HDR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6747-HDR-Enhanced-NR.jpg" thumbURL="thumbs/_7RV6747-HDR-Enhanced-NR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6774-HDR.jpg" thumbURL="thumbs/_7RV6774-HDR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6819.jpg" thumbURL="thumbs/_7RV6819.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6825-HDR-Enhanced-NR.jpg" thumbURL="thumbs/_7RV6825-HDR-Enhanced-NR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6831-HDR.jpg" thumbURL="thumbs/_7RV6831-HDR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6852-HDR.jpg" thumbURL="thumbs/_7RV6852-HDR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6855-HDR.jpg" thumbURL="thumbs/_7RV6855-HDR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6882-HDR.jpg" thumbURL="thumbs/_7RV6882-HDR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6924-HDR.jpg" thumbURL="thumbs/_7RV6924-HDR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6927-HDR.jpg" thumbURL="thumbs/_7RV6927-HDR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6964.jpg" thumbURL="thumbs/_7RV6964.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6967-HDR.jpg" thumbURL="thumbs/_7RV6967-HDR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+			<image imageURL="images/_7RV6973-HDR-Enhanced-NR.jpg" thumbURL="thumbs/_7RV6973-HDR-Enhanced-NR.jpg" linkURL="" linkTarget="_blank">
+			<title><![CDATA[]]></title>
+			<caption><![CDATA[]]></caption>
+		</image>
+	</juiceboxgallery>
