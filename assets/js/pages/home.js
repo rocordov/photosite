@@ -37,19 +37,20 @@ function cycleWelcomeMessages() {
 }
 
 // Quotes functionality
-// Quotes functionality
 let quotes = []; // Will be populated from JSON
-
+console.debug('Starting loading quotes:');
 // Load quotes from JSON file
 fetch('/assets/components/quotes.json')
   .then(response => response.json())
   .then(data => {
     quotes = data;
+    displayRandomQuote(); // Move this inside the .then block
   })
   .catch(error => {
     console.error('Error loading quotes:', error);
     // Fallback quote if loading fails
     quotes = ["The meaning of life is just to be alive. — Alan Watts"];
+    displayRandomQuote(); // Ensure fallback quote is displayed
   });
 
 /**
@@ -57,10 +58,30 @@ fetch('/assets/components/quotes.json')
  */
 function displayRandomQuote() {
   const quoteDisplay = document.getElementById('quote-display');
-  if (!quoteDisplay) return;
+  if (!quoteDisplay) {
+    console.error('Quote display element not found.');
+    return;
+  } 
   
-  const randomIndex = Math.floor(Math.random() * quotes.length);
-  quoteDisplay.textContent = quotes[randomIndex];
+  // Guard against empty quotes array
+  if (!quotes || quotes.length === 0) {
+    console.warn('No quotes available to display');
+    return;
+  }
+
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  
+  // Handle both object and string formats
+  if (typeof randomQuote === 'object' && randomQuote.quote && randomQuote.author) {
+    quoteDisplay.textContent = `${randomQuote.quote} — ${randomQuote.author}`;
+  } else if (typeof randomQuote === 'string') {
+    quoteDisplay.textContent = randomQuote;
+  } else {
+    console.error('Invalid quote format:', randomQuote);
+    quoteDisplay.textContent = 'The meaning of life is just to be alive. — Alan Watts';
+  }
+  
+  console.debug('Random quote displayed:', randomQuote);
 }
 
 /**
@@ -135,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   // Initialize quote
+  
   displayRandomQuote();
   
   // Initialize gallery
