@@ -1,47 +1,674 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Chiang Mai</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" id="jb-viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=0" />
-		<meta name="description" content="" />
-				<!--START OPEN GRAPH TAGS-->
-		<meta property="og:description" content="" />
-		<meta property="og:image" content="/images/IMG_0925.jpg" />
-		<meta property="og:title" content="Chiang Mai" />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="/" />
-		<!--END OPEN GRAPH TAGS-->
-		<style type="text/css">
-			body {
-				margin: 0px;
-			}
-		</style>
-	</head>
-	<body>
-		<!--START JUICEBOX EMBED-->
-		<script src="jbcore/juicebox.js"></script>
-		<script>
-			new juicebox({
-				backgroundColor: "rgba(34,34,34,1)",
-				containerId: "juicebox-container",
-				galleryHeight: "100%",
-				galleryWidth: "100%"
-			});
-		</script>
-		<div id="juicebox-container">
-							<noscript>
-					<h1>Chiang Mai</h1>
-											<p><img src="images/IMG_0925.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0933.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0937.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0940.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0941.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0943.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0945.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0957.jpg" title="" alt="" /><br /></p>
-									</noscript>
-					</div>
-		<!--END JUICEBOX EMBED-->
-	</body>
+<head>
+    <title>Chiang Mai</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" id="jb-viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta name="description" content="Gallery of Chiang Mai, Thailand" />
+    <!--START OPEN GRAPH TAGS-->
+    <meta property="og:description" content="Photo gallery of Chiang Mai, Thailand" />
+    <meta property="og:image" content="images/IMG_0925.jpg" />
+    <meta property="og:title" content="Chiang Mai" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="/" />
+    <!--END OPEN GRAPH TAGS-->
+    
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Trirong:wght@300;400;700&display=swap');
+        
+        :root {
+            --primary-gold: #D4AF37;
+            --primary-red: #9D2235;
+            --primary-green: #006C35;
+            --cream: #F9F6EE;
+            --dark-brown: #50291F;
+            --dark-overlay: rgba(35, 20, 15, 0.85);
+            --gold-glow: rgba(212, 175, 55, 0.3);
+            --gold-light: rgba(212, 175, 55, 0.7);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Trirong', serif;
+            background-color: var(--dark-brown);
+            color: var(--cream);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--dark-brown) 0%, #3c1f18 100%);
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 0h2v20H9V0zm25.134.84l1.732 1-10 17.32-1.732-1 10-17.32zm-20 20l1.732 1-10 17.32-1.732-1 10-17.32zM58.16 4.134l1 1.732-17.32 10-1-1.732 17.32-10zm-40 40l1 1.732-17.32 10-1-1.732 17.32-10zM80 9v2H60V9h20zM20 69v2H0v-2h20zm79.32-55l-1 1.732-17.32-10L82 4l17.32 10zm-80 80l-1 1.732-17.32-10L2 84l17.32 10zm96.546-75.84l-1.732 1-10-17.32 1.732-1 10 17.32zm-100 100l-1.732 1-10-17.32 1.732-1 10 17.32zM38.16 24.134l1 1.732-17.32 10-1-1.732 17.32-10zM60 29v2H40v-2h20zm19.32 5l-1 1.732-17.32-10L62 24l17.32 10zm16.546 4.16l-1.732 1-10-17.32 1.732-1 10 17.32zM111 40h-2V20h2v20zm3.134.84l1.732 1-10 17.32-1.732-1 10-17.32zM40 49v2H20v-2h20zm19.32 5l-1 1.732-17.32-10L42 44l17.32 10zm16.546 4.16l-1.732 1-10-17.32 1.732-1 10 17.32zM91 60h-2V40h2v20zm3.134.84l1.732 1-10 17.32-1.732-1 10-17.32zm-60 20l1.732 1-10 17.32-1.732-1 10-17.32zm-20 0l1.732 1-10 17.32-1.732-1 10-17.32zM80 69v2H60v-2h20zm0 20v2H60v-2h20zM38.16 84.134l1 1.732-17.32 10-1-1.732 17.32-10zm40 40l1 1.732-17.32 10-1-1.732 17.32-10zm39.32-55l-1 1.732-17.32-10L100 59l17.32 10zm-40 40l-1 1.732-17.32-10L80 99l17.32 10zM78.16 44.134l1 1.732-17.32 10-1-1.732 17.32-10zm16.546 4.16l-1.732 1-10-17.32 1.732-1 10 17.32zM98.16 64.134l1 1.732-17.32 10-1-1.732 17.32-10zm20 20l1 1.732-17.32 10-1-1.732 17.32-10zm-40 40l1 1.732-17.32 10-1-1.732 17.32-10zm-75.32-55l-1 1.732-17.32-10L-16 59l17.32 10zm16.546 4.16l-1.732 1-10-17.32 1.732-1 10 17.32zM.16 84.134l1 1.732-17.32 10-1-1.732 17.32-10zm16.546 4.16l-1.732 1-10-17.32 1.732-1 10 17.32z' fill='rgba(212, 175, 55, 0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .gallery-container {
+            width: 100%;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Thai-inspired decorative elements */
+        .thai-border-top,
+        .thai-border-bottom {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='26' viewBox='0 0 120 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h12v6H0V0zm28 8h12v6H28V8zm14-8h12v6H42V0zm14 0h12v6H56V0zm0 8h12v6H56V8zM42 8h12v6H42V8zm0 16h12v6H42v-6zm14-8h12v6H56v-6zm14 0h12v6H70v-6zm0-16h12v6H70V0zM28 32h12v6H28v-6zM14 16h12v6H14v-6zM0 24h12v6H0v-6zm0 8h12v6H0v-6zM14 0h12v6H14V0zm14 8h12v6H28V8zM14 8h12v6H14V8zm14 8h12v6H28v-6zm-14 0h12v6H14v-6zm28 0h12v6H42v-6zm14-8h12v6H56V8zm0-8h12v6H56V0zm14 8h12v6H70V8zm0 8h12v6H70v-6zm14-8h12v6H84V8zm0-8h12v6H84V0zm0 16h12v6H84v-6zm-14 0h12v6H70v-6zm-28 0h12v6H42v-6zm-14 0h12v6H28v-6zm-14 8h12v6H14v-6zm14 0h12v6H28v-6zm14 0h12v6H42v-6zm28 0h12v6H70v-6zm14-8h12v6H84v-6zm0 8h12v6H84v-6zm-14 8h12v6H70v-6zm-14 0h12v6H56v-6zm-28 0h12v6H28v-6zm14 8h12v6H42v-6zm-14 0h12v6H28v-6zm-14 0h12v6H14v-6zm0-8h12v6H14v-6zm14 0h12v6H28v-6zm56 0h12v6H84v-6zm-14 8h12v6H70v-6zm0 8h12v6H70v-6z' fill='rgba(212, 175, 55, 0.5)' fill-rule='evenodd'/%3E%3C/svg%3E");
+            z-index: 10;
+        }
+        
+        .thai-border-top {
+            top: 0;
+        }
+        
+        .thai-border-bottom {
+            bottom: 0;
+            transform: rotate(180deg);
+        }
+        
+        .gallery-header {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            background: var(--dark-overlay);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-gold);
+            border-top: 2px solid var(--primary-gold);
+        }
+        
+        .gallery-title {
+            font-size: 2.8rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px var(--gold-glow);
+            animation: golden-pulse 6s infinite;
+            color: var(--primary-gold);
+            position: relative;
+        }
+        
+        .gallery-title::before,
+        .gallery-title::after {
+            content: "❧";
+            position: absolute;
+            color: var(--primary-gold);
+            font-size: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .gallery-title::before {
+            left: 20%;
+        }
+        
+        .gallery-title::after {
+            right: 20%;
+        }
+        
+        .gallery-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            color: var(--cream);
+            letter-spacing: 1px;
+        }
+        
+        .swiper-container {
+            width: 100%;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background: var(--dark-brown);
+        }
+        
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.8s ease;
+            opacity: 0.6;
+        }
+        
+        .swiper-slide-active {
+            opacity: 1;
+        }
+        
+        .swiper-slide-active .slide-content {
+            transform: scale(1);
+        }
+        
+        .slide-content {
+            width: 85%;
+            height: 85%;
+            position: relative;
+            transform: scale(0.9);
+            transition: all 0.6s ease;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            border: 8px solid var(--dark-brown);
+            outline: 1px solid var(--primary-gold);
+        }
+        
+        .slide-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--primary-gold) 0%, transparent 30%, transparent 70%, var(--primary-gold) 100%);
+            opacity: 0.2;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .slide-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 1s ease;
+        }
+        
+        .swiper-slide-active .slide-content img {
+            transform: scale(1.05);
+        }
+        
+        .swiper-pagination-bullet {
+            width: 12px;
+            height: 12px;
+            background: var(--dark-brown);
+            border: 1px solid var(--primary-gold);
+            opacity: 0.7;
+        }
+        
+        .swiper-pagination-bullet-active {
+            background: var(--primary-gold);
+            opacity: 1;
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+        
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: var(--primary-gold);
+            background: var(--dark-overlay);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+            border: 1px solid var(--primary-gold);
+        }
+        
+        .swiper-button-next:hover,
+        .swiper-button-prev:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+        
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            background: var(--dark-overlay);
+            color: var(--primary-gold);
+            border: 1px solid var(--primary-gold);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 15px var(--gold-glow);
+            transform: scale(1.1);
+        }
+        
+        .swiper-pagination {
+            position: fixed;
+            bottom: 60px;
+            z-index: 1000;
+        }
+        
+        /* Lotus flower decoration */
+        .lotus-decoration {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 7C40 7 30 12 25 22c-5-10-15-15-25-15 0 20 10 35 25 43-15 8-25 23-25 43 10 0 20-5 25-15 5 10 15 15 25 15s20-5 25-15c5 10 15 15 25 15 0-20-10-35-25-43 15-8 25-23 25-43-10 0-20 5-25 15-5-10-15-15-25-15z' fill='rgba(212, 175, 55, 0.15)'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .lotus-top-left {
+            top: 70px;
+            left: 20px;
+        }
+        
+        .lotus-top-right {
+            top: 70px;
+            right: 20px;
+            transform: rotate(45deg);
+        }
+        
+        .lotus-bottom-left {
+            bottom: 50px;
+            left: 20px;
+            transform: rotate(-45deg);
+        }
+        
+        .lotus-bottom-right {
+            bottom: 50px;
+            right: 20px;
+            transform: rotate(90deg);
+        }
+        
+        /* Caption overlay */
+        .caption-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: var(--dark-overlay);
+            backdrop-filter: blur(10px);
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+            color: var(--cream);
+            z-index: 5;
+            border-top: 1px solid var(--primary-gold);
+        }
+        
+        .slide-content:hover .caption-overlay {
+            transform: translateY(0);
+        }
+        
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-brown);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .loader-spinner {
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--dark-brown);
+            border-top: 3px solid var(--primary-gold);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+        
+        .loader-image {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            top: 15px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 7C40 7 30 12 25 22c-5-10-15-15-25-15 0 20 10 35 25 43-15 8-25 23-25 43 10 0 20-5 25-15 5 10 15 15 25 15s20-5 25-15c5 10 15 15 25 15 0-20-10-35-25-43 15-8 25-23 25-43-10 0-20 5-25 15-5-10-15-15-25-15z' fill='rgba(212, 175, 55, 1)'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: pulse 2s infinite;
+        }
+        
+        .loader-text {
+            color: var(--primary-gold);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes golden-pulse {
+            0% { text-shadow: 0 0 5px var(--gold-glow); }
+            50% { text-shadow: 0 0 25px var(--gold-glow), 0 0 40px var(--gold-glow); }
+            100% { text-shadow: 0 0 5px var(--gold-glow); }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.5; transform: scale(0.95); }
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-title {
+                font-size: 2rem;
+            }
+            
+            .gallery-title::before,
+            .gallery-title::after {
+                display: none;
+            }
+            
+            .swiper-container {
+                height: calc(100vh - 80px);
+                padding: 15px 0;
+            }
+            
+            .swiper-button-next,
+            .swiper-button-prev {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .lotus-decoration {
+                width: 80px;
+                height: 80px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery-title {
+                font-size: 1.5rem;
+            }
+            
+            .gallery-header {
+                padding: 10px 0;
+            }
+            
+            .swiper-button-next,
+            .swiper-button-prev {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .swiper-button-next:after,
+            .swiper-button-prev:after {
+                font-size: 16px;
+            }
+            
+            .lotus-decoration {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading animation -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <div class="loader-image"></div>
+            <div class="loader-text">Loading Chiang Mai Gallery...</div>
+        </div>
+    </div>
+
+    <div class="gallery-container">
+        <!-- Thai-inspired decorative borders -->
+        <div class="thai-border-top"></div>
+        <div class="thai-border-bottom"></div>
+        
+        <!-- Lotus decorations -->
+        <div class="lotus-decoration lotus-top-left"></div>
+        <div class="lotus-decoration lotus-top-right"></div>
+        <div class="lotus-decoration lotus-bottom-left"></div>
+        <div class="lotus-decoration lotus-bottom-right"></div>
+        
+        <div class="gallery-header">
+            <h1 class="gallery-title">Chiang Mai</h1>
+            <div class="gallery-subtitle">Ancient City of Thailand</div>
+        </div>
+        
+        <!-- Main Swiper container -->
+        <div class="swiper-container" id="main-swiper">
+            <div class="swiper-wrapper">
+                <!-- Images will be loaded dynamically -->
+            </div>
+            
+            <!-- Navigation buttons -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            
+            <!-- Pagination -->
+            <div class="swiper-pagination"></div>
+            
+            <!-- Additional controls -->
+            <div class="controls">
+                <button class="control-btn" id="fullscreen-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"/>
+                    </svg>
+                </button>
+                <button class="control-btn" id="autoplay-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <script>
+        // Image list
+        const images = [
+            'IMG_0925.jpg', 'IMG_0933.jpg', 'IMG_0937.jpg', 'IMG_0940.jpg',
+            'IMG_0941.jpg', 'IMG_0943.jpg', 'IMG_0945.jpg', 'IMG_0957.jpg'
+        ];
+        
+        // Captions for images (traditional Thai cultural elements)
+        const captions = [
+            'Ancient Lanna temple with intricate wood carvings and golden decorations',
+            'Traditional Thai market with local crafts and handmade products',
+            'Buddhist monks in saffron robes performing daily rituals',
+            'Ornate temple gates guarded by mythical creatures from Thai folklore',
+            'Exquisite Thai architecture showcasing centuries-old craftsmanship',
+            'Sacred Buddha statue adorned with gold leaf offerings',
+            'Tranquil garden with lotus flowers, a symbol of purity in Thai culture',
+            'Traditional Thai lanterns illuminating the ancient city walls'
+        ];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate slides
+            loadGallery();
+            
+            // Initialize Swiper
+            initializeSwipers();
+            
+            // Setup controls
+            setupControls();
+            
+            // Hide loader when everything is ready
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 2000);
+        });
+
+        // Function to load gallery images
+        function loadGallery() {
+            const mainWrapper = document.querySelector('#main-swiper .swiper-wrapper');
+            
+            images.forEach((image, index) => {
+                // Create main slide
+                const slide = document.createElement('div');
+                slide.className = 'swiper-slide';
+                
+                const slideContent = document.createElement('div');
+                slideContent.className = 'slide-content';
+                
+                const img = document.createElement('img');
+                img.src = `images/${image}`;
+                img.setAttribute('loading', 'lazy');
+                img.setAttribute('alt', `Chiang Mai photo ${index + 1}`);
+                
+                const caption = document.createElement('div');
+                caption.className = 'caption-overlay';
+                caption.innerHTML = `
+                    <h3>Chiang Mai Treasures</h3>
+                    <p>${captions[index]}</p>
+                    <p><small>Photo ${index + 1} of ${images.length}</small></p>
+                `;
+                
+                slideContent.appendChild(img);
+                slideContent.appendChild(caption);
+                slide.appendChild(slideContent);
+                mainWrapper.appendChild(slide);
+            });
+        }
+
+        // Initialize Swiper instances
+        function initializeSwipers() {
+            const mainSwiper = new Swiper('#main-swiper', {
+                effect: 'cube',
+                grabCursor: true,
+                cubeEffect: {
+                    shadow: true,
+                    slideShadows: true,
+                    shadowOffset: 20,
+                    shadowScale: 0.94
+                },
+                speed: 1000,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    dynamicBullets: true,
+                },
+                keyboard: {
+                    enabled: true,
+                },
+                loop: true,
+                preloadImages: false,
+                lazy: {
+                    loadPrevNext: true,
+                    loadPrevNextAmount: 3,
+                },
+                autoplay: {
+                    delay: 3500,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true
+                },
+                // Responsive breakpoints
+                breakpoints: {
+                    320: {
+                        slidesPerView: 1,
+                    },
+                    768: {
+                        slidesPerView: 1,
+                    }
+                }
+            });
+
+            // Store swiper instance globally
+            window.mainSwiper = mainSwiper;
+        }
+
+        // Setup control buttons
+        function setupControls() {
+            // Fullscreen button
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+            
+            // Autoplay button
+            const autoplayBtn = document.getElementById('autoplay-btn');
+            let autoplayActive = true;
+            
+            autoplayBtn.addEventListener('click', function() {
+                if (autoplayActive) {
+                    window.mainSwiper.autoplay.stop();
+                    autoplayActive = false;
+                    this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>';
+                } else {
+                    window.mainSwiper.params.autoplay = {
+                        delay: 3500,
+                        disableOnInteraction: false
+                    };
+                    window.mainSwiper.autoplay.start();
+                    autoplayActive = true;
+                    this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>';
+                }
+            });
+        }
+
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            const galleryContainer = document.querySelector('.gallery-container');
+            
+            if (!document.fullscreenElement) {
+                if (galleryContainer.requestFullscreen) {
+                    galleryContainer.requestFullscreen();
+                } else if (galleryContainer.webkitRequestFullscreen) {
+                    galleryContainer.webkitRequestFullscreen();
+                } else if (galleryContainer.msRequestFullscreen) {
+                    galleryContainer.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
 </html>

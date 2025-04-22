@@ -1,42 +1,825 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Tempe Town Lake</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" id="jb-viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=0" />
-		<meta name="description" content="" />
-				<!--START OPEN GRAPH TAGS-->
-		<meta property="og:description" content="" />
-		<meta property="og:image" content="/images/IMG_5061.jpg" />
-		<meta property="og:title" content="Tempe Town Lake" />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="/" />
-		<!--END OPEN GRAPH TAGS-->
-		<style type="text/css">
-			body {
-				margin: 0px;
-			}
-		</style>
-	</head>
-	<body>
-		<!--START JUICEBOX EMBED-->
-		<script src="jbcore/juicebox.js"></script>
-		<script>
-			new juicebox({
-				backgroundColor: "rgba(34,34,34,1)",
-				containerId: "juicebox-container",
-				galleryHeight: "100%",
-				galleryWidth: "100%"
-			});
-		</script>
-		<div id="juicebox-container">
-							<noscript>
-					<h1>Tempe Town Lake</h1>
-											<p><img src="images/IMG_5061.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC5386_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_4685.jpg" title="" alt="" /><br /></p>
-									</noscript>
-					</div>
-		<!--END JUICEBOX EMBED-->
-	</body>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta name="description" content="A personal photo gallery with a tech-inspired theme" />
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:description" content="A personal photo gallery with a tech-inspired theme" />
+    <meta property="og:image" content="images/IMG_5061.jpg" />
+    <meta property="og:title" content="Photo Gallery" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="/" />
+    
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Rajdhani:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Main colors */
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --accent-primary: #0ff;
+            --accent-secondary: #8b5cf6;
+            --accent-tertiary: #3b82f6;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            
+            /* UI Colors */
+            --ui-bg: rgba(17, 24, 39, 0.85);
+            --ui-bg-hover: rgba(22, 30, 46, 0.95);
+            --ui-border: rgba(15, 255, 255, 0.2);
+            --ui-glow: rgba(15, 255, 255, 0.5);
+            --ui-shadow: rgba(0, 0, 0, 0.5);
+            
+            /* Typography */
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #050a15 100%);
+            color: var(--text-primary);
+            position: relative;
+        }
+        
+        /* Background effects */
+        .tech-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(30, 41, 59, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(30, 41, 59, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: center;
+            z-index: -2;
+            opacity: 0.4;
+        }
+        
+        .tech-circle {
+            position: fixed;
+            width: 80vw;
+            height: 80vw;
+            border-radius: 50%;
+            border: 1px solid rgba(15, 255, 255, 0.05);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            opacity: 0.2;
+        }
+        
+        .tech-circle::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60vw;
+            height: 60vw;
+            border-radius: 50%;
+            border: 1px solid rgba(139, 92, 246, 0.05);
+            transform: translate(-50%, -50%);
+        }
+        
+        .tech-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40vw;
+            height: 40vw;
+            border-radius: 50%;
+            border: 1px solid rgba(59, 130, 246, 0.05);
+            transform: translate(-50%, -50%);
+        }
+        
+        .scanner-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, var(--accent-primary) 50%, transparent 100%);
+            box-shadow: 0 0 8px var(--accent-primary);
+            opacity: 0.6;
+            z-index: -1;
+            animation: scan 8s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        
+        /* Main container */
+        .gallery-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        .gallery-header {
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            padding: 10px 0;
+        }
+        
+        .gallery-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            letter-spacing: 3px;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        
+        .gallery-title::before, .gallery-title::after {
+            content: "";
+            position: absolute;
+            height: 4px;
+            width: 20px;
+            background: var(--accent-primary);
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .gallery-title::before {
+            left: -30px;
+        }
+        
+        .gallery-title::after {
+            right: -30px;
+        }
+        
+        .gallery-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        /* Swiper Container */
+        .swiper-container {
+            width: 100%;
+            max-width: 1200px;
+            height: calc(100vh - 150px);
+            margin: 0 auto;
+            position: relative;
+            overflow: visible;
+        }
+        
+        /* 3D Effects Container */
+        .swiper {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+        
+        .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+        
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        
+        /* Image Info */
+        .slide-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: var(--ui-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--ui-border);
+            color: var(--text-primary);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 2;
+        }
+        
+        .swiper-slide:hover .slide-info {
+            transform: translateY(0);
+        }
+        
+        .image-counter {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--accent-primary);
+            margin-bottom: 5px;
+            font-family: var(--font-heading);
+        }
+        
+        .image-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        /* Navigation Controls */
+        .swiper-button-next, .swiper-button-prev {
+            color: var(--accent-primary);
+            background: var(--ui-bg);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid var(--ui-border);
+            box-shadow: 0 0 15px var(--ui-shadow);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            margin: 0 20px;
+        }
+        
+        .swiper-button-next:hover, .swiper-button-prev:hover {
+            background: var(--ui-bg-hover);
+            box-shadow: 0 0 15px var(--ui-glow);
+        }
+        
+        .swiper-button-next:after, .swiper-button-prev:after {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        /* Pagination */
+        .swiper-pagination-bullet {
+            width: 12px;
+            height: 12px;
+            background: var(--text-secondary);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+        
+        .swiper-pagination-bullet-active {
+            background: var(--accent-primary);
+            opacity: 1;
+            box-shadow: 0 0 10px var(--ui-glow);
+        }
+        
+        /* Thumbnails */
+        .thumbnails-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto 0;
+            position: relative;
+        }
+        
+        .swiper-thumbs {
+            width: 100%;
+            height: 80px;
+            background: var(--ui-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            border: 1px solid var(--ui-border);
+            box-shadow: 0 5px 15px var(--ui-shadow);
+            padding: 10px;
+        }
+        
+        .swiper-thumbs .swiper-slide {
+            width: 100px;
+            height: 60px;
+            opacity: 0.5;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .swiper-thumbs .swiper-slide-thumb-active {
+            opacity: 1;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px var(--ui-glow);
+        }
+        
+        .swiper-thumbs .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Additional Controls */
+        .gallery-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+        
+        .control-btn {
+            background: var(--ui-bg);
+            border: 1px solid var(--ui-border);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px var(--ui-shadow);
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-btn:hover {
+            background: var(--ui-bg-hover);
+            color: var(--accent-primary);
+            box-shadow: 0 0 15px var(--ui-glow);
+        }
+        
+        .control-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-ring {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .loader-ring div {
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border: 4px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: loader-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            border-color: var(--accent-primary) transparent transparent transparent;
+        }
+        
+        .loader-ring div:nth-child(1) {
+            animation-delay: -0.45s;
+        }
+        
+        .loader-ring div:nth-child(2) {
+            animation-delay: -0.3s;
+        }
+        
+        .loader-ring div:nth-child(3) {
+            animation-delay: -0.15s;
+        }
+        
+        @keyframes loader-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loader-text {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+        
+        .loader-progress {
+            width: 200px;
+            height: 4px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loader-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-primary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--ui-glow);
+        }
+        
+        /* Media Queries */
+        @media (max-width: 1024px) {
+            .gallery-title {
+                font-size: 2rem;
+            }
+            
+            .swiper-container {
+                height: calc(100vh - 180px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-title {
+                font-size: 1.8rem;
+            }
+            
+            .gallery-subtitle {
+                font-size: 1rem;
+            }
+            
+            .swiper-container {
+                height: calc(100vh - 200px);
+            }
+            
+            .swiper-button-next, .swiper-button-prev {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .swiper-thumbs {
+                height: 70px;
+            }
+            
+            .swiper-thumbs .swiper-slide {
+                width: 80px;
+                height: 50px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery-container {
+                padding: 10px;
+            }
+            
+            .gallery-title {
+                font-size: 1.5rem;
+            }
+            
+            .gallery-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .swiper-container {
+                height: calc(100vh - 220px);
+            }
+            
+            .swiper-button-next, .swiper-button-prev {
+                width: 35px;
+                height: 35px;
+                margin: 0 10px;
+            }
+            
+            .swiper-button-next:after, .swiper-button-prev:after {
+                font-size: 14px;
+            }
+            
+            .swiper-thumbs {
+                height: 60px;
+            }
+            
+            .swiper-thumbs .swiper-slide {
+                width: 60px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="tech-grid"></div>
+    <div class="tech-circle"></div>
+    <div class="scanner-line"></div>
+    
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-ring"><div></div><div></div><div></div><div></div></div>
+        <div class="loader-text">Loading Gallery</div>
+        <div class="loader-progress">
+            <div class="loader-progress-bar" id="loader-bar"></div>
+        </div>
+    </div>
+    
+    <div class="gallery-container">
+        <div class="gallery-header">
+            <h1 class="gallery-title">RC</h1>
+        </div>
+        
+        <!-- Main Swiper Container -->
+        <div class="swiper-container">
+            <!-- 3D Cube Effect Swiper -->
+            <div class="swiper" id="main-swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="images/IMG_5061.jpg" alt="Photo 1" loading="lazy">
+                        <div class="slide-info">
+                            <span class="image-counter">Photo 1 of 3</span>
+                            <h3 class="image-title">Landscape View</h3>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/_DSC5386_stack.jpg" alt="Photo 2" loading="lazy">
+                        <div class="slide-info">
+                            <span class="image-counter">Photo 2 of 3</span>
+                            <h3 class="image-title">Stacked Composition</h3>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/IMG_4685.jpg" alt="Photo 3" loading="lazy">
+                        <div class="slide-info">
+                            <span class="image-counter">Photo 3 of 3</span>
+                            <h3 class="image-title">Scenic View</h3>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                
+                <!-- Pagination -->
+                <div class="swiper-pagination"></div>
+                
+                <!-- Additional Controls -->
+                <div class="gallery-controls">
+                    <button class="control-btn" id="fullscreen-btn" title="Toggle fullscreen">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                        </svg>
+                    </button>
+                    <button class="control-btn" id="effect-btn" title="Change 3D effect">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/>
+                            <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Thumbnails -->
+        <div class="thumbnails-container">
+            <div class="swiper swiper-thumbs" id="thumbs-swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="images/IMG_5061.jpg" alt="Thumbnail 1">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/_DSC5386_stack.jpg" alt="Thumbnail 2">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/IMG_4685.jpg" alt="Thumbnail 3">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <script>
+        // Current effect
+        let currentEffect = 'cube';
+        const effects = ['cube', 'flip', 'cards', 'coverflow'];
+        
+        // Initialize the gallery on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate loading progress
+            simulateLoading();
+            
+            // Initialize Swiper instances
+            initSwipers();
+            
+            // Setup controls
+            setupControls();
+        });
+        
+        // Simulate loading progress
+        function simulateLoading() {
+            const loaderBar = document.getElementById('loader-bar');
+            const loader = document.getElementById('loader');
+            let width = 0;
+            
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loader.classList.add('hidden');
+                    }, 300);
+                } else {
+                    width += Math.floor(Math.random() * 10) + 1;
+                    if (width > 100) width = 100;
+                    loaderBar.style.width = width + '%';
+                }
+            }, 100);
+        }
+        
+        // Initialize Swiper instances
+        function initSwipers() {
+            // Initialize thumbnail swiper
+            const thumbsSwiper = new Swiper('#thumbs-swiper', {
+                slidesPerView: 3,
+                spaceBetween: 10,
+                centerInsufficientSlides: true,
+                slideToClickedSlide: true,
+                watchSlidesProgress: true,
+                breakpoints: {
+                    320: {
+                        slidesPerView: 2,
+                    },
+                    480: {
+                        slidesPerView: 3,
+                    },
+                    768: {
+                        slidesPerView: 3,
+                    }
+                }
+            });
+            
+            // Initialize main swiper with 3D cube effect
+            updateMainSwiper(thumbsSwiper);
+        }
+        
+        // Update main swiper with specific effect
+        function updateMainSwiper(thumbsSwiper) {
+            // Destroy existing instance if it exists
+            if (window.mainSwiper) {
+                window.mainSwiper.destroy(true, true);
+            }
+            
+            // Common options
+            const swiperOptions = {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                speed: 800,
+                grabCursor: true,
+                keyboard: {
+                    enabled: true,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                thumbs: {
+                    swiper: thumbsSwiper
+                }
+            };
+            
+            // Add effect-specific options
+            switch (currentEffect) {
+                case 'cube':
+                    swiperOptions.effect = 'cube';
+                    swiperOptions.cubeEffect = {
+                        shadow: true,
+                        slideShadows: true,
+                        shadowOffset: 20,
+                        shadowScale: 0.94
+                    };
+                    break;
+                    
+                case 'flip':
+                    swiperOptions.effect = 'flip';
+                    swiperOptions.flipEffect = {
+                        slideShadows: true,
+                        limitRotation: true
+                    };
+                    break;
+                    
+                case 'cards':
+                    swiperOptions.effect = 'cards';
+                    swiperOptions.cardsEffect = {
+                        perSlideOffset: 8,
+                        perSlideRotate: 2,
+                        rotate: true,
+                        slideShadows: true
+                    };
+                    break;
+                    
+                case 'coverflow':
+                    swiperOptions.effect = 'coverflow';
+                    swiperOptions.coverflowEffect = {
+                        rotate: 50,
+                        stretch: 0,
+                        depth: 100,
+                        modifier: 1,
+                        slideShadows: true
+                    };
+                    swiperOptions.centeredSlides = true;
+                    break;
+            }
+            
+            // Initialize the swiper with options
+            window.mainSwiper = new Swiper('#main-swiper', swiperOptions);
+        }
+        
+        // Setup control buttons
+        function setupControls() {
+            // Fullscreen toggle
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            const container = document.querySelector('.gallery-container');
+            
+            fullscreenBtn.addEventListener('click', function() {
+                if (!document.fullscreenElement) {
+                    if (container.requestFullscreen) {
+                        container.requestFullscreen();
+                    } else if (container.webkitRequestFullscreen) {
+                        container.webkitRequestFullscreen();
+                    } else if (container.msRequestFullscreen) {
+                        container.msRequestFullscreen();
+                    }
+                    this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>';
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                    this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>';
+                }
+            });
+            
+            // 3D effect toggle
+            const effectBtn = document.getElementById('effect-btn');
+            
+            effectBtn.addEventListener('click', function() {
+                // Get current index and move to next effect
+                const currentIndex = effects.indexOf(currentEffect);
+                const nextIndex = (currentIndex + 1) % effects.length;
+                currentEffect = effects[nextIndex];
+                
+                // Update swiper with new effect
+                const thumbsSwiper = document.querySelector('#thumbs-swiper').swiper;
+                updateMainSwiper(thumbsSwiper);
+                
+                // Save current slide index
+                const currentSlideIndex = window.mainSwiper.activeIndex;
+                
+                // Navigate to the same slide after effect change
+                setTimeout(() => {
+                    window.mainSwiper.slideTo(currentSlideIndex, 0);
+                }, 100);
+            });
+        }
+    </script>
+</body>
 </html>
