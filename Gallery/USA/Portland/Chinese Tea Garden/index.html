@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chinese Tea Garden</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Chinese Tea Garden Photo Gallery" />
+    <!--START OPEN GRAPH TAGS-->
+    <meta property="og:description" content="Chinese Tea Garden Photo Gallery" />
+    <meta property="og:image" content="images/_7RV6705.jpg" />
+    <meta property="og:title" content="Chinese Tea Garden" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="/" />
+    <!--END OPEN GRAPH TAGS-->
+    
+    <!-- Lightbox2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet" />
+    
+    <style type="text/css">
+        /* Reset and base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #d2b1b1;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin: 20px 0 30px;
+            font-weight: 300;
+            color: #333;
+        }
+        
+        /* True Masonry Gallery CSS */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-auto-rows: 5px;
+            grid-gap: 4px;
+        }
+        
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        
+        .gallery-item a {
+            display: block;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.03);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-gap: 3px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-gap: 2px;
+            }
+            
+            h1 {
+                font-size: 24px;
+                margin: 15px 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chinese Tea Garden</h1>
+        <div class="gallery" id="gallery">
+            <!-- Gallery items will be dynamically added here with JavaScript -->
+        </div>
+    </div>
+    
+    <!-- jQuery (required for Lightbox2) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <!-- Lightbox2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+    
+    <script>
+        // Image paths
+        const images = [
+            '_7RV6705.jpg',
+            '_7RV6714.jpg',
+            '_7RV6720-HDR.jpg',
+            '_7RV6747-HDR-Enhanced-NR.jpg',
+            '_7RV6774-HDR.jpg',
+            '_7RV6819.jpg',
+            '_7RV6825-HDR-Enhanced-NR.jpg',
+            '_7RV6831-HDR.jpg',
+            '_7RV6852-HDR.jpg',
+            '_7RV6855-HDR.jpg',
+            '_7RV6882-HDR.jpg',
+            '_7RV6924-HDR.jpg',
+            '_7RV6927-HDR.jpg',
+            '_7RV6964.jpg',
+            '_7RV6967-HDR.jpg',
+            '_7RV6973-HDR-Enhanced-NR.jpg'
+        ];
+        
+        // Load images and create masonry layout
+        function initGallery() {
+            const gallery = document.getElementById('gallery');
+            const imagePromises = [];
+            
+            // Create gallery items
+            images.forEach((image, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.id = `item-${index}`;
+                
+                const link = document.createElement('a');
+                link.href = `images/${image}`;
+                link.setAttribute('data-lightbox', 'chinese-tea-garden');
+                link.setAttribute('data-title', 'Chinese Tea Garden');
+                
+                const img = document.createElement('img');
+                img.src = `images/${image}`;
+                img.alt = 'Chinese Tea Garden';
+                img.loading = 'lazy';
+                
+                link.appendChild(img);
+                item.appendChild(link);
+                gallery.appendChild(item);
+                
+                // Create a promise for this image load
+                const promise = new Promise(resolve => {
+                    if (img.complete) {
+                        resizeGridItem(item);
+                        resolve();
+                    } else {
+                        img.onload = () => {
+                            resizeGridItem(item);
+                            resolve();
+                        };
+                    }
+                });
+                
+                imagePromises.push(promise);
+            });
+            
+            // After all images are loaded, refresh the layout
+            Promise.all(imagePromises).then(() => {
+                resizeAllGridItems();
+            });
+            
+            // Add event listener for window resize
+            window.addEventListener('resize', resizeAllGridItems);
+        }
+        
+        // Calculate and set the height of a grid item
+        function resizeGridItem(item) {
+            const grid = document.getElementById('gallery');
+            const rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
+            const rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'));
+            
+            const imgHeight = item.querySelector('img').getBoundingClientRect().height;
+            const rowSpan = Math.ceil((imgHeight + rowGap) / (rowHeight + rowGap));
+            
+            item.style.gridRowEnd = `span ${rowSpan}`;
+        }
+        
+        // Resize all grid items
+        function resizeAllGridItems() {
+            const allItems = document.getElementsByClassName('gallery-item');
+            for (let i = 0; i < allItems.length; i++) {
+                resizeGridItem(allItems[i]);
+            }
+        }
+        
+        // Initialize Lightbox options
+        lightbox.option({
+            'resizeDuration': 300,
+            'wrapAround': true,
+            'showImageNumberLabel': false,
+            'fadeDuration': 300,
+            'alwaysShowNavOnTouchDevices': true
+        });
+        
+        // Initialize gallery after page is loaded
+        document.addEventListener('DOMContentLoaded', initGallery);
+    </script>
+</body>
+</html>
