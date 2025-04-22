@@ -1,74 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Flowers</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" id="jb-viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=0" />
-		<meta name="description" content="" />
-				<!--START OPEN GRAPH TAGS-->
-		<meta property="og:description" content="" />
-		<meta property="og:image" content="images/IMG_0976.jpg" />
-		<meta property="og:title" content="Flowers" />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="/" />
-		<!--END OPEN GRAPH TAGS-->
-		<style type="text/css">
-			body {
-				margin: 0px;
-			}
-		</style>
-	</head>
-	<body>
-		<!--START JUICEBOX EMBED-->
-		<script src="jbcore/juicebox.js"></script>
-		<script>
-			new juicebox({
-				backgroundColor: "rgba(34,34,34,1)",
-				containerId: "juicebox-container",
-				galleryHeight: "100%",
-				galleryWidth: "100%"
-			});
-		</script>
-		<div id="juicebox-container">
-							<noscript>
-					<h1>Flowers</h1>
-											<p><img src="images/IMG_0976.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0979.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_2052.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_2104.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_2117.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0059.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0866.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0868.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0913.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0975.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_0977.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_1204.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_1230.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_1231.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_2691.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_3498.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_3500.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_3520.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_4849.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_4850.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_5007.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_5013.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/IMG_5964.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0307.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0319.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0320.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0322.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0323.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0371.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0402.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0404.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0412.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0692.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC0694.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1312_HDR_2.jpg" title="" alt="" /><br /></p>
-									</noscript>
-					</div>
-		<!--END JUICEBOX EMBED-->
-	</body>
+<head>
+    <title>Flowers Gallery</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=5" />
+    <meta name="description" content="Beautiful collection of flower photographs" />
+    <!--START OPEN GRAPH TAGS-->
+    <meta property="og:description" content="Beautiful collection of flower photographs" />
+    <meta property="og:image" content="images/IMG_0976.jpg" />
+    <meta property="og:title" content="Flowers Gallery" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="/" />
+    <!--END OPEN GRAPH TAGS-->
+    
+    <!-- Lightgallery CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8));
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/IMG_0976.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(5px) brightness(0.5);
+            z-index: -1;
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-weight: 300;
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            letter-spacing: 1px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .gallery-container {
+            padding: 20px 0 60px;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            display: block;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+        
+        /* Lightgallery Customizations */
+        .lg-backdrop {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .lg-toolbar,
+        .lg-outer .lg-thumb-outer,
+        .lg-actions .lg-next, 
+        .lg-actions .lg-prev {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        
+        .lg-actions .lg-next, 
+        .lg-actions .lg-prev {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .lg-actions .lg-next:hover, 
+        .lg-actions .lg-prev:hover {
+            background-color: rgba(76, 175, 80, 0.8);
+        }
+        
+        .lg-progress-bar .lg-progress {
+            background-color: #4CAF50;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .gallery-item img {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Flower Gallery</h1>
+        <p class="subtitle">A collection of beautiful blooms from around the world, capturing the delicate beauty and vibrant colors of nature</p>
+    </header>
+    
+    <div class="container">
+        <div class="gallery-container">
+            <div id="lightgallery" class="gallery-grid">
+                <a class="gallery-item" data-src="images/IMG_0976.jpg" data-sub-html="<h4>Beautiful Bloom</h4>">
+                    <img src="images/IMG_0976.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_0979.jpg" data-sub-html="<h4>Vibrant Petals</h4>">
+                    <img src="images/IMG_0979.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_2052.jpg" data-sub-html="<h4>Garden Beauty</h4>">
+                    <img src="images/IMG_2052.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_2104.jpg" data-sub-html="<h4>Delicate Bloom</h4>">
+                    <img src="images/IMG_2104.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_2117.jpg" data-sub-html="<h4>Colorful Flowers</h4>">
+                    <img src="images/IMG_2117.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_0059.jpg" data-sub-html="<h4>Morning Dew</h4>">
+                    <img src="images/IMG_0059.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_0866.jpg" data-sub-html="<h4>Summer Bloom</h4>">
+                    <img src="images/IMG_0866.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_0868.jpg" data-sub-html="<h4>Garden Wonder</h4>">
+                    <img src="images/IMG_0868.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_0913.jpg" data-sub-html="<h4>Fresh Petals</h4>">
+                    <img src="images/IMG_0913.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_0975.jpg" data-sub-html="<h4>Wild Flower</h4>">
+                    <img src="images/IMG_0975.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_0977.jpg" data-sub-html="<h4>Spring Beauty</h4>">
+                    <img src="images/IMG_0977.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_1204.jpg" data-sub-html="<h4>Sunset Blossom</h4>">
+                    <img src="images/IMG_1204.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_1230.jpg" data-sub-html="<h4>Lush Petals</h4>">
+                    <img src="images/IMG_1230.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_1231.jpg" data-sub-html="<h4>Pure Beauty</h4>">
+                    <img src="images/IMG_1231.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_2691.jpg" data-sub-html="<h4>Elegant Bloom</h4>">
+                    <img src="images/IMG_2691.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_3498.jpg" data-sub-html="<h4>Gentle Petals</h4>">
+                    <img src="images/IMG_3498.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_3500.jpg" data-sub-html="<h4>Tranquil Beauty</h4>">
+                    <img src="images/IMG_3500.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_3520.jpg" data-sub-html="<h4>Garden Treasure</h4>">
+                    <img src="images/IMG_3520.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_4849.jpg" data-sub-html="<h4>Radiant Bloom</h4>">
+                    <img src="images/IMG_4849.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_4850.jpg" data-sub-html="<h4>Nature's Gift</h4>">
+                    <img src="images/IMG_4850.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_5007.jpg" data-sub-html="<h4>Exotic Flower</h4>">
+                    <img src="images/IMG_5007.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_5013.jpg" data-sub-html="<h4>Pristine Petals</h4>">
+                    <img src="images/IMG_5013.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/IMG_5964.jpg" data-sub-html="<h4>Morning Bloom</h4>">
+                    <img src="images/IMG_5964.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0307.jpg" data-sub-html="<h4>Gentle Beauty</h4>">
+                    <img src="images/_DSC0307.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0319.jpg" data-sub-html="<h4>Sunny Bloom</h4>">
+                    <img src="images/_DSC0319.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0320.jpg" data-sub-html="<h4>Delicate Petals</h4>">
+                    <img src="images/_DSC0320.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0322.jpg" data-sub-html="<h4>Vibrant Colors</h4>">
+                    <img src="images/_DSC0322.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0323.jpg" data-sub-html="<h4>Elegant Beauty</h4>">
+                    <img src="images/_DSC0323.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0371.jpg" data-sub-html="<h4>Garden Gem</h4>">
+                    <img src="images/_DSC0371.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0402.jpg" data-sub-html="<h4>Natural Wonder</h4>">
+                    <img src="images/_DSC0402.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0404.jpg" data-sub-html="<h4>Colorful Bloom</h4>">
+                    <img src="images/_DSC0404.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0412.jpg" data-sub-html="<h4>Striking Petals</h4>">
+                    <img src="images/_DSC0412.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0692.jpg" data-sub-html="<h4>Summer Blossom</h4>">
+                    <img src="images/_DSC0692.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC0694.jpg" data-sub-html="<h4>Nature's Beauty</h4>">
+                    <img src="images/_DSC0694.jpg" alt="Flower image" />
+                </a>
+                <a class="gallery-item" data-src="images/_DSC1312_HDR_2.jpg" data-sub-html="<h4>Garden Splendor</h4>">
+                    <img src="images/_DSC1312_HDR_2.jpg" alt="Flower image" />
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; Flower Gallery 2025 | All images are protected by copyright</p>
+    </footer>
+
+    <!-- Lightgallery JS -->
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/lightgallery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/fullscreen/lg-fullscreen.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/autoplay/lg-autoplay.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const galleryElement = document.getElementById('lightgallery');
+            
+            // Initialize lightGallery
+            const gallery = lightGallery(galleryElement, {
+                speed: 500,
+                plugins: [lgZoom, lgThumbnail, lgFullscreen, lgAutoplay],
+                mode: 'lg-fade',
+                cssEasing: 'cubic-bezier(0.25, 0, 0.25, 1)',
+                closable: true,
+                counter: true,
+                download: false,
+                thumbnail: true,
+                animateThumb: true,
+                zoomFromOrigin: true,
+                allowMediaOverlap: false,
+                toggleThumb: true,
+                enableSwipe: true,
+                enableDrag: true,
+                loop: true,
+                mousewheel: true,
+                mobileSettings: {
+                    controls: true,
+                    showCloseIcon: true,
+                    download: false,
+                    rotate: false
+                }
+            });
+            
+            // Optional: Add masonry effect with animation on load
+            window.addEventListener('load', function() {
+                document.querySelectorAll('.gallery-item').forEach(function(item, index) {
+                    setTimeout(function() {
+                        item.style.opacity = 1;
+                        item.style.transform = 'translateY(0)';
+                    }, 100 * index);
+                });
+            });
+        });
+    </script>
+</body>
 </html>

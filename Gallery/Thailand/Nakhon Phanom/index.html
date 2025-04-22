@@ -4,78 +4,299 @@
 		<title>Nakhon Phanom</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" id="jb-viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=0" />
-		<meta name="description" content="" />
-				<!--START OPEN GRAPH TAGS-->
-		<meta property="og:description" content="" />
+		<meta name="description" content="Photo gallery of Nakhon Phanom, Thailand" />
+		<!--START OPEN GRAPH TAGS-->
+		<meta property="og:description" content="Photo gallery of Nakhon Phanom, Thailand" />
 		<meta property="og:image" content="/images/_DSC5828_HDR.jpg" />
 		<meta property="og:title" content="Nakhon Phanom" />
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="/" />
 		<!--END OPEN GRAPH TAGS-->
+		<!-- Fancyapps UI CSS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
 		<style type="text/css">
+			:root {
+				--primary-color: #3498db;
+				--secondary-color: #2c3e50;
+				--accent-color: #e74c3c;
+				--text-color: #333;
+				--light-bg: #f9f9f9;
+				--transition-speed: 0.3s;
+			}
+			
 			body {
-				margin: 0px;
+				margin: 0;
+				padding: 0;
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background-color: var(--light-bg);
+				color: var(--text-color);
+			}
+			
+			.container {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2rem;
+			}
+			
+			.gallery-header {
+				text-align: center;
+				margin-bottom: 2rem;
+			}
+			
+			.gallery-header h1 {
+				font-size: 2.5rem;
+				margin-bottom: 0.5rem;
+				color: var(--secondary-color);
+			}
+			
+			.gallery-header p {
+				font-size: 1.1rem;
+				color: #666;
+				max-width: 600px;
+				margin: 0 auto;
+			}
+			
+			.gallery-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+				grid-gap: 15px;
+				margin-bottom: 2rem;
+			}
+			
+			.gallery-item {
+				position: relative;
+				overflow: hidden;
+				border-radius: 8px;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+				transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+			}
+			
+			.gallery-item:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+			}
+			
+			.gallery-item img {
+				width: 100%;
+				height: 250px;
+				object-fit: cover;
+				display: block;
+				transition: transform var(--transition-speed);
+			}
+			
+			.gallery-item:hover img {
+				transform: scale(1.05);
+			}
+			
+			@media (max-width: 768px) {
+				.gallery-grid {
+					grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+				}
+				
+				.gallery-item img {
+					height: 150px;
+				}
+				
+				.container {
+					padding: 1rem;
+				}
+			}
+			
+			.f-thumbs__slide__img {
+				object-fit: cover;
+			}
+			
+			/* Add custom styling for Fancybox */
+			.fancybox__container {
+				--fancybox-bg: rgba(24, 24, 27, 0.95);
+			}
+			
+			.fancybox__caption {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				font-size: 16px;
+				padding: 10px 20px;
 			}
 		</style>
 	</head>
 	<body>
-		<!--START JUICEBOX EMBED-->
-		<script src="jbcore/juicebox.js"></script>
+		<div class="container">
+			<div class="gallery-header">
+				<h1>Nakhon Phanom</h1>
+				<p>Explore the beauty of Nakhon Phanom, Thailand through this collection of stunning photographs</p>
+			</div>
+			
+			<div class="gallery-grid">
+				<a href="images/_DSC5828_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom scenery">
+					<img src="images/_DSC5828_HDR.jpg" alt="Nakhon Phanom landscape" />
+				</a>
+				<a href="images/_DSC5927_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom landscape">
+					<img src="images/_DSC5927_HDR.jpg" alt="Nakhon Phanom landscape" />
+				</a>
+				<a href="images/_DSC5942_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom view">
+					<img src="images/_DSC5942_HDR.jpg" alt="Nakhon Phanom view" />
+				</a>
+				<a href="images/_DSC5958_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Scenic Nakhon Phanom">
+					<img src="images/_DSC5958_HDR.jpg" alt="Scenic Nakhon Phanom" />
+				</a>
+				<a href="images/_DSC5978_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom beauty">
+					<img src="images/_DSC5978_HDR.jpg" alt="Nakhon Phanom beauty" />
+				</a>
+				<a href="images/_DSC5984_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom scenery">
+					<img src="images/_DSC5984_HDR.jpg" alt="Nakhon Phanom scenery" />
+				</a>
+				<a href="images/_DSC6014_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom landscape">
+					<img src="images/_DSC6014_HDR.jpg" alt="Nakhon Phanom landscape" />
+				</a>
+				<a href="images/_DSC6023_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom view">
+					<img src="images/_DSC6023_HDR.jpg" alt="Nakhon Phanom view" />
+				</a>
+				<a href="images/_DSC6034_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Scenic Nakhon Phanom">
+					<img src="images/_DSC6034_HDR.jpg" alt="Scenic Nakhon Phanom" />
+				</a>
+				<a href="images/_DSC6041_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom beauty">
+					<img src="images/_DSC6041_HDR.jpg" alt="Nakhon Phanom beauty" />
+				</a>
+				<a href="images/_DSC6058_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom scenery">
+					<img src="images/_DSC6058_HDR.jpg" alt="Nakhon Phanom scenery" />
+				</a>
+				<a href="images/_DSC6112_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom landscape">
+					<img src="images/_DSC6112_HDR.jpg" alt="Nakhon Phanom landscape" />
+				</a>
+				<a href="images/_DSC6180_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom view">
+					<img src="images/_DSC6180_HDR.jpg" alt="Nakhon Phanom view" />
+				</a>
+				<a href="images/_DSC6219_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Scenic Nakhon Phanom">
+					<img src="images/_DSC6219_HDR.jpg" alt="Scenic Nakhon Phanom" />
+				</a>
+				<a href="images/_DSC6529.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom beauty">
+					<img src="images/_DSC6529.jpg" alt="Nakhon Phanom beauty" />
+				</a>
+				<a href="images/_DSC6594_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom scenery">
+					<img src="images/_DSC6594_HDR.jpg" alt="Nakhon Phanom scenery" />
+				</a>
+				<a href="images/_DSC6603_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom landscape">
+					<img src="images/_DSC6603_HDR.jpg" alt="Nakhon Phanom landscape" />
+				</a>
+				<a href="images/_DSC6636_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom view">
+					<img src="images/_DSC6636_HDR.jpg" alt="Nakhon Phanom view" />
+				</a>
+				<a href="images/_DSC6656_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Scenic Nakhon Phanom">
+					<img src="images/_DSC6656_HDR.jpg" alt="Scenic Nakhon Phanom" />
+				</a>
+				<a href="images/_DSC6676_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom beauty">
+					<img src="images/_DSC6676_HDR.jpg" alt="Nakhon Phanom beauty" />
+				</a>
+				<a href="images/_DSC6702_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom scenery">
+					<img src="images/_DSC6702_HDR.jpg" alt="Nakhon Phanom scenery" />
+				</a>
+				<a href="images/_DSC6710.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom landscape">
+					<img src="images/_DSC6710.jpg" alt="Nakhon Phanom landscape" />
+				</a>
+				<a href="images/_DSC6828_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom view">
+					<img src="images/_DSC6828_HDR.jpg" alt="Nakhon Phanom view" />
+				</a>
+				<a href="images/_DSC6956_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Scenic Nakhon Phanom">
+					<img src="images/_DSC6956_HDR.jpg" alt="Scenic Nakhon Phanom" />
+				</a>
+				<a href="images/_DSC6967_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom beauty">
+					<img src="images/_DSC6967_HDR.jpg" alt="Nakhon Phanom beauty" />
+				</a>
+				<a href="images/_DSC7139_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom scenery">
+					<img src="images/_DSC7139_HDR.jpg" alt="Nakhon Phanom scenery" />
+				</a>
+				<a href="images/_DSC7151_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom landscape">
+					<img src="images/_DSC7151_HDR.jpg" alt="Nakhon Phanom landscape" />
+				</a>
+				<a href="images/_DSC7197_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom view">
+					<img src="images/_DSC7197_HDR.jpg" alt="Nakhon Phanom view" />
+				</a>
+				<a href="images/_DSC7219_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Scenic Nakhon Phanom">
+					<img src="images/_DSC7219_HDR.jpg" alt="Scenic Nakhon Phanom" />
+				</a>
+				<a href="images/_DSC7234_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom beauty">
+					<img src="images/_DSC7234_HDR.jpg" alt="Nakhon Phanom beauty" />
+				</a>
+				<a href="images/_DSC7242_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom scenery">
+					<img src="images/_DSC7242_HDR.jpg" alt="Nakhon Phanom scenery" />
+				</a>
+				<a href="images/_DSC7247_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom landscape">
+					<img src="images/_DSC7247_HDR.jpg" alt="Nakhon Phanom landscape" />
+				</a>
+				<a href="images/_DSC7262_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom view">
+					<img src="images/_DSC7262_HDR.jpg" alt="Nakhon Phanom view" />
+				</a>
+				<a href="images/_DSC7275_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Scenic Nakhon Phanom">
+					<img src="images/_DSC7275_HDR.jpg" alt="Scenic Nakhon Phanom" />
+				</a>
+				<a href="images/_DSC7292_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom beauty">
+					<img src="images/_DSC7292_HDR.jpg" alt="Nakhon Phanom beauty" />
+				</a>
+				<a href="images/_DSC7300_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom scenery">
+					<img src="images/_DSC7300_HDR.jpg" alt="Nakhon Phanom scenery" />
+				</a>
+				<a href="images/_DSC7345_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom landscape">
+					<img src="images/_DSC7345_HDR.jpg" alt="Nakhon Phanom landscape" />
+				</a>
+				<a href="images/_DSC7354_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom view">
+					<img src="images/_DSC7354_HDR.jpg" alt="Nakhon Phanom view" />
+				</a>
+				<a href="images/_DSC7386_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Scenic Nakhon Phanom">
+					<img src="images/_DSC7386_HDR.jpg" alt="Scenic Nakhon Phanom" />
+				</a>
+				<a href="images/_DSC7388.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom beauty">
+					<img src="images/_DSC7388.jpg" alt="Nakhon Phanom beauty" />
+				</a>
+				<a href="images/_DSC7426_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom scenery">
+					<img src="images/_DSC7426_HDR.jpg" alt="Nakhon Phanom scenery" />
+				</a>
+				<a href="images/_DSC7459_HDR.jpg" class="gallery-item" data-fancybox="gallery" data-caption="Nakhon Phanom landscape">
+					<img src="images/_DSC7459_HDR.jpg" alt="Nakhon Phanom landscape" />
+				</a>
+			</div>
+		</div>
+		
+		<!-- Fancyapps UI JavaScript -->
+		<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
 		<script>
-			new juicebox({
-				backgroundColor: "rgba(34,34,34,1)",
-				containerId: "juicebox-container",
-				galleryHeight: "100%",
-				galleryWidth: "100%"
+			// Initialize Fancybox with custom options
+			Fancybox.bind("[data-fancybox]", {
+				// Custom options
+				Thumbs: {
+					type: "modern", // Use modern thumbnails
+				},
+				Toolbar: {
+					display: {
+						left: ["infobar"],
+						middle: [
+							"zoomIn",
+							"zoomOut",
+							"toggle1to1",
+							"rotateCCW",
+							"rotateCW",
+							"flipX",
+							"flipY",
+						],
+						right: ["slideshow", "thumbs", "close"],
+					},
+				},
+				Images: {
+					zoom: true,
+				},
+				Carousel: {
+					transition: "fade", // Use fade transition
+				},
+				// Enable lazy loading for better performance
+				Image: {
+					Panzoom: {
+						panMode: "mousemove",
+						mouseMoveFactor: 1.1,
+					},
+				},
+				// Add caption for each image
+				Caption: {
+					position: "bottom",
+				},
 			});
 		</script>
-		<div id="juicebox-container">
-							<noscript>
-					<h1>Nakhon Phanom</h1>
-											<p><img src="images/_DSC5828_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC5927_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC5942_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC5958_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC5978_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC5984_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6014_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6023_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6034_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6041_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6058_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6112_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6180_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6219_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6529.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6594_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6603_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6636_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6656_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6676_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6702_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6710.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6828_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6956_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC6967_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7139_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7151_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7197_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7219_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7234_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7242_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7247_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7262_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7275_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7292_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7300_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7345_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7354_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7386_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7388.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7426_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC7459_HDR.jpg" title="" alt="" /><br /></p>
-									</noscript>
-					</div>
-		<!--END JUICEBOX EMBED-->
 	</body>
 </html>

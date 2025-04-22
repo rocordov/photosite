@@ -1,51 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Phetchaburi</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" id="jb-viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=0" />
-		<meta name="description" content="" />
-				<!--START OPEN GRAPH TAGS-->
-		<meta property="og:description" content="" />
-		<meta property="og:image" content="/images/_DSC4300_HDR.jpg" />
-		<meta property="og:title" content="Phetchaburi" />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="/" />
-		<!--END OPEN GRAPH TAGS-->
-		<style type="text/css">
-			body {
-				margin: 0px;
-			}
-		</style>
-	</head>
-	<body>
-		<!--START JUICEBOX EMBED-->
-		<script src="jbcore/juicebox.js"></script>
-		<script>
-			new juicebox({
-				backgroundColor: "rgba(34,34,34,1)",
-				containerId: "juicebox-container",
-				galleryHeight: "100%",
-				galleryWidth: "100%"
-			});
-		</script>
-		<div id="juicebox-container">
-							<noscript>
-					<h1>Phetchaburi</h1>
-											<p><img src="images/_DSC4300_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4308_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4313_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4331_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4413_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4426_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4430_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4436_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4443_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4457_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4462_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC4480_HDR.jpg" title="" alt="" /><br /></p>
-									</noscript>
-					</div>
-		<!--END JUICEBOX EMBED-->
-	</body>
+<head>
+    <title>Phetchaburi</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta name="description" content="Phetchaburi Photo Gallery" />
+    <!--START OPEN GRAPH TAGS-->
+    <meta property="og:description" content="Phetchaburi Photo Gallery" />
+    <meta property="og:image" content="images/_DSC4300_HDR.jpg" />
+    <meta property="og:title" content="Phetchaburi" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="/" />
+    <!--END OPEN GRAPH TAGS-->
+    
+    <!-- PhotoSwipe CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.3.7/dist/photoswipe.css">
+    
+    <style>
+        :root {
+            --gallery-background: #1a1a1a;
+            --text-color: #ffffff;
+            --thumbnail-hover: rgba(255, 255, 255, 0.1);
+            --accent-color: #4db6ac;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--gallery-background);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .gallery-info {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            text-align: center;
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+        
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-gap: 15px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            display: block; /* Added for <a> tag */
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+            height: 0;
+            padding-bottom: 75%; /* Maintain aspect ratio */
+            transition: transform 0.3s ease;
+            background-color: var(--gallery-background); /* Add background color */
+            text-decoration: none; /* Added for <a> tag */
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .gallery-item:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, 0.7) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item:hover:after {
+            opacity: 1;
+        }
+        
+        .gallery-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Change from cover to contain */
+            transition: transform 0.5s ease;
+            image-rendering: -webkit-optimize-contrast; /* Improve image rendering */
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--gallery-background);
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-inner {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+        
+        .loader-inner div {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            animation: loader 1.2s linear infinite;
+        }
+        
+        .loader-inner div:nth-child(1) {
+            top: 0;
+            left: 0;
+            animation-delay: 0s;
+        }
+        
+        .loader-inner div:nth-child(2) {
+            top: 0;
+            right: 0;
+            animation-delay: 0.4s;
+        }
+        
+        .loader-inner div:nth-child(3) {
+            bottom: 0;
+            left: 0;
+            animation-delay: 0.8s;
+        }
+        
+        .loader-inner div:nth-child(4) {
+            bottom: 0;
+            right: 0;
+            animation-delay: 1.2s;
+        }
+        
+        @keyframes loader {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-gap: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .gallery-info {
+                font-size: 0.9rem;
+                padding: 0 15px;
+            }
+        }
+        
+        /* PhotoSwipe UI elements */
+        .pswp__button--arrow--prev,
+        .pswp__button--arrow--next,
+        .pswp__button--close,
+        .pswp__button--zoom {
+            color: white;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+        
+        .pswp__button--arrow--prev:hover,
+        .pswp__button--arrow--next:hover,
+        .pswp__button--close:hover,
+        .pswp__button--zoom:hover {
+            opacity: 1;
+        }
+        
+        .pswp__button--share {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading animation -->
+    <div class="loader">
+        <div class="loader-inner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <header>
+        <h1>Phetchaburi</h1>
+        <div class="gallery-info">
+            <p>A collection of beautiful HDR photographs from Phetchaburi, Thailand</p>
+        </div>
+    </header>
+
+    <!-- Image Gallery -->
+    <div class="gallery-container">
+<a href="images/_DSC4300_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4300_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4308_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4308_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4313_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4313_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4331_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4331_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4413_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4413_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4426_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4426_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4430_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4430_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4436_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4436_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4443_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4443_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4457_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4457_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4462_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4462_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+<a href="images/_DSC4480_HDR.jpg" class="gallery-item" data-pswp-width="1200" data-pswp-height="900">
+  <img src="images/_DSC4480_HDR.jpg" alt="Phetchaburi HDR photograph" loading="lazy">
+</a>
+    </div>
+
+    <!-- PhotoSwipe -->
+    <script type="module">
+        import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5.3.7/dist/photoswipe-lightbox.esm.js';
+        import PhotoSwipe from 'https://unpkg.com/photoswipe@5.3.7/dist/photoswipe.esm.js';
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallery: '.gallery-container',
+            children: 'a',  // Changed to target <a> elements
+            pswpModule: PhotoSwipe,
+            bgOpacity: 0.85,
+            showHideAnimationType: 'fade',
+            closeOnVerticalDrag: true,
+            zoom: {
+                enabled: true,
+                maxRatio: 2
+            },
+            // Use href attribute for image source
+            initialZoomLevel: 'fit',
+            secondaryZoomLevel: 2,
+            maxZoomLevel: 4,
+            mouseMovePan: true,
+            allowPanToNext: true,
+            allowMouseDrag: true,
+            wheelToZoom: true
+        });
+
+        // Add loading state
+        lightbox.on('beforeOpen', () => {
+            document.body.style.cursor = 'wait';
+        });
+
+        lightbox.on('afterOpen', () => {
+            document.body.style.cursor = 'auto';
+        });
+
+        lightbox.init();
+
+        // Remove loading animation when page is loaded
+        window.addEventListener('load', function() {
+            document.querySelector('.loader').classList.add('loaded');
+        });
+
+        // Lazy load images
+        if ('IntersectionObserver' in window) {
+            const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        // Use the src directly since we're now using data-src on the parent div
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            lazyImages.forEach((img) => {
+                imageObserver.observe(img);
+            });
+        }
+    </script>
+</body>
 </html>
