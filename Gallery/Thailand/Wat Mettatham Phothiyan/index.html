@@ -75,6 +75,20 @@
 					animation: fadeInScale 0.8s ease forwards;
 				}
 
+				/* Fix fullscreen bug: center and scale image properly when fullscreen */
+				.trail-image:fullscreen {
+					position: fixed;
+					top: 50%;
+					left: 50%;
+					width: 90vw;
+					height: auto;
+					max-height: 90vh;
+					transform: translate(-50%, -50%) scale(1);
+					z-index: 9999;
+					border: none;
+					box-shadow: none;
+				}
+
 				@keyframes fadeInScale {
 					from {
 						opacity: 0;
@@ -178,21 +192,50 @@
 		    instructions.classList.remove('hidden');
 		  }
 
-		  // Update mouse movement handler for smoother performance
+		  // Update mouse movement handler for correct UI hide/show logic
 		  let lastMoveTime = 0;
+		  let uiHidden = false;
 		  document.addEventListener('mousemove', (e) => {
 		    const now = Date.now();
 		    if (now - lastMoveTime > 400) {
-		        showTrailImage(e.clientX, e.clientY);
-		        lastMoveTime = now;
+		      showTrailImage(e.clientX, e.clientY);
+		      lastMoveTime = now;
 		    }
 
-		    hideUI();
+		    if (!uiHidden) {
+		      hideUI();
+		      uiHidden = true;
+		    }
+
 		    clearTimeout(hideUITimer);
 		    hideUITimer = setTimeout(() => {
 		      showUI();
+		      uiHidden = false;
 		    }, 2000);
 		  });
+		// Fullscreen toggle on double-click for the topmost image, with error handling and state check
+		document.addEventListener('dblclick', () => {
+		  const topImage = visibleImages[visibleImages.length - 1];
+		  if (!topImage) return;
+
+		  if (!document.fullscreenElement) {
+		    if (topImage.requestFullscreen) {
+		      topImage.requestFullscreen().catch(err => console.error('Fullscreen error:', err));
+		    } else if (topImage.webkitRequestFullscreen) {
+		      topImage.webkitRequestFullscreen();
+		    } else if (topImage.msRequestFullscreen) {
+		      topImage.msRequestFullscreen();
+		    }
+		  } else {
+		    if (document.exitFullscreen) {
+		      document.exitFullscreen().catch(err => console.error('Exit fullscreen error:', err));
+		    } else if (document.webkitExitFullscreen) {
+		      document.webkitExitFullscreen();
+		    } else if (document.msExitFullscreen) {
+		      document.msExitFullscreen();
+		    }
+		  }
+		});
 		</script>
 	</body>
 </html>
