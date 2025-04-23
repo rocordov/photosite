@@ -255,8 +255,43 @@ class CircularGallery {
       this.thumbnails.push(thumbnail);
     }
     
-    // Update thumbnail click handler
+    // Update thumbnail click/touch handler
     this.thumbnails.forEach((thumbnail, i) => {
+        // Track touch state
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isTouchMove = false;
+
+        // Touch start handler
+        thumbnail.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            isTouchMove = false;
+        }, { passive: false });
+
+        // Touch move handler
+        thumbnail.addEventListener('touchmove', (e) => {
+            if (Math.abs(e.touches[0].clientX - touchStartX) > 5 ||
+                Math.abs(e.touches[0].clientY - touchStartY) > 5) {
+                isTouchMove = true;
+            }
+        });
+
+        // Touch end handler
+        thumbnail.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (!isTouchMove && !this.isAnimating) {
+                const imageIndex = parseInt(thumbnail.dataset.index);
+                if (!this.hasScattered) {
+                    this.triggerScatterEffect(imageIndex);
+                } else {
+                    this.openFullscreenImage(imageIndex);
+                }
+            }
+        });
+
+        // Keep click handler for desktop
         thumbnail.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -265,8 +300,11 @@ class CircularGallery {
             if (this.isAnimating) return;
 
             const imageIndex = parseInt(thumbnail.dataset.index);
-            // Always trigger scatter effect and show image
-            this.triggerScatterEffect(imageIndex);
+            if (!this.hasScattered) {
+                this.triggerScatterEffect(imageIndex);
+            } else {
+                this.openFullscreenImage(imageIndex);
+            }
         });
     });
 
