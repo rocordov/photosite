@@ -562,9 +562,9 @@ class CircularGallery {
         maxDistance: Math.min(window.innerWidth, window.innerHeight) * 0.8, // Use more of viewport
         collisionRadius: 180,       // Larger collision detection
         bounce: 0.7,               // Bouncier collisions
-        margin: 100,                // Reduced margin to use more space
+        margin: 0,                  // No margin; allow thumbnails to reach all edges
         stopThreshold: 0.01,        // Lower threshold for longer motion (was 0.05)
-        gravityStrength: 0.002,     // Stronger pull for continuous movement
+        gravityStrength: 0.012,     // Stronger pull for continuous movement
         rotationSpeed: 0.0004,      // Slower orbital rotation
         repelStrength: 0.015,       // Stronger repulsion
         minSpacing: 200,            // Minimum spacing between thumbnails
@@ -922,10 +922,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Create the circular gallery
   const gallery = new CircularGallery('juicebox-container', {
     numThumbnails: 24,              // Display 24 thumbnails in the wheel
-    rotationSensitivity: 0.2,       // Wheel rotation sensitivity
-    ambientMovement: 0.8,           // Subtle ambient movement
+    rotationSensitivity: 1,       // Wheel rotation sensitivity
+    ambientMovement: 1.8,           // Subtle ambient movement
     initialRotation: 15,            // Start with a slight rotation
-    scatterRadius: Math.min(window.innerWidth, window.innerHeight) * 0.35, // Responsive scatter distance
+    scatterRadius: Math.max(window.innerWidth, window.innerHeight) * 0.35, // Responsive scatter distance
     scatterRotation: 45,            // More dramatic rotation for scattered thumbnails
     scatterDuration: 2.2,           // Longer duration for more dramatic effect
     scatterJitter: 0.5              // More randomness in scatter positioning
