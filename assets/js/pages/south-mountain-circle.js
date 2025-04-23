@@ -562,13 +562,13 @@ class CircularGallery {
         maxDistance: Math.min(window.innerWidth, window.innerHeight) * 0.8, // Use more of viewport
         collisionRadius: 180,       // Larger collision detection
         bounce: 0.7,               // Bouncier collisions
-        margin: 100,               // Reduced margin to use more space
-        stopThreshold: 0.05,       // Lower threshold for longer motion
-        gravityStrength: 0.0001,   // Much weaker gravity
-        rotationSpeed: 0.0004,     // Slower orbital rotation
-        repelStrength: 0.015,      // Stronger repulsion
-        minSpacing: 200,           // Minimum spacing between thumbnails
-        orbitForce: 0.0002         // Gentle orbital force
+        margin: 100,                // Reduced margin to use more space
+        stopThreshold: 0.01,        // Lower threshold for longer motion (was 0.05)
+        gravityStrength: 0.002,     // Stronger pull for continuous movement
+        rotationSpeed: 0.0004,      // Slower orbital rotation
+        repelStrength: 0.015,       // Stronger repulsion
+        minSpacing: 200,            // Minimum spacing between thumbnails
+        orbitForce: 0.0002          // Gentle orbital force
     };
 
     // Calculate viewport areas for better distribution
@@ -579,6 +579,18 @@ class CircularGallery {
     // Setup thumbnails with physics properties
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
+
+    // --- Step 1: Track the mouse cursor globally for gravity ---
+    let gravityX = window.innerWidth / 2;
+    let gravityY = window.innerHeight / 2;
+    // Only add this listener once per instance
+    if (!this._scatterGravityListenerAdded) {
+      document.addEventListener('mousemove', (e) => {
+        gravityX = e.clientX;
+        gravityY = e.clientY;
+      });
+      this._scatterGravityListenerAdded = true;
+    }
 
     const bounds = {
       left: config.margin,
@@ -592,8 +604,8 @@ class CircularGallery {
       const height = el.offsetHeight || 100;
       return {
         element: el,
-        x: centerX - width / 2,
-        y: centerY - height / 2,
+        x: centerX,
+        y: centerY,
         vx: 0,
         vy: 0,
         width,
@@ -602,23 +614,23 @@ class CircularGallery {
       };
     });
 
-    // Initial scatter velocities with better distribution
+    // Improved: Even radial placement with initial offsets for better space usage
     thumbnails.forEach((thumb, index) => {
-        if (!thumb.isSelected) {
-            // Polar coordinates for even distribution
-            const angle = (Math.random() + index / thumbnails.length) * Math.PI * 2;
-            const distance = config.minDistance + Math.random() * (config.maxDistance - config.minDistance);
-            
-            // Add randomized burst velocity
-            const burstSpeed = config.scatterForce * (0.8 + Math.random() * 0.4) * scaleFactor;
-            thumb.vx = Math.cos(angle) * burstSpeed;
-            thumb.vy = Math.sin(angle) * burstSpeed;
-            
-            // Add slight spin
-            const spin = (Math.random() - 0.5) * 2;
-            thumb.vx += spin;
-            thumb.vy += spin;
-        }
+        const angle = (index / thumbnails.length) * 2 * Math.PI + Math.random() * 0.2;
+        const distance = config.minDistance + Math.random() * (config.maxDistance - config.minDistance);
+
+        // Set initial position around center
+        thumb.x = centerX + Math.cos(angle) * distance;
+        thumb.y = centerY + Math.sin(angle) * distance;
+
+        // Apply burst velocity outward from actual offset position
+        thumb.vx = (thumb.x - centerX) * 0.03;
+        thumb.vy = (thumb.y - centerY) * 0.03;
+
+        // Add gentle spin
+        const spin = (Math.random() - 0.5) * 1.5;
+        thumb.vx += spin;
+        thumb.vy += spin;
     });
 
     // Handle selected thumbnail immediately
@@ -636,11 +648,12 @@ class CircularGallery {
       let stillMoving = false;
 
       thumbnails.forEach(thumb => {
-        if (thumb.isSelected) return;
+        // All thumbnails (including selected) move toward the mouse!
 
         // Orbital motion
-        const dx = centerX - thumb.x;
-        const dy = centerY - thumb.y;
+        // --- Step 2: Use gravityX/Y instead of centerX/centerY ---
+        const dx = gravityX - thumb.x;
+        const dy = gravityY - thumb.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         
         if (dist > 0) {
@@ -659,7 +672,7 @@ class CircularGallery {
 
         // Strong repulsion between thumbnails
         thumbnails.forEach(other => {
-            if (other === thumb || other.isSelected) return;
+            if (other === thumb) return;
             
             const rdx = other.x - thumb.x;
             const rdy = other.y - thumb.y;
@@ -709,8 +722,15 @@ class CircularGallery {
         thumb.element.style.top = `${thumb.y}px`;
         thumb.element.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
 
-        if (Math.abs(thumb.vx) > config.stopThreshold ||
-            Math.abs(thumb.vy) > config.stopThreshold) {
+        // --- Modified stillMoving check to continue animation if not at cursor ---
+        const cursorDx = gravityX - thumb.x;
+        const cursorDy = gravityY - thumb.y;
+        const cursorDist = Math.sqrt(cursorDx * cursorDx + cursorDy * cursorDy);
+        if (
+          Math.abs(thumb.vx) > config.stopThreshold ||
+          Math.abs(thumb.vy) > config.stopThreshold ||
+          cursorDist > 100
+        ) {
           stillMoving = true;
         }
       });
