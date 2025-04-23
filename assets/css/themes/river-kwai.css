@@ -1,0 +1,266 @@
+/* 
+ * River Kwai Theme
+ * An elegant, nature-inspired theme evoking the tranquil beauty of River Kwai
+ * with lush forest tones, warm accents, and traditional Thai aesthetics
+ */
+
+/* Theme Variable Definitions */
+:root {
+  /* Primary color palette */
+  --river-forest: #1e392a; /* Deep forest green background */
+  --river-mist: #c9d1c8;   /* Light foggy green for text */
+  --canopy-dark: #0a1f0a;  /* Dark jungle canopy shade */
+  --bamboo-light: #dec06e; /* Light bamboo accent */
+  --sunlight-gold: #d4a54a; /* Warm golden light through trees */
+  --silk-cream: #f9f3e3;    /* Light cream color for highlights */
+  --sunset-copper: #c1754b; /* Warm copper accent */
+  
+  /* Functional assignments */
+  --background-color: var(--river-forest);
+  --text-color: var(--river-mist);
+  --header-color: var(--silk-cream);
+  --accent-color: var(--sunlight-gold);
+  --border-subtle: rgba(222, 192, 110, 0.25); /* Translucent bamboo */
+  --shadow-color: rgba(10, 31, 10, 0.4);     /* Transparent canopy shadow */
+  
+  /* Typography */
+  --heading-font: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --body-font: 'Lato', 'Open Sans', sans-serif;
+  
+  /* Refinements */
+  --image-border-radius: 6px;
+  --image-frame-opacity: 0.85;
+  --container-brightness: 0.95;
+  
+  /* Transitions */
+  --transition-speed: 0.35s;
+  --ease-natural: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Base Element Styling */
+body.river-kwai-theme {
+  background-color: var(--background-color);
+  background-image: url('../../images/theme/paper-texture.png');
+  background-blend-mode: multiply;
+  background-attachment: fixed;
+  color: var(--text-color);
+  font-family: var(--body-font);
+  transition: background-color 0.5s ease;
+}
+
+body.river-kwai-theme::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 57, 42, 0.97) 0%,
+    rgba(10, 31, 10, 0.95) 100%
+  );
+  z-index: -1;
+}
+
+/* Typography */
+body.river-kwai-theme h1, 
+body.river-kwai-theme h2, 
+body.river-kwai-theme h3 {
+  font-family: var(--heading-font);
+  color: var(--header-color);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+
+body.river-kwai-theme .gallery-header h1 {
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 15px;
+  position: relative;
+}
+
+body.river-kwai-theme .gallery-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 30%;
+  right: 30%;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--accent-color),
+    transparent
+  );
+}
+
+/* Gallery Container Styling */
+body.river-kwai-theme .gallery-container {
+  position: relative;
+}
+
+/* Main gallery area */
+body.river-kwai-theme .gallery-main {
+  position: relative;
+}
+
+body.river-kwai-theme .gallery-meta {
+  color: var(--text-color);
+  opacity: 0.8;
+  font-style: italic;
+}
+
+body.river-kwai-theme .gallery-meta span {
+  position: relative;
+  padding: 0 20px;
+}
+
+body.river-kwai-theme .gallery-meta span::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent-color);
+}
+
+body.river-kwai-theme .gallery-meta span:first-child::before {
+  display: none;
+}
+
+/* Image Styling */
+body.river-kwai-theme .image-container {
+  filter: brightness(var(--container-brightness));
+  transition: filter var(--transition-speed) var(--ease-natural);
+}
+
+body.river-kwai-theme .image-container img {
+  border-radius: var(--image-border-radius);
+  box-shadow: 
+    0 10px 20px var(--shadow-color),
+    0 0 0 1px var(--border-subtle);
+  transition: all var(--transition-speed) var(--ease-natural);
+}
+
+body.river-kwai-theme .image-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--image-border-radius);
+  box-shadow: inset 0 0 0 1px rgba(249, 243, 227, 0.15);
+  pointer-events: none;
+  opacity: var(--image-frame-opacity);
+}
+
+/* Focus state styling */
+body.river-kwai-theme .image-container.in-focus {
+  filter: brightness(1.05);
+  z-index: 2;
+}
+
+body.river-kwai-theme .image-container.in-focus img {
+  box-shadow: 
+    0 15px 35px var(--shadow-color),
+    0 0 0 1px var(--accent-color);
+}
+
+/* Thumbnail Navigation */
+body.river-kwai-theme .gallery-thumbnails {
+  background: rgba(10, 31, 10, 0.5);
+  border-radius: 30px;
+  padding: 10px 5px;
+  backdrop-filter: blur(5px);
+}
+
+body.river-kwai-theme .thumbnail {
+  border-radius: var(--image-border-radius);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+body.river-kwai-theme .thumbnail::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 31, 10, 0.3);
+  transition: all 0.3s ease;
+}
+
+body.river-kwai-theme .thumbnail:hover::after {
+  background: rgba(10, 31, 10, 0.1);
+}
+
+body.river-kwai-theme .thumbnail.active {
+  border-color: var(--accent-color);
+  transform: scale(1.1);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+}
+
+body.river-kwai-theme .thumbnail.active::after {
+  background: transparent;
+}
+
+/* Audio Control */
+body.river-kwai-theme .audio-control {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background: rgba(30, 57, 42, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+body.river-kwai-theme .audio-control:hover {
+  background: rgba(30, 57, 42, 0.9);
+  transform: scale(1.05);
+  border-color: var(--accent-color);
+}
+
+body.river-kwai-theme .audio-control svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--accent-color);
+}
+
+body.river-kwai-theme .audio-control.muted svg {
+  fill: var(--text-color);
+  opacity: 0.5;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  body.river-kwai-theme .gallery-header h1 {
+    font-size: 28px;
+  }
+  
+  body.river-kwai-theme .audio-control {
+    bottom: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  body.river-kwai-theme .audio-control svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Dark mode enhancement */
+@media (prefers-color-scheme: dark) {
+  body.river-kwai-theme {
+    --container-brightness: 1;
+  }
+}
