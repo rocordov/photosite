@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portland Music and Coffee</title>
+    <style>
+        /* Base styles */
+        :root {
+            --bg-color: #e8e1d0; /* Beige background */
+            --text-color: #222; /* Dark text */
+            --line-color: #888; /* Line color */
+            --inactive-color: #aaa; /* Inactive text */
+            --animation-duration: 0.6s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            line-height: 1.4;
+        }
+        
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            font-size: 24px;
+            letter-spacing: 15px;
+            font-weight: 300;
+            display: flex;
+        }
+        
+        .logo span {
+            margin-right: 15px;
+        }
+        
+        .menu-toggle {
+            cursor: pointer;
+            width: 30px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 1px;
+            background-color: var(--text-color);
+            transition: transform 0.3s ease;
+        }
+        
+        /* Main content */
+        .gallery-container {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Carousel */
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 75vh;  /* Increased from 60vh */
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 5vw;  /* Add padding for prev/next slides */
+        }
+        
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            touch-action: pan-y pinch-zoom;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+        
+        /* Update carousel slide styles */
+        .carousel-slide {
+            position: absolute;
+            transition: all var(--animation-duration) ease-in-out;
+            transform: scale(0.8);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 70vw !important;
+            height: 70vh !important;
+            max-width: 1400px;
+            opacity: 0;
+            pointer-events: none;
+            left: 50%;
+            transform-origin: center center;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+            z-index: 10;
+            transform: translateX(-50%) scale(1.05);
+            pointer-events: auto;
+        }
+
+        .carousel-slide.next {
+            opacity: 0.8;  /* Increased from 0.4 */
+            z-index: 5;
+            transform: translateX(25%) scale(0.9);  /* Changed from 45% to 25% */
+            width: 60vw !important;
+            height: 60vh !important;
+            pointer-events: auto;  /* Make next slide clickable */
+        }
+
+        .carousel-slide.prev {
+            opacity: 0.4;
+            z-index: 1;
+            transform: translateX(-120%) scale(0.8);  /* Move further left */
+            width: 50vw !important;
+            height: 50vh !important;
+        }
+
+        /* Add hover effect for next slide */
+        .carousel-slide.next:hover {
+            opacity: 0.9;
+            transform: translateX(20%) scale(0.95);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .carousel-slide.next {
+                transform: translateX(35%) scale(0.85);
+                width: 50vw !important;
+                height: 50vh !important;
+            }
+            
+            .carousel-slide.prev {
+                transform: translateX(-130%) scale(0.75);
+            }
+        }
+        
+        /* Connecting lines */
+        .connecting-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .connecting-lines svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .connecting-lines line {
+            stroke: var(--line-color);
+            stroke-width: 0.5;
+            stroke-dasharray: 5, 5;
+            opacity: 0.3;
+        }
+        
+        /* Project info */
+        .project-info {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        
+        .project-info h1 {
+            font-weight: 300;
+            font-size: 26px;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+        
+        .project-info p {
+            font-weight: 300;
+            font-size: 16px;
+            color: var(--text-color);
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 40px;
+            padding: 10px;
+        }
+        
+        .mode-switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .mode-switch span {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .mode-switch span.active {
+            color: var(--text-color);
+        }
+        
+        .mode-switch span:not(.active) {
+            color: var(--inactive-color);
+        }
+        
+        .switch-track {
+            width: 40px;
+            height: 16px;
+            background-color: #ddd;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .switch-thumb {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            transition: left 0.3s ease;
+        }
+        
+        .switch-track.random .switch-thumb {
+            left: calc(100% - 20px);
+        }
+        
+        @media (max-width: 768px) {
+            .carousel {
+                height: 60vh;
+            }
+            
+            .carousel-wrapper {
+                height: 70%;
+            }
+            
+            .carousel-slide {
+                width: 85vw !important;
+                height: 55vh !important;
+            }
+            
+            .carousel-slide.prev {
+                transform: translateX(-20%) scale(0.7);
+                width: 60vw !important;
+                height: 40vh !important;
+            }
+            
+            .carousel-slide.next {
+                transform: translateX(20%) scale(0.7);
+                width: 60vw !important;
+                height: 40vh !important;
+            }
+            
+            .project-info h1 {
+                font-size: 22px;
+            }
+            
+            .project-info p {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 18px;
+                letter-spacing: 10px;
+            }
+            
+            .carousel-slide.prev,
+            .carousel-slide.next {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <span>P</span>
+            <span>O</span>
+            <span>R</span>
+            <span>T</span>
+            <span>L</span>
+            <span>A</span>
+            <span>N</span>
+            <span>D</span>
+        </div>
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <div class="gallery-container">
+        <div class="carousel">
+            <div class="carousel-wrapper" id="carousel">
+                <!-- Images will be added dynamically -->
+            </div>
+            <div class="connecting-lines">
+                <svg id="lines"></svg>
+            </div>
+        </div>
+        
+        <div class="project-info">
+            <h1>Portland Music and Coffee</h1>
+            <p>A collection of moments from Portland's unique coffee shop culture, where music and artisanal coffee create spaces for creativity and community to thrive.</p>
+        </div>
+        
+        <div class="controls">
+            <div class="mode-switch">
+                <span class="linear active">LINEAR</span>
+                <div class="switch-track" id="mode-switch">
+                    <div class="switch-thumb"></div>
+                </div>
+                <span class="random">RANDOM</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Image paths
+            const images = [
+                'images/_7RV6586.jpg',
+                'images/_7RV6589.jpg',
+                'images/_7RV6592.jpg'
+            ];
+            
+            // Image titles and descriptions (optional)
+            const imageData = [
+                {
+                    title: 'Acoustic Corner',
+                    description: 'A cozy corner where local musicians often perform intimate sets'
+                },
+                {
+                    title: 'Brewing Perfection',
+                    description: 'Artisanal brewing methods that highlight the coffee\'s unique character'
+                },
+                {
+                    title: 'Community Space',
+                    description: 'Where conversations flow as freely as the coffee'
+                }
+            ];
+            
+            // DOM elements
+            const carousel = document.getElementById('carousel');
+            const linesContainer = document.getElementById('lines');
+            const modeSwitch = document.getElementById('mode-switch');
+            const linearMode = document.querySelector('.mode-switch .linear');
+            const randomMode = document.querySelector('.mode-switch .random');
+            
+            let currentIndex = 0;
+            let slides = [];
+            let isRandom = false;
+            let timeout;
+            
+            // Create carousel slides
+            function createCarousel() {
+                carousel.innerHTML = '';
+                
+                images.forEach((image, index) => {
+                    const slide = document.createElement('div');
+                    slide.className = 'carousel-slide';
+                    slide.innerHTML = `<img src="${image}" alt="${imageData[index].title}">`;
+                    slide.dataset.index = index;
+                    
+                    // Set dimensions and positions (varied sizes for visual interest)
+                    const width = Math.floor(Math.random() * 100) + 300; // 300-400px
+                    slide.style.width = `${width}px`;
+                    slide.style.height = `${Math.floor(width * 0.75)}px`; // 3:4 aspect ratio
+                    
+                    carousel.appendChild(slide);
+                    slides.push(slide);
+                });
+                
+                // Set initial slide positions
+                updateSlides();
+                
+                // Draw connecting lines
+                drawLines();
+            }
+            
+            // Update slide positions and classes
+            function updateSlides() {
+                slides.forEach((slide, index) => {
+                    const slideIndex = parseInt(slide.dataset.index);
+                    
+                    // Remove all classes
+                    slide.classList.remove('active', 'prev', 'next');
+                    
+                    // Add appropriate class based on position
+                    if (slideIndex === currentIndex) {
+                        slide.classList.add('active');
+                    } else if ((slideIndex === currentIndex - 1) || 
+                              (currentIndex === 0 && slideIndex === slides.length - 1)) {
+                        slide.classList.add('prev');
+                    } else if ((slideIndex === currentIndex + 1) || 
+                              (currentIndex === slides.length - 1 && slideIndex === 0)) {
+                        slide.classList.add('next');
+                    }
+                });
+                
+                // Update connecting lines
+                drawLines();
+            }
+            
+            // Draw connecting lines between images
+            function drawLines() {
+                linesContainer.innerHTML = '';
+                
+                const activeSlide = document.querySelector('.carousel-slide.active');
+                const prevSlide = document.querySelector('.carousel-slide.prev');
+                const nextSlide = document.querySelector('.carousel-slide.next');
+                
+                if (!activeSlide) return;
+                
+                const activeRect = activeSlide.getBoundingClientRect();
+                const activeX = activeRect.x + activeRect.width / 2;
+                const activeY = activeRect.y + activeRect.height / 2;
+                
+                if (prevSlide) {
+                    const prevRect = prevSlide.getBoundingClientRect();
+                    const prevX = prevRect.x + prevRect.width / 2;
+                    const prevY = prevRect.y + prevRect.height / 2;
+                    
+                    drawLine(prevX, prevY, activeX, activeY);
+                }
+                
+                if (nextSlide) {
+                    const nextRect = nextSlide.getBoundingClientRect();
+                    const nextX = nextRect.x + nextRect.width / 2;
+                    const nextY = nextRect.y + nextRect.height / 2;
+                    
+                    drawLine(activeX, activeY, nextX, nextY);
+                }
+            }
+            
+            // Helper function to draw SVG line
+            function drawLine(x1, y1, x2, y2) {
+                // Convert to SVG coordinate space
+                const rect = linesContainer.getBoundingClientRect();
+                x1 -= rect.x;
+                y1 -= rect.y;
+                x2 -= rect.x;
+                y2 -= rect.y;
+                
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1);
+                line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2);
+                line.setAttribute('y2', y2);
+                
+                linesContainer.appendChild(line);
+            }
+            
+            // Go to next slide
+            function nextSlide() {
+                if (isRandom) {
+                    // Random mode: go to a random slide that's not the current one
+                    let newIndex;
+                    do {
+                        newIndex = Math.floor(Math.random() * slides.length);
+                    } while (newIndex === currentIndex && slides.length > 1);
+                    
+                    currentIndex = newIndex;
+                } else {
+                    // Linear mode: go to next slide
+                    currentIndex = (currentIndex + 1) % slides.length;
+                }
+                
+                updateSlides();
+                resetAutoplay();
+            }
+            
+            // Go to previous slide
+            function prevSlide() {
+                if (isRandom) {
+                    // Random mode: go to a random slide that's not the current one
+                    let newIndex;
+                    do {
+                        newIndex = Math.floor(Math.random() * slides.length);
+                    } while (newIndex === currentIndex && slides.length > 1);
+                    
+                    currentIndex = newIndex;
+                } else {
+                    // Linear mode: go to previous slide
+                    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                }
+                
+                updateSlides();
+                resetAutoplay();
+            }
+            
+            // Set up autoplay
+            function startAutoplay() {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    nextSlide();
+                }, 5000); // Change slide every 5 seconds
+            }
+            
+            // Reset autoplay timer
+            function resetAutoplay() {
+                clearTimeout(timeout);
+                startAutoplay();
+            }
+            
+            // Handle click on mode switch
+            modeSwitch.addEventListener('click', function() {
+                isRandom = !isRandom;
+                
+                if (isRandom) {
+                    modeSwitch.classList.add('random');
+                    linearMode.classList.remove('active');
+                    randomMode.classList.add('active');
+                } else {
+                    modeSwitch.classList.remove('random');
+                    linearMode.classList.add('active');
+                    randomMode.classList.remove('active');
+                }
+                
+                resetAutoplay();
+            });
+            
+            // Click on linear/random text also toggles mode
+            linearMode.addEventListener('click', function() {
+                if (isRandom) {
+                    isRandom = false;
+                    modeSwitch.classList.remove('random');
+                    linearMode.classList.add('active');
+                    randomMode.classList.remove('active');
+                    resetAutoplay();
+                }
+            });
+            
+            randomMode.addEventListener('click', function() {
+                if (!isRandom) {
+                    isRandom = true;
+                    modeSwitch.classList.add('random');
+                    linearMode.classList.remove('active');
+                    randomMode.classList.add('active');
+                    resetAutoplay();
+                }
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                drawLines();
+            });
+            
+            // Click handlers for carousel navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    nextSlide();
+                }
+            });
+            
+            // Click on prev/next slides to navigate
+            carousel.addEventListener('click', function(e) {
+                const clickedSlide = e.target.closest('.carousel-slide');
+                if (!clickedSlide) return;
+                
+                const clickedIndex = parseInt(clickedSlide.dataset.index);
+                
+                if (clickedSlide.classList.contains('prev')) {
+                    prevSlide();
+                } else if (clickedSlide.classList.contains('next')) {
+                    nextSlide();
+                }
+            });
+            
+            // Initialize
+            createCarousel();
+            startAutoplay();
+
+            // Add after carousel initialization
+            function initDragSupport() {
+                let isDragging = false;
+                let startX = 0;
+                let startY = 0;
+                let moveX = 0;
+                let moveY = 0;
+                const dragThreshold = 50; // Minimum drag distance to trigger slide change
+                
+                // Touch events
+                carousel.addEventListener('touchstart', handleDragStart, { passive: true });
+                carousel.addEventListener('touchmove', handleDrag, { passive: true });
+                carousel.addEventListener('touchend', handleDragEnd);
+                
+                // Mouse events
+                carousel.addEventListener('mousedown', handleDragStart);
+                carousel.addEventListener('mousemove', handleDrag);
+                carousel.addEventListener('mouseup', handleDragEnd);
+                carousel.addEventListener('mouseleave', handleDragEnd);
+                
+                function handleDragStart(e) {
+                    isDragging = true;
+                    const point = e.touches ? e.touches[0] : e;
+                    startX = point.clientX;
+                    startY = point.clientY;
+                    moveX = 0;
+                    moveY = 0;
+                    
+                    // Add dragging class for visual feedback
+                    carousel.classList.add('dragging');
+                }
+                
+                function handleDrag(e) {
+                    if (!isDragging) return;
+                    
+                    const point = e.touches ? e.touches[0] : e;
+                    moveX = point.clientX - startX;
+                    moveY = point.clientY - startY;
+                    
+                    // Apply drag transform to active slide
+                    const activeSlide = document.querySelector('.carousel-slide.active');
+                    if (activeSlide) {
+                        activeSlide.style.transform = `scale(1.05) translateX(${moveX}px)`;
+                    }
+                }
+                
+                function handleDragEnd() {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    
+                    // Remove dragging class
+                    carousel.classList.remove('dragging');
+                    
+                    // Reset active slide transform
+                    const activeSlide = document.querySelector('.carousel-slide.active');
+                    if (activeSlide) {
+                        activeSlide.style.transform = '';
+                    }
+                    
+                    // Check if drag distance exceeds threshold
+                    if (Math.abs(moveX) > dragThreshold) {
+                        if (moveX > 0) {
+                            prevSlide();
+                        } else {
+                            nextSlide();
+                        }
+                    }
+                    
+                    // Reset values
+                    startX = 0;
+                    startY = 0;
+                    moveX = 0;
+                    moveY = 0;
+                }
+            }
+
+            // Add this CSS for drag feedback
+            const style = document.createElement('style');
+            style.textContent = `
+                .carousel-wrapper.dragging {
+                    cursor: grabbing;
+                }
+                
+                .carousel-slide {
+                    cursor: grab;
+                    transition: transform var(--animation-duration) ease-in-out;
+                }
+                
+                .carousel-wrapper.dragging .carousel-slide {
+                    transition: none;
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Initialize drag support
+            initDragSupport();
+        });
+    </script>
+</body>
+</html>
