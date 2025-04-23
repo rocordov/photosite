@@ -637,7 +637,7 @@ class CircularGallery {
       }
 
       thumbnails.forEach((thumb, index) => {
-        const historyIndex = index * 25;
+        const historyIndex = index * 50;
         const pos = leadHistory[historyIndex] || head;
         thumb.style.position = 'fixed';
         thumb.style.left = `${pos.x}px`;
