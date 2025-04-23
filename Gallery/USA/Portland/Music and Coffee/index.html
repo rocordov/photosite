@@ -38,6 +38,8 @@
             flex-direction: column;
             justify-content: center;
             line-height: 1.4;
+            padding-top: 100px; /* space below the header */
+            padding-bottom: 100px; /* space above the footer or controls */
         }
         
         /* Header */
@@ -47,10 +49,11 @@
             left: 0;
             width: 100%;
             padding: 25px;
-            z-index: 100;
+            z-index: 1000; /* Ensure it's above image layers */
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background-color: var(--coffee-dark); /* Ensure readability */
         }
         
         .logo {
@@ -241,12 +244,13 @@
             text-align: center;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
             margin-top: 50px;
-            background: rgba(44, 24, 16, 0.8);
+            background: rgba(44, 24, 16, 0.9);  /* Darker background */
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 30px;
+            border: 1px solid var(--coffee-light);  /* Add border */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);  /* Add shadow */
         }
         
         .project-info h1 {
@@ -271,10 +275,12 @@
         .project-info p {
             font-weight: 300;
             font-size: 16px;
-            color: var(--text-color);
-            opacity: 0.9;
+            color: var(--cream);  /* Changed from var(--text-color) to var(--cream) */
+            opacity: 1;  /* Changed from 0.9 to 1 */
             max-width: 600px;
             margin: 0 auto;
+            line-height: 1.6;
+            letter-spacing: 0.3px;
         }
         
         /* Controls */
@@ -339,6 +345,10 @@
         }
         
         @media (max-width: 768px) {
+            body {
+                padding-top: 80px;
+                padding-bottom: 80px;
+            }
             .carousel {
                 height: 60vh;
             }
@@ -369,7 +379,8 @@
             }
             
             .project-info p {
-                font-size: 14px;
+                font-size: 15px;
+                padding: 0 15px;
             }
         }
         
@@ -389,6 +400,7 @@
 <body>
     <header>
         <div class="logo">
+            <span>♪</span>
             <span>M</span>
             <span>U</span>
             <span>S</span>
@@ -403,6 +415,7 @@
             <span>F</span>
             <span>E</span>
             <span>E</span>
+            <span>☕</span>
         </div>
     </header>
 
@@ -417,7 +430,6 @@
         </div>
         
         <div class="project-info">
-            <h1>Music & Coffee</h1>
             <p>Experience Hillsboro's unique coffee culture where artisanal brews meet live music. Each image captures the harmony between carefully crafted beverages and the soulful sounds that fill these intimate spaces.</p>
         </div>
         
