@@ -548,7 +548,7 @@ class CircularGallery {
     }
   }
   
-  // Scatter Effect: Click-to-scatter model with enlarged focus image
+  // Scatter Effect: Click-to-scatter model with spring-coupled thumbnail animation
   triggerScatterEffect(selectedIndex = 0) {
     if (this.isAnimating) return;
 
@@ -556,144 +556,172 @@ class CircularGallery {
     this.hasScattered = true;
 
     const config = {
-        damping: 0.98,
-        scatterForce: 25,
-        minDistance: 150,
-        maxDistance: Math.min(window.innerWidth, window.innerHeight) * 0.25, // Reduced to 25% of viewport
-        collisionRadius: 120,
-        bounce: 0.65,
-        margin: 150,  // Increased margin from edges
-        stopThreshold: 0.1,
-        gravityStrength: window.innerWidth < 768 ? 0.002 : 0.005,
-        rotationSpeed: window.innerWidth < 768 ? 0.001 : 0.003
+        damping: 0.98,              // Increased for smoother motion
+        scatterForce: 45,           // Increased initial force
+        minDistance: 300,           // Much larger minimum spread
+        maxDistance: Math.min(window.innerWidth, window.innerHeight) * 0.8, // Use more of viewport
+        collisionRadius: 180,       // Larger collision detection
+        bounce: 0.7,               // Bouncier collisions
+        margin: 100,               // Reduced margin to use more space
+        stopThreshold: 0.05,       // Lower threshold for longer motion
+        gravityStrength: 0.0001,   // Much weaker gravity
+        rotationSpeed: 0.0004,     // Slower orbital rotation
+        repelStrength: 0.015,      // Stronger repulsion
+        minSpacing: 200,           // Minimum spacing between thumbnails
+        orbitForce: 0.0002         // Gentle orbital force
     };
 
-    // Adjusted center of gravity to move further up and to the left
-    const centerX = window.innerWidth / 3.9 ;
-    const centerY = window.innerHeight / 3.9 ;
-
-    // Calculate safe boundaries
-    const bounds = {
-        left: config.margin,
-        right: window.innerWidth - config.margin,
-        top: config.margin,
-        bottom: window.innerHeight - config.margin
-    };
+    // Calculate viewport areas for better distribution
+    const viewportArea = window.innerWidth * window.innerHeight;
+    const thumbnailArea = (config.minSpacing * config.minSpacing) * this.thumbnails.length;
+    const scaleFactor = Math.sqrt(viewportArea / thumbnailArea) * 0.8;
 
     // Setup thumbnails with physics properties
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+
+    const bounds = {
+      left: config.margin,
+      right: window.innerWidth - config.margin,
+      top: config.margin,
+      bottom: window.innerHeight - config.margin
+    };
+
     const thumbnails = this.thumbnails.map((el, i) => {
-        const width = el.offsetWidth || 100;
-        const height = el.offsetHeight || 100;
-        // Adjust starting position by subtracting half the thumbnail size
-        return {
-            element: el,
-            x: centerX - width / 2,
-            y: centerY - height / 2,
-            vx: 0,
-            vy: 0,
-            width,
-            height,
-            isSelected: i === selectedIndex
-        };
+      const width = el.offsetWidth || 100;
+      const height = el.offsetHeight || 100;
+      return {
+        element: el,
+        x: centerX - width / 2,
+        y: centerY - height / 2,
+        vx: 0,
+        vy: 0,
+        width,
+        height,
+        isSelected: i === selectedIndex
+      };
     });
 
-    // Initial scatter velocities
-    thumbnails.forEach(thumb => {
+    // Initial scatter velocities with better distribution
+    thumbnails.forEach((thumb, index) => {
         if (!thumb.isSelected) {
-            const angle = Math.random() * Math.PI * 2;
+            // Polar coordinates for even distribution
+            const angle = (Math.random() + index / thumbnails.length) * Math.PI * 2;
             const distance = config.minDistance + Math.random() * (config.maxDistance - config.minDistance);
-            const speed = config.scatterForce * (0.8 + Math.random() * 0.4);
-            // Calculate velocity components
-            thumb.vx = Math.cos(angle) * speed;
-            thumb.vy = Math.sin(angle) * speed;
+            
+            // Add randomized burst velocity
+            const burstSpeed = config.scatterForce * (0.8 + Math.random() * 0.4) * scaleFactor;
+            thumb.vx = Math.cos(angle) * burstSpeed;
+            thumb.vy = Math.sin(angle) * burstSpeed;
+            
+            // Add slight spin
+            const spin = (Math.random() - 0.5) * 2;
+            thumb.vx += spin;
+            thumb.vy += spin;
         }
     });
 
     // Handle selected thumbnail immediately
     if (selectedIndex !== undefined) {
-        const selected = thumbnails[selectedIndex];
-        selected.element.style.transition = 'all 0.5s ease-out';
-        selected.element.style.zIndex = '1000';
-        setTimeout(() => {
-            this.openFullscreenImage(selectedIndex);
-        }, 300);
+      const selected = thumbnails[selectedIndex];
+      selected.element.style.transition = 'all 0.5s ease-out';
+      selected.element.style.zIndex = '1000';
+      setTimeout(() => {
+        this.openFullscreenImage(selectedIndex);
+      }, 300);
     }
 
     let animationFrame;
     const animate = () => {
-        let stillMoving = false;
-        thumbnails.forEach(thumb => {
-          if (thumb.isSelected) return;
+      let stillMoving = false;
 
-          // Gravitational pull toward center (black hole effect)
-          const dx = centerX - thumb.x;
-          const dy = centerY - thumb.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist > 0.5) {
-            const gravPullX = (dx / dist) * config.gravityStrength;
-            const gravPullY = (dy / dist) * config.gravityStrength;
-            thumb.vx += gravPullX;
-            thumb.vy += gravPullY;
-          }
-          // Optional: slow orbital motion
-          const angle = Math.atan2(dy, dx) + Math.PI / 2;
-          thumb.vx += Math.cos(angle) * config.rotationSpeed;
-          thumb.vy += Math.sin(angle) * config.rotationSpeed;
+      thumbnails.forEach(thumb => {
+        if (thumb.isSelected) return;
 
-          // Update position with velocity
-          thumb.x += thumb.vx;
-          thumb.y += thumb.vy;
+        // Orbital motion
+        const dx = centerX - thumb.x;
+        const dy = centerY - thumb.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        if (dist > 0) {
+            // Weaker gravity at larger distances
+            const gravityFalloff = Math.min(1, 500 / dist);
+            const gravForce = config.gravityStrength * gravityFalloff;
+            thumb.vx += (dx / dist) * gravForce;
+            thumb.vy += (dy / dist) * gravForce;
 
-          const halfWidth = thumb.width / 2;
-          const halfHeight = thumb.height / 2;
+            // Add orbital velocity
+            const perpX = -dy / dist;
+            const perpY = dx / dist;
+            thumb.vx += perpX * config.orbitForce;
+            thumb.vy += perpY * config.orbitForce;
+        }
 
-          // Keep thumbnails within bounds
-          if (thumb.x + halfWidth > bounds.right) {
-            thumb.x = bounds.right - halfWidth;
-            thumb.vx = -Math.abs(thumb.vx * config.bounce);
-          }
-          if (thumb.x - halfWidth < bounds.left) {
-            thumb.x = bounds.left + halfWidth;
-            thumb.vx = Math.abs(thumb.vx * config.bounce);
-          }
-
-          if (thumb.y + halfHeight > bounds.bottom) {
-            thumb.y = bounds.bottom - halfHeight;
-            thumb.vy = -Math.abs(thumb.vy * config.bounce);
-          }
-          if (thumb.y - halfHeight < bounds.top) {
-            thumb.y = bounds.top + halfHeight;
-            thumb.vy = Math.abs(thumb.vy * config.bounce);
-          }
-
-          // Damping
-          thumb.vx *= config.damping;
-          thumb.vy *= config.damping;
-
-          // Rotation
-          const speed = Math.sqrt(thumb.vx * thumb.vx + thumb.vy * thumb.vy);
-          const rotationAngle = (speed * 2) * (Math.random() > 0.5 ? 1 : -1);
-
-          // Use center-based transform without subtracting size again
-          thumb.element.style.position = 'fixed';
-          thumb.element.style.left = `${thumb.x}px`;
-          thumb.element.style.top = `${thumb.y}px`;
-          thumb.element.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
-
-          if (Math.abs(thumb.vx) > config.stopThreshold ||
-              Math.abs(thumb.vy) > config.stopThreshold) {
-            stillMoving = true;
-          }
+        // Strong repulsion between thumbnails
+        thumbnails.forEach(other => {
+            if (other === thumb || other.isSelected) return;
+            
+            const rdx = other.x - thumb.x;
+            const rdy = other.y - thumb.y;
+            const rDist = Math.sqrt(rdx * rdx + rdy * rdy);
+            
+            if (rDist < config.minSpacing && rDist > 0) {
+                const force = config.repelStrength * (1 - rDist / config.minSpacing);
+                thumb.vx -= (rdx / rDist) * force;
+                thumb.vy -= (rdy / rDist) * force;
+            }
         });
 
-        if (stillMoving) {
-          animationFrame = requestAnimationFrame(animate);
-        } else {
-          cancelAnimationFrame(animationFrame);
-          this.isAnimating = false;
+        // Update position
+        thumb.x += thumb.vx;
+        thumb.y += thumb.vy;
+        thumb.vx *= config.damping;
+        thumb.vy *= config.damping;
+
+        // Boundary bounce with momentum preservation
+        const halfWidth = thumb.width / 2;
+        const halfHeight = thumb.height / 2;
+
+        if (thumb.x + halfWidth > bounds.right) {
+          thumb.x = bounds.right - halfWidth;
+          thumb.vx = -Math.abs(thumb.vx * config.bounce);
         }
+        if (thumb.x - halfWidth < bounds.left) {
+          thumb.x = bounds.left + halfWidth;
+          thumb.vx = Math.abs(thumb.vx * config.bounce);
+        }
+
+        if (thumb.y + halfHeight > bounds.bottom) {
+          thumb.y = bounds.bottom - halfHeight;
+          thumb.vy = -Math.abs(thumb.vy * config.bounce);
+        }
+        if (thumb.y - halfHeight < bounds.top) {
+          thumb.y = bounds.top + halfHeight;
+          thumb.vy = Math.abs(thumb.vy * config.bounce);
+        }
+
+        // Rotation
+        const speed = Math.sqrt(thumb.vx * thumb.vx + thumb.vy * thumb.vy);
+        const rotationAngle = (speed * 2) * (Math.random() > 0.5 ? 1 : -1);
+
+        thumb.element.style.position = 'fixed';
+        thumb.element.style.left = `${thumb.x}px`;
+        thumb.element.style.top = `${thumb.y}px`;
+        thumb.element.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
+
+        if (Math.abs(thumb.vx) > config.stopThreshold ||
+            Math.abs(thumb.vy) > config.stopThreshold) {
+          stillMoving = true;
+        }
+      });
+
+      if (stillMoving) {
+        animationFrame = requestAnimationFrame(animate);
+      } else {
+        cancelAnimationFrame(animationFrame);
+        this.isAnimating = false;
+      }
     };
-    // Start animation
     animate();
   }
   
