@@ -104,6 +104,17 @@
 				.instructions:hover {
 					opacity: 1;
 				}
+
+				.header.hidden {
+				  transform: translateY(-100%);
+				  opacity: 0;
+				  transition: transform 0.8s ease, opacity 0.8s ease;
+				}
+
+				.instructions.hidden {
+				  transform: translate(-50%, 150%);
+				  opacity: 0;
+				}
 			</style>
 	</head>
 	<body>
@@ -153,6 +164,20 @@
 		    currentImageIndex = (currentImageIndex + 1) % imagePaths.length;
 		  }
 
+		  const header = document.querySelector('.header');
+		  const instructions = document.querySelector('.instructions');
+		  let hideUITimer;
+
+		  function hideUI() {
+		    header.classList.add('hidden');
+		    instructions.classList.add('hidden');
+		  }
+
+		  function showUI() {
+		    header.classList.remove('hidden');
+		    instructions.classList.remove('hidden');
+		  }
+
 		  // Update mouse movement handler for smoother performance
 		  let lastMoveTime = 0;
 		  document.addEventListener('mousemove', (e) => {
@@ -161,6 +186,12 @@
 		        showTrailImage(e.clientX, e.clientY);
 		        lastMoveTime = now;
 		    }
+
+		    hideUI();
+		    clearTimeout(hideUITimer);
+		    hideUITimer = setTimeout(() => {
+		      showUI();
+		    }, 2000);
 		  });
 		</script>
 	</body>
