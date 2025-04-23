@@ -156,6 +156,7 @@ class CircularGallery {
     this._clickTimeout = null; // Add click handling state
     this._lastClickTime = 0; // Add click handling state
     this.userInteracted = false; // Track user interaction for ambient motion
+    this.snakeAnimationActive = false; // Controls snake-following animation
     
     // Spring physics for the wheel rotation
     this.rotationSpring = new SpringPhysics({
@@ -567,201 +568,87 @@ class CircularGallery {
     }
   }
   
-  // Scatter Effect: Click-to-scatter model with spring-coupled thumbnail animation
+  // Scatter Effect: Snake-following behavior after scatter
   triggerScatterEffect(selectedIndex = 0) {
     if (this.isAnimating) return;
     this.userInteracted = true;
     this.isAnimating = true;
     this.hasScattered = true;
 
-    const config = {
-        damping: 0.98,              // Increased for smoother motion
-        scatterForce: 45,           // Increased initial force
-        minDistance: 300,           // Much larger minimum spread
-        maxDistance: Math.min(window.innerWidth, window.innerHeight) * 0.8, // Use more of viewport
-        collisionRadius: 180,       // Larger collision detection
-        bounce: 0.7,               // Bouncier collisions
-        margin: 0,                  // No margin; allow thumbnails to reach all edges
-        stopThreshold: 0.01,        // Lower threshold for longer motion (was 0.05)
-        gravityStrength: 0.012,     // Stronger pull for continuous movement
-        rotationSpeed: 0.0004,      // Slower orbital rotation
-        repelStrength: 0.015,       // Stronger repulsion
-        minSpacing: 200,            // Minimum spacing between thumbnails
-        orbitForce: 0.0002          // Gentle orbital force
-    };
+    // Store the index of the selected thumbnail (if any)
+    const openIndex = selectedIndex;
 
-    // Calculate viewport areas for better distribution
-    const viewportArea = window.innerWidth * window.innerHeight;
-    const thumbnailArea = (config.minSpacing * config.minSpacing) * this.thumbnails.length;
-    const scaleFactor = Math.sqrt(viewportArea / thumbnailArea) * 0.8;
+    // Start the snake animation
+    this.startSnakeAnimation();
 
-    // Setup thumbnails with physics properties
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-
-    // --- Step 1: Track the mouse cursor globally for gravity ---
-    let gravityX = window.innerWidth / 2;
-    let gravityY = window.innerHeight / 2;
-    // Only add this listener once per instance
-    if (!this._scatterGravityListenerAdded) {
-      document.addEventListener('mousemove', (e) => {
-        gravityX = e.clientX;
-        gravityY = e.clientY;
-      });
-      this._scatterGravityListenerAdded = true;
-    }
-
-    const bounds = {
-      left: config.margin,
-      right: window.innerWidth - config.margin,
-      top: config.margin,
-      bottom: window.innerHeight - config.margin
-    };
-
-    const thumbnails = this.thumbnails.map((el, i) => {
-      const width = el.offsetWidth || 100;
-      const height = el.offsetHeight || 100;
-      return {
-        element: el,
-        x: centerX,
-        y: centerY,
-        vx: 0,
-        vy: 0,
-        width,
-        height,
-        isSelected: i === selectedIndex
-      };
-    });
-
-    // Improved: Even radial placement with initial offsets for better space usage
-    thumbnails.forEach((thumb, index) => {
-        const angle = (index / thumbnails.length) * 2 * Math.PI + Math.random() * 0.2;
-        const distance = config.minDistance + Math.random() * (config.maxDistance - config.minDistance);
-
-        // Set initial position around center
-        thumb.x = centerX + Math.cos(angle) * distance;
-        thumb.y = centerY + Math.sin(angle) * distance;
-
-        // Apply burst velocity outward from actual offset position
-        thumb.vx = (thumb.x - centerX) * 0.03;
-        thumb.vy = (thumb.y - centerY) * 0.03;
-
-        // Add gentle spin
-        const spin = (Math.random() - 0.5) * 1.5;
-        thumb.vx += spin;
-        thumb.vy += spin;
-    });
-
-    // Handle selected thumbnail immediately
-    if (selectedIndex !== undefined) {
-      const selected = thumbnails[selectedIndex];
-      selected.element.style.transition = 'all 0.5s ease-out';
-      selected.element.style.zIndex = '1000';
+    // After animation begins, trigger fullscreen image if a thumbnail was selected
+    if (openIndex !== undefined) {
       setTimeout(() => {
-        this.openFullscreenImage(selectedIndex);
-      }, 300);
+        this.openFullscreenImage(openIndex);
+      }, 600); // Delay to let animation begin
     }
+    // Removed timeout that ended animation after 8 seconds
+  }
 
-    let animationFrame;
-    const animate = () => {
-      let stillMoving = false;
+  // Start or resume the snake-following animation (organic wandering head)
+  startSnakeAnimation() {
+    if (this.snakeAnimationActive) return;
+    this.snakeAnimationActive = true;
+    this.isAnimating = true;
 
-      thumbnails.forEach(thumb => {
-        // All thumbnails (including selected) move toward the mouse!
+    const thumbnails = this.thumbnails;
+    const leadHistory = [];
+    let head = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let velocity = { x: 2, y: 1.5 };
 
-        // Orbital motion
-        // --- Step 2: Use gravityX/Y instead of centerX/centerY ---
-        const dx = gravityX - thumb.x;
-        const dy = gravityY - thumb.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        
-        if (dist > 0) {
-            // Weaker gravity at larger distances
-            const gravityFalloff = Math.min(1, 500 / dist);
-            const gravForce = config.gravityStrength * gravityFalloff;
-            thumb.vx += (dx / dist) * gravForce;
-            thumb.vy += (dy / dist) * gravForce;
+    const speedLimit = 3;
+    const turnRate = 0.15;
 
-            // Add orbital velocity
-            const perpX = -dy / dist;
-            const perpY = dx / dist;
-            thumb.vx += perpX * config.orbitForce;
-            thumb.vy += perpY * config.orbitForce;
-        }
+    const animateSnake = () => {
+      if (!this.snakeAnimationActive) {
+        this.isAnimating = false;
+        return;
+      }
 
-        // Strong repulsion between thumbnails
-        thumbnails.forEach(other => {
-            if (other === thumb) return;
-            
-            const rdx = other.x - thumb.x;
-            const rdy = other.y - thumb.y;
-            const rDist = Math.sqrt(rdx * rdx + rdy * rdy);
-            
-            if (rDist < config.minSpacing && rDist > 0) {
-                const force = config.repelStrength * (1 - rDist / config.minSpacing);
-                thumb.vx -= (rdx / rDist) * force;
-                thumb.vy -= (rdy / rDist) * force;
-            }
-        });
+      // Randomly adjust velocity slightly
+      velocity.x += (Math.random() - 0.5) * turnRate;
+      velocity.y += (Math.random() - 0.5) * turnRate;
 
-        // Update position
-        thumb.x += thumb.vx;
-        thumb.y += thumb.vy;
-        thumb.vx *= config.damping;
-        thumb.vy *= config.damping;
+      // Clamp velocity
+      const mag = Math.sqrt(velocity.x ** 2 + velocity.y ** 2);
+      if (mag > speedLimit) {
+        velocity.x = (velocity.x / mag) * speedLimit;
+        velocity.y = (velocity.y / mag) * speedLimit;
+      }
 
-        // Boundary bounce with momentum preservation
-        const halfWidth = thumb.width / 2;
-        const halfHeight = thumb.height / 2;
+      // Move head
+      head.x += velocity.x;
+      head.y += velocity.y;
 
-        if (thumb.x + halfWidth > bounds.right) {
-          thumb.x = bounds.right - halfWidth;
-          thumb.vx = -Math.abs(thumb.vx * config.bounce);
-        }
-        if (thumb.x - halfWidth < bounds.left) {
-          thumb.x = bounds.left + halfWidth;
-          thumb.vx = Math.abs(thumb.vx * config.bounce);
-        }
+      // Reflect off walls
+      if (head.x < 0 || head.x > window.innerWidth) velocity.x *= -1;
+      if (head.y < 0 || head.y > window.innerHeight) velocity.y *= -1;
 
-        if (thumb.y + halfHeight > bounds.bottom) {
-          thumb.y = bounds.bottom - halfHeight;
-          thumb.vy = -Math.abs(thumb.vy * config.bounce);
-        }
-        if (thumb.y - halfHeight < bounds.top) {
-          thumb.y = bounds.top + halfHeight;
-          thumb.vy = Math.abs(thumb.vy * config.bounce);
-        }
+      // Record head position
+      leadHistory.unshift({ x: head.x, y: head.y });
+      const maxHistory = thumbnails.length * 40;
+      if (leadHistory.length > maxHistory) {
+        leadHistory.pop();
+      }
 
-        // Rotation
-        const speed = Math.sqrt(thumb.vx * thumb.vx + thumb.vy * thumb.vy);
-        const rotationAngle = (speed * 2) * (Math.random() > 0.5 ? 1 : -1);
-
-        thumb.element.style.position = 'fixed';
-        thumb.element.style.left = `${thumb.x}px`;
-        thumb.element.style.top = `${thumb.y}px`;
-        thumb.element.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
-
-        // --- Modified stillMoving check to continue animation if not at cursor ---
-        const cursorDx = gravityX - thumb.x;
-        const cursorDy = gravityY - thumb.y;
-        const cursorDist = Math.sqrt(cursorDx * cursorDx + cursorDy * cursorDy);
-        if (
-          Math.abs(thumb.vx) > config.stopThreshold ||
-          Math.abs(thumb.vy) > config.stopThreshold ||
-          cursorDist > 100
-        ) {
-          stillMoving = true;
-        }
+      thumbnails.forEach((thumb, index) => {
+        const historyIndex = index * 25;
+        const pos = leadHistory[historyIndex] || head;
+        thumb.style.position = 'fixed';
+        thumb.style.left = `${pos.x}px`;
+        thumb.style.top = `${pos.y}px`;
+        thumb.style.transform = `translate(-50%, -50%) scale(1)`;
       });
 
-      if (stillMoving) {
-        animationFrame = requestAnimationFrame(animate);
-      } else {
-        cancelAnimationFrame(animationFrame);
-        this.isAnimating = false;
-      }
+      requestAnimationFrame(animateSnake);
     };
-    animate();
+
+    animateSnake();
   }
   
   // Create subtle ambient motion
@@ -873,8 +760,12 @@ class CircularGallery {
         }, 500);
     }
 
-    // Don't resume ambient motion if scattered
-    if (!this.hasScattered) {
+    // Resume snake animation if scattered
+    if (this.hasScattered) {
+        // Resume the snake-following animation
+        this.startSnakeAnimation();
+    } else {
+        // Don't resume ambient motion if scattered
         setTimeout(() => {
             if (!this.isDragging && !this.imageActive) {
                 this.startAmbientMotion();
