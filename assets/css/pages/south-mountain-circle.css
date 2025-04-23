@@ -1,0 +1,406 @@
+/* 
+ * South Mountain Circular Gallery
+ * A rotating circular thumbnail gallery with spring physics and flip animations
+ */
+
+:root {
+  /* Gallery configuration variables */
+  --circle-size: 700px;               /* Increased from 450px to accommodate larger thumbnails */
+  --thumbnail-size: 170px;            /* Doubled from 85px */
+  --thumbnail-scale: 1.15;            /* Keep same scale factor */
+  --thumbnail-border-radius: 12px;    /* Increased for larger thumbnails */
+  --thumbnail-rotation: -15deg;       /* Angle to rotate thumbnails */
+  --circle-ambient-animation: 20s;    /* Duration of ambient floating animation */
+  --wheel-transition-duration: 0.8s;  /* Duration for wheel transitions */
+  
+  /* Color variables */
+  --desert-dusk: #2d1b2c;             /* Deep purple for night sky */
+  --desert-sand: #e8c39e;             /* Warm sand color */
+  --desert-rock: #a65d57;             /* Red rocks */
+  --desert-sage: #7ba691;             /* Desert sage accent */
+  --desert-gold: #ffd700;             /* Sunset gold */
+  --desert-shadow: rgba(45, 27, 44, 0.8); /* Dark purple shadow */
+  --bg-color: var(--desert-dusk);     /* Updated background color */
+  --text-color: var(--desert-sand);   /* Updated text color */
+  --accent-color: var(--desert-gold); /* Updated accent color */
+  --overlay-color: rgba(45, 27, 44, 0.85); /* Updated overlay color */
+  
+  /* Animation timing functions */
+  --elastic-ease: cubic-bezier(0.2, 0.8, 0.2, 1);  /* Bouncy elastic easing */
+  --smooth-ease: cubic-bezier(0.4, 0.0, 0.2, 1);   /* Smooth easing */
+}
+
+/* Base styling */
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(
+    135deg,
+    var(--desert-dusk) 0%,
+    #3d2b3c 40%,
+    #4d3b4c 100%
+  );
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.gallery-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gallery-container::before {
+  content: '';
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='1' fill='rgba(232, 195, 158, 0.15)'/%3E%3C/svg%3E");
+  animation: dustFloat 60s linear infinite;
+  opacity: 0.5;
+}
+
+.gallery-title {
+  position: absolute;
+  top: 2rem;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 200;
+  letter-spacing: 0.05em;
+  margin: 0;
+  z-index: 10;
+}
+
+/* Circular wheel container */
+.wheel-container {
+  position: relative;
+  width: var(--circle-size);
+  height: var(--circle-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter var(--wheel-transition-duration) var(--smooth-ease),
+              transform var(--wheel-transition-duration) var(--elastic-ease);
+  will-change: transform, filter;
+  
+  /* Subtle ambient animation */
+  animation: desertFloat var(--circle-ambient-animation) ease-in-out infinite;
+}
+
+/* Wheel container when an image is in fullscreen mode */
+.wheel-container.image-active {
+  filter: blur(4px) brightness(0.4);
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+/* Circular positioning of thumbnails */
+.thumbnail-wheel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 1s var(--elastic-ease);
+  will-change: transform;
+}
+
+/* Individual thumbnail styling */
+.thumbnail {
+  position: absolute;
+  width: var(--thumbnail-size);
+  height: var(--thumbnail-size);
+  transform-origin: center;
+  transform: rotateY(0deg) translateZ(calc(var(--circle-size) / 2 - var(--thumbnail-size) / 2)) rotateZ(var(--thumbnail-rotation));
+  backface-visibility: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.3s var(--elastic-ease),
+              filter 0.3s var(--elastic-ease);
+  will-change: transform, filter, box-shadow;
+  overflow: hidden;
+  border-radius: var(--thumbnail-border-radius);
+  box-shadow: 0 4px 15px var(--desert-shadow);
+  border: 2px solid rgba(232, 195, 158, 0.1);
+  background-color: #000;
+  filter: brightness(0.8);
+  z-index: 5;
+  
+  /* Center all thumbnails initially */
+  top: 50%;
+  left: 50%;
+}
+
+/* Different styling for scattered state */
+.thumbnail-wheel[data-has-scattered="true"] .thumbnail {
+  /* Remove transitions for transform to allow direct animation */
+  transform-origin: center;
+  /* Use custom animation in JS, no CSS transition for transform */
+  z-index: 5; /* Higher z-index for scattered thumbnails */
+}
+
+/* Styling for permanently scattered thumbnails */
+.thumbnail-wheel .thumbnail.scattered {
+  /* Ensure they stay in their scattered positions */
+  position: absolute; 
+  cursor: pointer;
+  top: 50%; 
+  left: 50%;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              box-shadow 0.4s ease,
+              filter 0.4s ease;
+  box-shadow: 0 8px 20px var(--desert-shadow);
+  border: 2px solid rgba(232, 195, 158, 0.15);
+}
+
+/* Hover effect for scattered thumbnails */
+.thumbnail-wheel .thumbnail.scattered:hover {
+  z-index: 10;
+  transform: translate(var(--hover-x, 0), var(--hover-y, 0)) 
+             rotate(var(--hover-rotation, 0deg)) 
+             scale(1.15) !important;
+  filter: brightness(1.1) contrast(1.05);
+  box-shadow: 0 15px 35px var(--desert-shadow),
+              0 0 0 2px var(--desert-gold);
+}
+
+/* Selected thumbnail highlight */
+.thumbnail-wheel .thumbnail.selected {
+  animation: pulse 1s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  z-index: 20;
+  box-shadow: 0 0 0 3px var(--accent-color), 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes pulse {
+  0% { transform: translate(var(--hover-x, 0), var(--hover-y, 0)) rotate(var(--hover-rotation, 0deg)) scale(1); }
+  50% { transform: translate(var(--hover-x, 0), var(--hover-y, 0)) rotate(var(--hover-rotation, 0deg)) scale(1.25); }
+  100% { transform: translate(var(--hover-x, 0), var(--hover-y, 0)) rotate(var(--hover-rotation, 0deg)) scale(1); }
+}
+
+/* Hover effect for thumbnails */
+.thumbnail:hover {
+  transform: rotateY(0deg) translateZ(calc(var(--circle-size) / 2 - var(--thumbnail-size) / 2)) 
+             rotateZ(var(--thumbnail-rotation)) scale(var(--thumbnail-scale));
+  filter: brightness(1.2) contrast(1.1);
+  box-shadow: 0 8px 25px var(--desert-shadow),
+              0 0 0 2px var(--desert-gold);
+  z-index: 10;
+}
+
+/* Thumbnail images */
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--thumbnail-border-radius);
+  transition: opacity 0.3s ease;
+  pointer-events: none; /* Prevents image from capturing click events */
+}
+
+/* Fullscreen image display */
+.fullscreen-view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 1000;
+  background: radial-gradient(
+    circle at center,
+    var(--desert-shadow) 0%,
+    var(--desert-dusk) 100%
+  );
+  transition: opacity 0.6s var(--smooth-ease),
+              visibility 0.6s var(--smooth-ease);
+  perspective: 1000px;
+}
+
+.fullscreen-view.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Fullscreen image container */
+.fullscreen-image {
+  position: relative;
+  max-width: 90%;
+  max-height: 85%;
+  transform: scale(0.5) rotateY(90deg);
+  transition: transform 0.8s var(--elastic-ease);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #000;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.fullscreen-view.active .fullscreen-image {
+  transform: scale(1) rotateY(0deg);
+}
+
+.fullscreen-image img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  display: block;
+}
+
+/* Navigation buttons in fullscreen view */
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 1001;
+}
+
+.nav-button:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.prev-button {
+  left: 20px;
+}
+
+.next-button {
+  right: 20px;
+}
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 1001;
+}
+
+.close-button:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Animation for ambient floating effect */
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  100% {
+    transform: translateY(5px) rotate(-1deg);
+  }
+}
+
+/* Add new desert float animation */
+@keyframes desertFloat {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-12px) rotate(1deg) scale(1.01);
+  }
+  66% {
+    transform: translateY(8px) rotate(-1deg) scale(0.99);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+/* Chain scatter animations */
+@keyframes jitter {
+  0%, 100% { transform: translate(var(--final-x, 0), var(--final-y, 0)) rotate(calc(var(--final-rotation) + 0deg)) scale(1); }
+  25% { transform: translate(var(--final-x, 0), var(--final-y, 0)) rotate(calc(var(--final-rotation) + 2deg)) scale(1.03); }
+  75% { transform: translate(var(--final-x, 0), var(--final-y, 0)) rotate(calc(var(--final-rotation) - 2deg)) scale(0.98); }
+}
+
+.thumbnail-wheel[data-has-scattered="true"] .thumbnail.scattered {
+  animation: jitter 7s infinite ease-in-out;
+  animation-delay: calc(var(--i, 0) * 200ms);
+  /* Store hover position variables based on final position */
+  --hover-x: attr(data-final-x px);
+  --hover-y: attr(data-final-y px);
+  --hover-rotation: attr(data-final-rotation deg);
+  /* Persist shadow effect */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.thumbnail-wheel[data-has-scattered="true"] .thumbnail.scattered:hover {
+  animation-play-state: paused;
+}
+
+/* Add some small motion to scattered thumbnails to make them feel alive */
+.thumbnail-wheel[data-has-scattered="true"] .thumbnail:nth-child(3n+1) {
+  animation-duration: 8s;  
+}
+
+.thumbnail-wheel[data-has-scattered="true"] .thumbnail:nth-child(3n+2) {
+  animation-duration: 9s;
+}
+
+.thumbnail-wheel[data-has-scattered="true"] .thumbnail:nth-child(3n+3) {
+  animation-duration: 10s;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  :root {
+    --circle-size: 500px;
+    --thumbnail-size: 120px;
+  }
+  
+  .gallery-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --circle-size: 400px;
+    --thumbnail-size: 100px;
+  }
+  
+  .gallery-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Add subtle dust particle effect */
+@keyframes dustFloat {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
+}
