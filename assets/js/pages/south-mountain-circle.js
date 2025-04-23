@@ -283,11 +283,7 @@ class CircularGallery {
             e.preventDefault();
             if (!isTouchMove && !this.isAnimating) {
                 const imageIndex = parseInt(thumbnail.dataset.index);
-                if (!this.hasScattered) {
-                    this.triggerScatterEffect(imageIndex);
-                } else {
-                    this.openFullscreenImage(imageIndex);
-                }
+                this.triggerScatterEffect(imageIndex);
             }
         });
 
@@ -300,11 +296,7 @@ class CircularGallery {
             if (this.isAnimating) return;
 
             const imageIndex = parseInt(thumbnail.dataset.index);
-            if (!this.hasScattered) {
-                this.triggerScatterEffect(imageIndex);
-            } else {
-                this.openFullscreenImage(imageIndex);
-            }
+            this.triggerScatterEffect(imageIndex);
         });
     });
 
@@ -572,8 +564,8 @@ class CircularGallery {
         bounce: 0.65,
         margin: 150,  // Increased margin from edges
         stopThreshold: 0.1,
-        gravityStrength: 0.005,   // Very gentle gravity
-        rotationSpeed: 0.003      // Slower swirl
+        gravityStrength: window.innerWidth < 768 ? 0.002 : 0.005,
+        rotationSpeed: window.innerWidth < 768 ? 0.001 : 0.003
     };
 
     // Adjusted center of gravity to move further up and to the left
@@ -784,14 +776,44 @@ class CircularGallery {
     
     // Remove active class from wheel to revert blur and scale
     this.wheelContainer.classList.remove('image-active');
-    
-    // Don't resume the ambient motion if we're scattered - we want the photos to stay in place
+
+    // Find the last viewed thumbnail
+    const lastViewedThumb = this.thumbnails.find(t => 
+        parseInt(t.dataset.index) === this.currentImageIndex
+    );
+
+    if (lastViewedThumb && this.hasScattered) {
+        // Get current bounds
+        const margin = 150;
+        const bounds = {
+            left: margin,
+            right: window.innerWidth - margin,
+            top: margin,
+            bottom: window.innerHeight - margin
+        };
+
+        // Position at bottom center with animation
+        lastViewedThumb.style.transition = 'all 0.5s ease-out';
+        lastViewedThumb.style.position = 'fixed';
+        lastViewedThumb.style.left = `${window.innerWidth / 2}px`;
+        lastViewedThumb.style.top = `${bounds.bottom}px`;
+        lastViewedThumb.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+        lastViewedThumb.style.zIndex = '1';
+
+        // Clear transition after animation
+        setTimeout(() => {
+            lastViewedThumb.style.transition = '';
+            lastViewedThumb.style.zIndex = '';
+        }, 500);
+    }
+
+    // Don't resume ambient motion if scattered
     if (!this.hasScattered) {
-      setTimeout(() => {
-        if (!this.isDragging && !this.imageActive) {
-          this.startAmbientMotion();
-        }
-      }, 1000);
+        setTimeout(() => {
+            if (!this.isDragging && !this.imageActive) {
+                this.startAmbientMotion();
+            }
+        }, 1000);
     }
   }
   
