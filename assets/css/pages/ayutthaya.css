@@ -4,15 +4,15 @@
  */
 
 :root {
-  /* Desert color palette */
-  --desert-dawn: #ffa07a;         /* Soft orange sunrise */
-  --desert-sand: #deb887;         /* Desert sand */
-  --desert-stone: #8b4513;        /* Mountain rock */
-  --desert-sky: #1a2f4b;          /* Desert night sky */
-  --desert-sage: #9acd32;         /* Desert vegetation */
-  --desert-sunset: #ff6b6b;       /* Warm sunset */
-  --desert-gold: #ffd700;         /* Sun reflection */
-  --desert-shadow: rgba(26, 47, 75, 0.85); /* Night sky shadow */
+  /* Ayutthaya color palette */
+  --temple-gold: #d4af37;         /* Historical gold */
+  --temple-sandstone: #d2b48c;    /* Ancient sandstone */
+  --temple-brick: #a0522d;        /* Royal brick red */
+  --temple-stone: #4b3621;        /* Weathered stone */
+  --temple-leaf: #6b8e23;         /* Temple greenery */
+  --temple-dusk: #1a1a2e;         /* Evening shadows */
+  --temple-ember: #ff6347;        /* Warm sunset ember */
+  --temple-shadow: rgba(26, 26, 46, 0.85); /* Deep temple shade */
 
   /* Gallery configuration */
   --circle-size: 700px;
@@ -30,11 +30,11 @@ body {
   padding: 0;
   background: linear-gradient(
     135deg,
-    var(--desert-sky) 0%,
-    var(--desert-shadow) 40%,
+    var(--temple-dusk) 0%,
+    var(--temple-shadow) 40%,
     #2a3f5b 100%
   );
-  color: var(--desert-sand);
+  color: var(--temple-sandstone);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
@@ -73,8 +73,8 @@ body {
   letter-spacing: 2px;
   margin: 0;
   z-index: 10;
-  color: var(--desert-sand);
-  text-shadow: 0 0 10px var(--desert-gold);
+  color: var(--temple-sandstone);
+  text-shadow: 0 0 10px var(--temple-gold);
   font-family: 'Helvetica Neue', sans-serif;
 }
 
@@ -124,7 +124,7 @@ body {
   will-change: transform, filter, box-shadow;
   overflow: hidden;
   border-radius: var(--thumbnail-border-radius);
-  box-shadow: 0 4px 15px var(--desert-shadow);
+  box-shadow: 0 4px 15px var(--temple-shadow);
   border: 2px solid rgba(255, 215, 0, 0.2);
   background-color: #000;
   filter: brightness(0.8);
@@ -141,9 +141,9 @@ body {
   transform-origin: center;
   /* Use custom animation in JS, no CSS transition for transform */
   z-index: 5; /* Higher z-index for scattered thumbnails */
-  border-color: var(--desert-gold);
-  box-shadow: 0 8px 20px var(--desert-shadow),
-              0 0 15px var(--desert-dawn);
+  border-color: var(--temple-gold);
+  box-shadow: 0 8px 20px var(--temple-shadow),
+              0 0 15px var(--temple-leaf);
 }
 
 /* Styling for permanently scattered thumbnails */
@@ -156,7 +156,7 @@ body {
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
               box-shadow 0.4s ease,
               filter 0.4s ease;
-  box-shadow: 0 8px 20px var(--desert-shadow);
+  box-shadow: 0 8px 20px var(--temple-shadow);
   border: 2px solid rgba(255, 215, 0, 0.2);
 }
 
@@ -167,16 +167,16 @@ body {
              rotate(var(--hover-rotation, 0deg)) 
              scale(1.15) !important;
   filter: brightness(1.1) contrast(1.05);
-  box-shadow: 0 15px 35px var(--desert-shadow),
-              0 0 0 2px var(--desert-gold);
+  box-shadow: 0 15px 35px var(--temple-shadow),
+              0 0 0 2px var(--temple-gold);
 }
 
 /* Selected thumbnail highlight */
 .thumbnail-wheel .thumbnail.selected {
   animation: pulse 1s cubic-bezier(0.455, 0.03, 0.515, 0.955);
   z-index: 20;
-  border-color: var(--desert-sunset);
-  box-shadow: 0 0 25px var(--desert-sunset);
+  border-color: var(--temple-ember);
+  box-shadow: 0 0 25px var(--temple-ember);
 }
 
 @keyframes pulse {
@@ -190,9 +190,9 @@ body {
   transform: rotateY(0deg) translateZ(calc(var(--circle-size) / 2 - var(--thumbnail-size) / 2)) 
              rotateZ(var(--thumbnail-rotation)) scale(var(--thumbnail-scale));
   filter: brightness(1.2) contrast(1.1);
-  border-color: var(--desert-gold);
-  box-shadow: 0 8px 25px var(--desert-shadow),
-              0 0 15px var(--desert-dawn);
+  border-color: var(--temple-gold);
+  box-shadow: 0 8px 25px var(--temple-shadow),
+              0 0 15px var(--temple-leaf);
   z-index: 10;
 }
 
@@ -221,8 +221,8 @@ body {
   z-index: 1000;
   background: radial-gradient(
     circle at center,
-    var(--desert-sky) 0%,
-    rgba(26, 47, 75, 0.95) 100%
+    var(--temple-dusk) 0%,
+    rgba(26, 26, 46, 0.95) 100%
   );
   transition: opacity 0.6s var(--smooth-ease),
               visibility 0.6s var(--smooth-ease);
@@ -265,9 +265,9 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: var(--desert-stone);
-  color: var(--desert-sand);
-  border: 2px solid var(--desert-gold);
+  background: var(--temple-stone);
+  color: var(--temple-sandstone);
+  border: 2px solid var(--temple-gold);
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
   width: 50px;
   height: 50px;
@@ -281,8 +281,8 @@ body {
 }
 
 .nav-button:hover {
-  background: var(--desert-gold);
-  color: var(--desert-sky);
+  background: var(--temple-gold);
+  color: var(--temple-dusk);
 }
 
 .prev-button {
