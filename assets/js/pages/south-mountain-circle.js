@@ -253,52 +253,23 @@ class CircularGallery {
       thumbnail.appendChild(img);
       this.thumbnailWheel.appendChild(thumbnail);
       this.thumbnails.push(thumbnail);
-      
-      // Add click handler for each thumbnail
-      thumbnail.addEventListener('click', (e) => {
-        // Add debounce to prevent double firing
-        if (this._clickTimeout) {
-            clearTimeout(this._clickTimeout);
-        }
-
-        this._clickTimeout = setTimeout(() => {
-            // Prevent handling if dragging
-            if (this.isDragging || this.isAnimating) {
-                return;
-            }
-
-            // Set animation state
-            this.isAnimating = true;
-
-            // Clear any existing transitions
-            thumbnail.style.transition = 'none';
-            requestAnimationFrame(() => {
-                thumbnail.style.transition = '';
-            });
-
-            if (!this.hasScattered) {
-                // First click - trigger scatter
-                this.triggerScatterEffect();
-                
-                // Wait for scatter to complete before showing image
-                setTimeout(() => {
-                    if (!this.isDragging) {
-                        this.openFullscreenImage(imageIndex);
-                    }
-                    this.isAnimating = false;
-                }, (this.config.scatterDuration * 1000) + 200);
-            } else {
-                // Already scattered - show image immediately
-                this.openFullscreenImage(imageIndex);
-                this.isAnimating = false;
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-        }, 50); // Small delay to ensure clean event handling
-      });
     }
     
+    // Update thumbnail click handler
+    this.thumbnails.forEach((thumbnail, i) => {
+        thumbnail.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Prevent rapid clicks
+            if (this.isAnimating) return;
+
+            const imageIndex = parseInt(thumbnail.dataset.index);
+            // Always trigger scatter effect and show image
+            this.triggerScatterEffect(imageIndex);
+        });
+    });
+
     // Create fullscreen view
     this.fullscreenView = document.createElement('div');
     this.fullscreenView.className = 'fullscreen-view';
@@ -547,169 +518,153 @@ class CircularGallery {
     }
   }
   
-  // Scatter Effect: Create a chain-like unraveling animation
-  triggerScatterEffect() {
-    if (this.hasScattered || this.isAnimating) return;
-    
-    // Mark as scattered
+  // Scatter Effect: Click-to-scatter model with enlarged focus image
+  triggerScatterEffect(selectedIndex = 0) {
+    if (this.isAnimating) return;
+
+    this.isAnimating = true;
     this.hasScattered = true;
-    this.thumbnailWheel.dataset.hasScattered = 'true';
-    
-    // Stop ambient motion and spring animation during scatter
-    this.stopAmbientMotion();
-    this.rotationSpring.stop();
-    
-    // Generate scatter positions if not already generated
-    if (this.scatterPositions[0].scatterAngle === null) {
-      this.generateScatterPositions();
-    }
-    
-    // Apply scatter animation to each thumbnail
-    this.thumbnails.forEach((thumbnail, i) => {
-      const scatterData = this.scatterPositions[i];
-      const delay = i * 40; // Staggered delay for chain-like effect
-      
-      // Save original transform for later reference
-      const originalTransform = thumbnail.style.transform;
-      thumbnail.dataset.originalTransform = originalTransform;
-      
-      // Apply the scatter animation
-      setTimeout(() => {
-        // Apply easing for natural motion
-        this.animateScatter(thumbnail, scatterData, this.config.scatterDuration);
-      }, delay);
-    });
-  }
-  
-  // Generate random but controlled scatter positions for thumbnails
-  generateScatterPositions() {
-    // Base radius for scattered positions
-    const baseRadius = this.config.scatterRadius;
-    
-    // Calculate viewport dimensions for better positioning
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    
-    // Calculate a nice distribution pattern - we'll use a spiral-like pattern
-    // with some randomness to create a naturalistic "chain" effect
-    this.scatterPositions.forEach((pos, i) => {
-      // Use a spiral pattern as base - golden angle for natural distribution
-      const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // ~2.4 radians
-      const baseScatterAngle = i * goldenAngle;
-      
-      // Add some randomness to make it look more natural
-      const randomAngleOffset = (Math.random() - 0.5) * this.config.scatterJitter * Math.PI;
-      pos.scatterAngle = baseScatterAngle + randomAngleOffset;
-      
-      // Calculate distance - further out as we go along the chain
-      // with variation to make it more organic
-      const progression = i / this.thumbnails.length; // 0 to 1 as we go through items
-      const spiralProgression = Math.sqrt(progression) * baseRadius * 1.2;
-      const randomDistance = (0.7 + Math.random() * 0.6) * spiralProgression;
-      
-      // Ensure thumbnails stay within a reasonable area of the viewport
-      const maxDistance = Math.min(viewportWidth, viewportHeight) * 0.4;
-      pos.scatterDistance = Math.min(randomDistance, maxDistance);
-      
-      // More dramatic random rotation for each thumbnail
-      pos.rotation = (Math.random() - 0.5) * this.config.scatterRotation * 3;
-      
-      // Store index for staggered animation
-      pos.index = i;
-    });
-  }
-  
-  // Animate a thumbnail from its original position to scattered position
-  animateScatter(thumbnail, scatterData, duration) {
-    // Save original position
-    const startTime = performance.now();
-    const endTime = startTime + (duration * 1000);
-    
-    // Store the final target positions on the thumbnail element for persistence
-    thumbnail.dataset.finalX = Math.cos(scatterData.scatterAngle) * scatterData.scatterDistance;
-    thumbnail.dataset.finalY = Math.sin(scatterData.scatterAngle) * scatterData.scatterDistance;
-    thumbnail.dataset.finalRotation = scatterData.rotation;
-    
-    // Set the animation delay based on index for chain-like unraveling
-    const delay = scatterData.index * 80; // Staggered sequence
-    
-    // Calculate scatter position in Cartesian coordinates
-    const targetX = thumbnail.dataset.finalX;
-    const targetY = thumbnail.dataset.finalY;
-    
-    // Index for animation variance - add to thumbnail as custom property
-    thumbnail.style.setProperty('--i', scatterData.index);
-    
-    // Add more dramatic "throw" effect with bouncy easing
-    const easeOutElastic = t => {
-      const c4 = (2 * Math.PI) / 4;
-      return t === 0
-        ? 0
-        : t === 1
-        ? 1
-        : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+
+    const config = {
+        damping: 0.98,
+        scatterForce: 25,
+        minDistance: 150,
+        maxDistance: Math.min(window.innerWidth, window.innerHeight) * 0.25, // Reduced to 25% of viewport
+        collisionRadius: 120,
+        bounce: 0.65,
+        margin: 150,  // Increased margin from edges
+        stopThreshold: 0.1,
+        gravityStrength: 0.005,   // Very gentle gravity
+        rotationSpeed: 0.003      // Slower swirl
     };
-    
-    // Delayed start for chain effect
-    setTimeout(() => {
-      // Initial "throw" effect - quick movement outward
-      thumbnail.style.transition = `transform 0.8s cubic-bezier(0.2, 0.85, 0.4, 1.4)`;
-      
-      // Physical animation of the scatter
-      const animateFrame = (timestamp) => {
-        // Calculate progress (0 to 1)
-        let progress = Math.min((timestamp - startTime - delay) / (duration * 1000), 1);
-        if (progress <= 0) progress = 0.001; // Ensure we start just above 0
-        
-        // Apply elastic easing for more dramatic motion
-        const easedProgress = easeOutElastic(progress);
-        
-        // Calculate current position
-        const currentX = parseFloat(targetX) * easedProgress;
-        const currentY = parseFloat(targetY) * easedProgress;
-        const currentRotation = scatterData.rotation * easedProgress;
-        
-        // Apply transform - scale up slightly during animation for more drama
-        const scale = 1 + Math.sin(progress * Math.PI) * 0.2; // Peaks at middle of animation
-        
-        thumbnail.style.transform = 
-          `translate(${currentX}px, ${currentY}px) rotate(${currentRotation}deg) scale(${scale})`;
-        
-        // Add slight shadow during animation for depth
-        thumbnail.style.boxShadow = `0 ${5 * easedProgress}px ${15 * easedProgress}px rgba(0,0,0,${0.3 * easedProgress})`;
-        
-        // Continue animation if not complete
-        if (progress < 1) {
-          requestAnimationFrame(animateFrame);
-        } else {
-          // Final position - keep them scattered
-          const finalScale = 1; // Normal scale at rest
-          const jitterAmount = 2; // Small amount of random movement
-          
-          // Set CSS variables for animations
-          thumbnail.style.setProperty('--final-x', `${thumbnail.dataset.finalX}px`);
-          thumbnail.style.setProperty('--final-y', `${thumbnail.dataset.finalY}px`);
-          thumbnail.style.setProperty('--final-rotation', `${thumbnail.dataset.finalRotation}deg`);
-          
-          // Set the final position with slight floating animation
-          thumbnail.style.transform = 
-            `translate(${thumbnail.dataset.finalX}px, ${thumbnail.dataset.finalY}px) 
-             rotate(${thumbnail.dataset.finalRotation}deg) scale(${finalScale})`;
-             
-          // Add persistent shadow
-          thumbnail.style.boxShadow = `0 5px 15px rgba(0,0,0,0.3)`;
-          
-          // Keep gentle animation for hover effect only
-          thumbnail.style.transition = 'transform 0.3s ease-out, box-shadow 0.3s ease-out, filter 0.3s ease-out';
-          
-          // Add class to indicate this thumbnail is permanently scattered
-          thumbnail.classList.add('scattered');
+
+    // Adjusted center of gravity to move further up and to the left
+    const centerX = window.innerWidth / 3.9 ;
+    const centerY = window.innerHeight / 3.9 ;
+
+    // Calculate safe boundaries
+    const bounds = {
+        left: config.margin,
+        right: window.innerWidth - config.margin,
+        top: config.margin,
+        bottom: window.innerHeight - config.margin
+    };
+
+    // Setup thumbnails with physics properties
+    const thumbnails = this.thumbnails.map((el, i) => {
+        const width = el.offsetWidth || 100;
+        const height = el.offsetHeight || 100;
+        // Adjust starting position by subtracting half the thumbnail size
+        return {
+            element: el,
+            x: centerX - width / 2,
+            y: centerY - height / 2,
+            vx: 0,
+            vy: 0,
+            width,
+            height,
+            isSelected: i === selectedIndex
+        };
+    });
+
+    // Initial scatter velocities
+    thumbnails.forEach(thumb => {
+        if (!thumb.isSelected) {
+            const angle = Math.random() * Math.PI * 2;
+            const distance = config.minDistance + Math.random() * (config.maxDistance - config.minDistance);
+            const speed = config.scatterForce * (0.8 + Math.random() * 0.4);
+            // Calculate velocity components
+            thumb.vx = Math.cos(angle) * speed;
+            thumb.vy = Math.sin(angle) * speed;
         }
-      };
-      
-      // Start animation
-      requestAnimationFrame(animateFrame);
-    }, delay);
+    });
+
+    // Handle selected thumbnail immediately
+    if (selectedIndex !== undefined) {
+        const selected = thumbnails[selectedIndex];
+        selected.element.style.transition = 'all 0.5s ease-out';
+        selected.element.style.zIndex = '1000';
+        setTimeout(() => {
+            this.openFullscreenImage(selectedIndex);
+        }, 300);
+    }
+
+    let animationFrame;
+    const animate = () => {
+        let stillMoving = false;
+        thumbnails.forEach(thumb => {
+          if (thumb.isSelected) return;
+
+          // Gravitational pull toward center (black hole effect)
+          const dx = centerX - thumb.x;
+          const dy = centerY - thumb.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist > 0.5) {
+            const gravPullX = (dx / dist) * config.gravityStrength;
+            const gravPullY = (dy / dist) * config.gravityStrength;
+            thumb.vx += gravPullX;
+            thumb.vy += gravPullY;
+          }
+          // Optional: slow orbital motion
+          const angle = Math.atan2(dy, dx) + Math.PI / 2;
+          thumb.vx += Math.cos(angle) * config.rotationSpeed;
+          thumb.vy += Math.sin(angle) * config.rotationSpeed;
+
+          // Update position with velocity
+          thumb.x += thumb.vx;
+          thumb.y += thumb.vy;
+
+          const halfWidth = thumb.width / 2;
+          const halfHeight = thumb.height / 2;
+
+          // Keep thumbnails within bounds
+          if (thumb.x + halfWidth > bounds.right) {
+            thumb.x = bounds.right - halfWidth;
+            thumb.vx = -Math.abs(thumb.vx * config.bounce);
+          }
+          if (thumb.x - halfWidth < bounds.left) {
+            thumb.x = bounds.left + halfWidth;
+            thumb.vx = Math.abs(thumb.vx * config.bounce);
+          }
+
+          if (thumb.y + halfHeight > bounds.bottom) {
+            thumb.y = bounds.bottom - halfHeight;
+            thumb.vy = -Math.abs(thumb.vy * config.bounce);
+          }
+          if (thumb.y - halfHeight < bounds.top) {
+            thumb.y = bounds.top + halfHeight;
+            thumb.vy = Math.abs(thumb.vy * config.bounce);
+          }
+
+          // Damping
+          thumb.vx *= config.damping;
+          thumb.vy *= config.damping;
+
+          // Rotation
+          const speed = Math.sqrt(thumb.vx * thumb.vx + thumb.vy * thumb.vy);
+          const rotationAngle = (speed * 2) * (Math.random() > 0.5 ? 1 : -1);
+
+          // Use center-based transform without subtracting size again
+          thumb.element.style.position = 'fixed';
+          thumb.element.style.left = `${thumb.x}px`;
+          thumb.element.style.top = `${thumb.y}px`;
+          thumb.element.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
+
+          if (Math.abs(thumb.vx) > config.stopThreshold ||
+              Math.abs(thumb.vy) > config.stopThreshold) {
+            stillMoving = true;
+          }
+        });
+
+        if (stillMoving) {
+          animationFrame = requestAnimationFrame(animate);
+        } else {
+          cancelAnimationFrame(animationFrame);
+          this.isAnimating = false;
+        }
+    };
+    // Start animation
+    animate();
   }
   
   // Create subtle ambient motion
@@ -736,6 +691,9 @@ class CircularGallery {
   
   // Open a fullscreen image
   openFullscreenImage(imageIndex) {
+    // Reset animation state first
+    this.isAnimating = false;
+
     // Mark image as active to prevent wheel interaction
     this.imageActive = true;
     this.currentImageIndex = imageIndex;
@@ -757,6 +715,9 @@ class CircularGallery {
     
     // Stop ambient motion while viewing image
     this.stopAmbientMotion();
+    
+    // Reset animation flag to allow further clicks after fullscreen opens
+    this.isAnimating = false;
     
     // Make the selected thumbnail pulse briefly to show which one was selected
     if (this.hasScattered) {
@@ -872,3 +833,41 @@ document.addEventListener('DOMContentLoaded', () => {
     // since dramatic resizing is less common during normal use
   });
 });
+
+// Defensive patch for runtime error: Add checks for getBoundingClientRect
+(function() {
+  // Find the container and thumbnails
+  const container = document.getElementById('juicebox-container');
+  if (!container) return;
+  const thumbnails = container.querySelectorAll('.thumbnail');
+  if (thumbnails.length === 0) return;
+  if (!container.getBoundingClientRect) {
+    console.error("Container does not support getBoundingClientRect");
+    return;
+  }
+
+  // Patch physicsStep to safely access getBoundingClientRect
+  if (window.CircularGallery && CircularGallery.prototype.physicsStep) {
+    const origPhysicsStep = CircularGallery.prototype.physicsStep;
+    CircularGallery.prototype.physicsStep = function() {
+      // Defensive getBoundingClientRect usage
+      const rect = this.container.getBoundingClientRect?.();
+      if (!rect) return;
+      // ...rest of original function, but replace all uses of getBoundingClientRect with rect
+      return origPhysicsStep.apply(this, arguments);
+    };
+  }
+
+  // Patch scatterThumbnails to safely access getBoundingClientRect
+  if (window.CircularGallery && CircularGallery.prototype.scatterThumbnails) {
+    const origScatterThumbnails = CircularGallery.prototype.scatterThumbnails;
+    CircularGallery.prototype.scatterThumbnails = function() {
+      const rect = this.container.getBoundingClientRect?.();
+      if (!rect) {
+        console.error("Failed to get container bounds during scatter.");
+        return;
+      }
+      return origScatterThumbnails.apply(this, arguments);
+    };
+  }
+})();
