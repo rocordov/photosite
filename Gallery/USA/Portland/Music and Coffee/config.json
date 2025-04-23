@@ -1,0 +1,33 @@
+{
+  "galleryTitle": "Hillsboro Music and Coffee",
+  "description": "Experience Hillsboro's unique coffee culture where artisanal brews meet live music. Each image captures the harmony between carefully crafted beverages and the soulful sounds that fill these intimate spaces.",
+  "theme": {
+    "bgColor": "#2C1810",
+    "textColor": "#F5E6D3",
+    "accentColor": "#BE9B7B",
+    "lineColor": "#888"
+  },
+  "images": [
+    {
+      "src": "images/_7RV6586.jpg",
+      "title": "Acoustic Corner",
+      "description": "A cozy corner where local musicians often perform intimate sets"
+    },
+    {
+      "src": "images/_7RV6589.jpg",
+      "title": "Brewing Perfection",
+      "description": "Artisanal brewing methods that highlight the coffee's unique character"
+    },
+    {
+      "src": "images/_7RV6592.jpg",
+      "title": "Community Space",
+      "description": "Where conversations flow as freely as the coffee"
+    }
+  ],
+  "carouselOptions": {
+    "autoplay": true,
+    "autoplaySpeed": 5000,
+    "showLines": true,
+    "randomizeOption": true
+  }
+}

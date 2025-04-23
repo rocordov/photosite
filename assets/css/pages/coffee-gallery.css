@@ -1,0 +1,395 @@
+/* Coffee Gallery - CSS
+ * Modular styles for the Music and Coffee gallery
+ */
+
+/* Base styles and variables */
+:root {
+    /* Theme colors */
+    --bg-color: #e8e1d0; /* Beige background */
+    --text-color: #222; /* Dark text */
+    --line-color: #888; /* Line color */
+    --inactive-color: #aaa; /* Inactive text */
+    --animation-duration: 0.6s;
+
+    /* Coffee theme colors */
+    --coffee-dark: #2C1810;
+    --coffee-medium: #4A2C23;
+    --coffee-light: #8B4513;
+    --cream: #F5E6D3;
+    --music-accent: #BE9B7B;
+    --note-color: rgba(245, 230, 211, 0.2);
+}
+
+/* Global styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--coffee-dark);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.4;
+    padding-top: 100px; /* space below the header */
+    padding-bottom: 100px; /* space above the footer or controls */
+}
+
+/* Header styles */
+.gallery-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 25px;
+    z-index: 1000; /* Ensure it's above image layers */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--coffee-dark); /* Ensure readability */
+}
+
+.logo {
+    font-size: 24px;
+    letter-spacing: 15px;
+    font-weight: 300;
+    display: flex;
+    color: var(--cream);
+}
+
+.logo span {
+    margin-right: 15px;
+}
+
+.menu-toggle {
+    cursor: pointer;
+    width: 30px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: var(--text-color);
+    transition: transform 0.3s ease;
+}
+
+/* Main gallery container */
+.gallery-container {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 50px; /* add padding to separate from project-info */
+}
+
+/* Decorative elements */
+.gallery-container::before {
+    content: '♪';
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    font-size: 4rem;
+    color: var(--note-color);
+    opacity: 0.4;
+    animation: float 6s ease-in-out infinite;
+}
+
+.gallery-container::after {
+    content: '☕';
+    position: fixed;
+    bottom: 15%;
+    right: 10%;
+    font-size: 3rem;
+    color: var(--music-accent);
+    opacity: 0.4;
+    animation: float 8s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Carousel component styles */
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 75vh;  /* Increased from 60vh */
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 5vw;  /* Add padding for prev/next slides */
+}
+
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    touch-action: pan-y pinch-zoom;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.carousel-wrapper.dragging {
+    cursor: grabbing;
+}
+
+.carousel-slide {
+    position: absolute;
+    transition: all var(--animation-duration) ease-in-out;
+    transform: scale(0.8);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    width: 70vw !important;
+    height: 70vh !important;
+    max-width: 1400px;
+    opacity: 0;
+    pointer-events: none;
+    left: 50%;
+    transform-origin: center center;
+    border: 2px solid var(--coffee-light);
+    background: var(--coffee-medium);
+    cursor: grab;
+}
+
+.carousel-wrapper.dragging .carousel-slide {
+    transition: none;
+}
+
+/* Ensure images resize and crop nicely inside carousel slides */
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    z-index: 10;
+    transform: translateX(-50%) scale(1.05);
+    pointer-events: auto;
+    box-shadow: 0 0 30px rgba(190, 155, 123, 0.3);
+}
+
+.carousel-slide.next {
+    opacity: 0.8;  /* Increased from 0.4 */
+    z-index: 5;
+    transform: translateX(25%) scale(0.9);  /* Changed from 45% to 25% */
+    width: 60vw !important;
+    height: 60vh !important;
+    pointer-events: auto;  /* Make next slide clickable */
+}
+
+.carousel-slide.prev {
+    opacity: 0.4;
+    z-index: 1;
+    transform: translateX(-120%) scale(0.8);  /* Move further left */
+    width: 50vw !important;
+    height: 50vh !important;
+}
+
+/* Add hover effect for next slide */
+.carousel-slide.next:hover {
+    opacity: 0.9;
+    transform: translateX(20%) scale(0.95);
+    transition: all 0.3s ease;
+}
+
+/* Connecting lines styles */
+.connecting-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.connecting-lines svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.connecting-lines line {
+    stroke: var(--line-color);
+    stroke-width: 0.5;
+    stroke-dasharray: 5, 5;
+    opacity: 0.3;
+}
+
+/* Project info styles */
+.project-info {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 50px;
+    background: rgba(44, 24, 16, 0.9);  /* Darker background */
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 30px;
+    border: 1px solid var(--coffee-light);  /* Add border */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);  /* Add shadow */
+}
+
+.project-info h1 {
+    font-weight: 300;
+    font-size: 26px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.project-info h1::before {
+    content: '♪';
+    margin-right: 10px;
+    color: var(--music-accent);
+}
+
+.project-info h1::after {
+    content: '☕';
+    margin-left: 10px;
+    color: var(--music-accent);
+}
+
+.project-info p {
+    font-weight: 300;
+    font-size: 16px;
+    color: var(--cream);
+    opacity: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+}
+
+/* Controls styles */
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 40px;
+    padding: 10px;
+    background: var(--coffee-medium);
+    border-radius: 25px;
+    padding: 15px 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.mode-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mode-switch span {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.mode-switch span.active {
+    color: var(--text-color);
+}
+
+.mode-switch span:not(.active) {
+    color: var(--inactive-color);
+}
+
+.switch-track {
+    width: 40px;
+    height: 16px;
+    background-color: var(--coffee-light);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.switch-thumb {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: var(--cream);
+    border-radius: 50%;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    transition: left 0.3s ease;
+}
+
+.switch-track.random .switch-thumb {
+    left: calc(100% - 20px);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    body {
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+    .carousel {
+        height: 60vh;
+        margin-bottom: 40px; /* space below carousel on mobile */
+    }
+    
+    .carousel-wrapper {
+        height: 70%;
+    }
+    
+    .carousel-slide {
+        width: 85vw !important;
+        height: 55vh !important;
+    }
+    
+    .carousel-slide.prev {
+        transform: translateX(-20%) scale(0.7);
+        width: 60vw !important;
+        height: 40vh !important;
+    }
+    
+    .carousel-slide.next {
+        transform: translateX(20%) scale(0.7);
+        width: 60vw !important;
+        height: 40vh !important;
+    }
+    
+    .project-info h1 {
+        font-size: 22px;
+    }
+    
+    .project-info p {
+        font-size: 15px;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 18px;
+        letter-spacing: 10px;
+    }
+    
+    .carousel-slide.prev,
+    .carousel-slide.next {
+        display: none;
+    }
+}
