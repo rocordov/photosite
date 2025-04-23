@@ -1,6 +1,6 @@
 /**
  * Vertical Gallery - JavaScript functionality
- * Handles scroll effects, intersection observations, and thumbnail navigation
+ * Optimized for performance with overlapping image layout
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,40 +8,60 @@ document.addEventListener('DOMContentLoaded', () => {
   const imageContainers = document.querySelectorAll('.image-container');
   const thumbnails = document.querySelectorAll('.thumbnail');
   
-  // Set up Intersection Observer to detect which images are in the viewport
+  // Track the currently focused image
+  let currentFocusedIndex = -1;
+  
+  // Use a more efficient Intersection Observer configuration
   const observerOptions = {
     root: null, // viewport
-    rootMargin: '-20% 0px -20% 0px', // tighter margin around the viewport
-    threshold: [0.2, 0.4, 0.6, 0.8] // multiple thresholds for smoother transitions
+    rootMargin: '-20% 0px -20% 0px', // margin around the viewport
+    threshold: [0.5] // Simplified threshold - better performance
   };
   
-  // Create observer instance for bokeh effect
+  // Create observer instance with optimized callbacks
   const imageObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      // Get the image container element
-      const container = entry.target;
+    // Use requestAnimationFrame to optimize visual updates
+    requestAnimationFrame(() => {
+      // Keep track of the most visible image
+      let maxVisibility = 0;
+      let mostVisibleIndex = -1;
       
-      // Get the image's data-index attribute
-      const index = parseInt(container.dataset.index);
-      
-      // Toggle in-focus class based on intersection status
-      if (entry.isIntersecting) {
-        // Calculate how visible the image is
-        const visibilityRatio = entry.intersectionRatio;
+      // Process all entries to find the most visible one
+      entries.forEach(entry => {
+        const container = entry.target;
+        const index = parseInt(container.dataset.index);
         
-        // Add in-focus class to the image that's most in view
-        if (visibilityRatio > 0.6) {
-          container.classList.add('in-focus');
+        if (entry.isIntersecting) {
+          const visibilityRatio = entry.intersectionRatio;
           
-          // Update the active thumbnail
-          updateActiveThumbnail(index);
-        } else {
-          // For partially visible images, we'll still show them but without full focus
-          container.classList.remove('in-focus');
+          if (visibilityRatio > maxVisibility) {
+            maxVisibility = visibilityRatio;
+            mostVisibleIndex = index;
+          }
         }
-      } else {
-        // Remove in-focus class when image is out of view
-        container.classList.remove('in-focus');
+      });
+      
+      // Only update the DOM if the most visible image has changed
+      if (mostVisibleIndex >= 0 && mostVisibleIndex !== currentFocusedIndex) {
+        // Remove focus from previously focused image
+        if (currentFocusedIndex >= 0) {
+          const prevFocused = document.querySelector(`.image-container[data-index="${currentFocusedIndex}"]`);
+          if (prevFocused) {
+            prevFocused.classList.remove('in-focus');
+          }
+        }
+        
+        // Set focus on the new most visible image
+        const newFocused = document.querySelector(`.image-container[data-index="${mostVisibleIndex}"]`);
+        if (newFocused) {
+          newFocused.classList.add('in-focus');
+        }
+        
+        // Update thumbnails
+        updateActiveThumbnail(mostVisibleIndex);
+        
+        // Update the current focused index
+        currentFocusedIndex = mostVisibleIndex;
       }
     });
   }, observerOptions);
@@ -64,16 +84,14 @@ document.addEventListener('DOMContentLoaded', () => {
    * @param {number} index - The index of the currently visible image
    */
   function updateActiveThumbnail(index) {
-    // Remove active class from all thumbnails
-    thumbnails.forEach(thumb => {
-      thumb.classList.remove('active');
+    // Use classList operations directly instead of querying for active thumbnails
+    thumbnails.forEach((thumb, i) => {
+      if (parseInt(thumb.dataset.index) === index) {
+        thumb.classList.add('active');
+      } else {
+        thumb.classList.remove('active');
+      }
     });
-    
-    // Add active class to the thumbnail corresponding to the visible image
-    const activeThumbnail = document.querySelector(`.thumbnail[data-index="${index}"]`);
-    if (activeThumbnail) {
-      activeThumbnail.classList.add('active');
-    }
   }
   
   /**
@@ -91,8 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
-  // Handle initial scroll position
-  window.addEventListener('load', () => {
+  // Handle initial image focus based on scroll position
+  function setInitialFocus() {
     // Find which image is most visible on initial load
     let maxVisibility = 0;
     let mostVisibleIndex = 0;
@@ -111,21 +129,35 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
     
-    // Add in-focus class to the most visible image
+    // Set the most visible image as focused
     const mostVisibleContainer = document.querySelector(`.image-container[data-index="${mostVisibleIndex}"]`);
     if (mostVisibleContainer) {
       mostVisibleContainer.classList.add('in-focus');
+      currentFocusedIndex = mostVisibleIndex;
     }
     
-    // Update the active thumbnail based on the most visible image
+    // Update the active thumbnail
     updateActiveThumbnail(mostVisibleIndex);
     
-    // Smooth scroll to ensure the image is properly centered if it's partially in view
+    // Center the image without unnecessary style resets
     setTimeout(() => {
       mostVisibleContainer.scrollIntoView({
         behavior: 'smooth',
         block: 'center'
       });
-    }, 500);
-  });
+    }, 100);
+  }
+  
+  // Set up initial focus once images have loaded
+  if (document.readyState === 'complete') {
+    setInitialFocus();
+  } else {
+    window.addEventListener('load', setInitialFocus);
+  }
+  
+  // Add passive scroll listener for better scroll performance
+  window.addEventListener('scroll', () => {
+    // Do nothing - let the IntersectionObserver handle visibility changes
+    // This empty listener with passive option helps some browsers optimize scrolling
+  }, { passive: true });
 });

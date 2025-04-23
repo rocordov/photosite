@@ -7,6 +7,9 @@
   --thumbnail-gap: 10px;
   --thumbnail-border-radius: 4px;
   --transition-speed: 0.3s;
+  --content-max-width: 1200px;
+  --image-max-width: 75%;
+  --image-spacing: 180px;
 }
 
 html {
@@ -28,16 +31,23 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: row;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
 }
 
 .gallery-main {
   width: calc(100% - var(--thumbnail-size) - 40px);
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .gallery-header {
   padding: 30px 0;
-  margin-bottom: 30px;
+  margin-bottom: 60px;
+  width: 100%;
+  text-align: center;
 }
 
 .gallery-header h1 {
@@ -50,6 +60,7 @@ body {
   margin-top: 10px;
   display: flex;
   align-items: center;
+  justify-content: center;
   font-size: 14px;
 }
 
@@ -57,10 +68,47 @@ body {
   margin-right: 20px;
 }
 
+.gallery-main {
+  width: calc(100% - var(--thumbnail-size) - 40px);
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  /* Add padding to ensure last image has room at bottom */
+  padding-bottom: 100px;
+}
+
 .image-container {
-  margin-bottom: 120px;
+  margin-bottom: 60px; /* Further reduced spacing for more overlap */
   position: relative;
   transition: all var(--transition-speed) ease;
+  max-width: var(--image-max-width);
+  align-self: flex-start;
+  margin-top: -100px; /* Increased overlap for dragon scale effect */
+  z-index: 1; /* Base z-index */
+  will-change: transform, opacity; /* Performance optimization */
+  perspective: 1000px; /* 3D space for transforms */
+}
+
+/* First image doesn't need negative margin */
+.image-container:first-child {
+  margin-top: 0;
+}
+
+.image-container:nth-child(odd) {
+  align-self: flex-end;
+  transform: translateY(-15px); /* Slight vertical staggering */
+}
+
+.image-container:nth-child(3n) {
+  align-self: center;
+  z-index: 2; /* Give every third image a higher z-index */
+  transform: translateY(-30px); /* Different staggering for center images */
+}
+
+.image-container:nth-child(3n+1) {
+  transform: translateY(0); /* Reset for first of each group */
 }
 
 .image-container img {
@@ -69,20 +117,25 @@ body {
   border-radius: var(--image-border-radius);
   display: block;
   transition: all var(--transition-speed) ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transform-origin: center center; /* Center transform origin */
 }
 
-/* Bokeh effect styles */
-.image-container:not(.in-focus) img {
-  filter: blur(3px);
-  opacity: 0.7;
-  transform: scale(0.98);
+/* Focus effect styles - enhanced but no blur */
+.image-container:not(.in-focus) {
+  opacity: 0.85;
+  transform: translateZ(0) scale(0.98); /* Use translateZ for hardware acceleration */
+}
+
+.image-container.in-focus {
+  opacity: 1;
+  transform: translateZ(0) scale(1.02); /* Hardware accelerated transform */
+  z-index: 10; /* Focused image always on top */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Custom easing for focus */
 }
 
 .image-container.in-focus img {
-  filter: blur(0);
-  opacity: 1;
-  transform: scale(1);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 /* Thumbnail sidebar */
@@ -127,7 +180,26 @@ body {
 }
 
 /* Responsive adjustments */
+@media (max-width: 1200px) {
+  :root {
+    --image-max-width: 85%;
+  }
+  
+  .image-container {
+    margin-top: -60px;
+  }
+}
+
 @media (max-width: 768px) {
+  :root {
+    --image-max-width: 90%;
+  }
+  
+  .image-container {
+    margin-top: -60px; /* Still maintain overlap on mobile */
+    margin-bottom: 40px;
+  }
+  
   .gallery-main {
     width: 100%;
   }
@@ -141,11 +213,47 @@ body {
   .gallery-header h1 {
     font-size: 32px;
   }
+  
+  .image-container.in-focus {
+    transform: translateZ(0) scale(1.01); /* Smaller scale on mobile */
+  }
+  
+  /* Less vertical offset on mobile */
+  .image-container:nth-child(odd) {
+    transform: translateY(-10px);
+  }
+
+  .image-container:nth-child(3n) {
+    transform: translateY(-15px);
+  }
 }
 
 @media (max-width: 480px) {
+  .image-container {
+    margin-top: -40px; /* Less overlap on smallest screens */
+    margin-bottom: 30px;
+  }
+  
   .gallery-thumbnails {
     --thumbnail-size: 30px;
     right: 5px;
+  }
+  
+  /* Keep the staggered layout on mobile with horizontal and vertical offset */
+  .image-container {
+    align-self: center;
+    transform: translateX(-10%) translateY(0);
+  }
+  
+  .image-container:nth-child(odd) {
+    transform: translateX(10%) translateY(-5px);
+  }
+  
+  .image-container:nth-child(3n) {
+    transform: translateX(0) translateY(-10px);
+  }
+  
+  .image-container.in-focus {
+    transform: translateZ(0) scale(1.01) translateX(0); /* Reset horizontal offset when focused but keep scale */
   }
 }
