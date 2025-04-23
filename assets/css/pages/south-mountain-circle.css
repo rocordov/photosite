@@ -4,30 +4,24 @@
  */
 
 :root {
-  /* Gallery configuration variables */
-  --circle-size: 700px;               /* Increased from 450px to accommodate larger thumbnails */
-  --thumbnail-size: 170px;            /* Doubled from 85px */
-  --thumbnail-scale: 1.15;            /* Keep same scale factor */
-  --thumbnail-border-radius: 12px;    /* Increased for larger thumbnails */
-  --thumbnail-rotation: -15deg;       /* Angle to rotate thumbnails */
-  --circle-ambient-animation: 20s;    /* Duration of ambient floating animation */
-  --wheel-transition-duration: 0.8s;  /* Duration for wheel transitions */
-  
-  /* Color variables */
-  --desert-dusk: #2d1b2c;             /* Deep purple for night sky */
-  --desert-sand: #e8c39e;             /* Warm sand color */
-  --desert-rock: #a65d57;             /* Red rocks */
-  --desert-sage: #7ba691;             /* Desert sage accent */
-  --desert-gold: #ffd700;             /* Sunset gold */
-  --desert-shadow: rgba(45, 27, 44, 0.8); /* Dark purple shadow */
-  --bg-color: var(--desert-dusk);     /* Updated background color */
-  --text-color: var(--desert-sand);   /* Updated text color */
-  --accent-color: var(--desert-gold); /* Updated accent color */
-  --overlay-color: rgba(45, 27, 44, 0.85); /* Updated overlay color */
-  
-  /* Animation timing functions */
-  --elastic-ease: cubic-bezier(0.2, 0.8, 0.2, 1);  /* Bouncy elastic easing */
-  --smooth-ease: cubic-bezier(0.4, 0.0, 0.2, 1);   /* Smooth easing */
+  /* Desert color palette */
+  --desert-dawn: #ffa07a;         /* Soft orange sunrise */
+  --desert-sand: #deb887;         /* Desert sand */
+  --desert-stone: #8b4513;        /* Mountain rock */
+  --desert-sky: #1a2f4b;          /* Desert night sky */
+  --desert-sage: #9acd32;         /* Desert vegetation */
+  --desert-sunset: #ff6b6b;       /* Warm sunset */
+  --desert-gold: #ffd700;         /* Sun reflection */
+  --desert-shadow: rgba(26, 47, 75, 0.85); /* Night sky shadow */
+
+  /* Gallery configuration */
+  --circle-size: 700px;
+  --thumbnail-size: 170px;
+  --thumbnail-scale: 1.15;
+  --thumbnail-border-radius: 12px;
+  --thumbnail-rotation: -15deg;
+  --circle-ambient-animation: 20s;
+  --wheel-transition-duration: 0.8s;
 }
 
 /* Base styling */
@@ -36,11 +30,11 @@ body {
   padding: 0;
   background: linear-gradient(
     135deg,
-    var(--desert-dusk) 0%,
-    #3d2b3c 40%,
-    #4d3b4c 100%
+    var(--desert-sky) 0%,
+    var(--desert-shadow) 40%,
+    #2a3f5b 100%
   );
-  color: var(--text-color);
+  color: var(--desert-sand);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
@@ -63,9 +57,14 @@ body {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='1' fill='rgba(232, 195, 158, 0.15)'/%3E%3C/svg%3E");
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 215, 0, 0.15) 1px,
+    transparent 1px
+  );
+  background-size: 30px 30px;
   animation: dustFloat 60s linear infinite;
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 .gallery-title {
@@ -73,10 +72,13 @@ body {
   top: 2rem;
   text-align: center;
   font-size: 2.5rem;
-  font-weight: 200;
-  letter-spacing: 0.05em;
+  font-weight: 300;
+  letter-spacing: 2px;
   margin: 0;
   z-index: 10;
+  color: var(--desert-sand);
+  text-shadow: 0 0 10px var(--desert-gold);
+  font-family: 'Helvetica Neue', sans-serif;
 }
 
 /* Circular wheel container */
@@ -121,13 +123,12 @@ body {
   transform: rotateY(0deg) translateZ(calc(var(--circle-size) / 2 - var(--thumbnail-size) / 2)) rotateZ(var(--thumbnail-rotation));
   backface-visibility: hidden;
   cursor: pointer;
-  transition: box-shadow 0.3s var(--elastic-ease),
-              filter 0.3s var(--elastic-ease);
+  transition: all 0.3s var(--elastic-ease);
   will-change: transform, filter, box-shadow;
   overflow: hidden;
   border-radius: var(--thumbnail-border-radius);
   box-shadow: 0 4px 15px var(--desert-shadow);
-  border: 2px solid rgba(232, 195, 158, 0.1);
+  border: 2px solid rgba(255, 215, 0, 0.2);
   background-color: #000;
   filter: brightness(0.8);
   z-index: 5;
@@ -143,6 +144,9 @@ body {
   transform-origin: center;
   /* Use custom animation in JS, no CSS transition for transform */
   z-index: 5; /* Higher z-index for scattered thumbnails */
+  border-color: var(--desert-gold);
+  box-shadow: 0 8px 20px var(--desert-shadow),
+              0 0 15px var(--desert-dawn);
 }
 
 /* Styling for permanently scattered thumbnails */
@@ -156,7 +160,7 @@ body {
               box-shadow 0.4s ease,
               filter 0.4s ease;
   box-shadow: 0 8px 20px var(--desert-shadow);
-  border: 2px solid rgba(232, 195, 158, 0.15);
+  border: 2px solid rgba(255, 215, 0, 0.2);
 }
 
 /* Hover effect for scattered thumbnails */
@@ -174,7 +178,8 @@ body {
 .thumbnail-wheel .thumbnail.selected {
   animation: pulse 1s cubic-bezier(0.455, 0.03, 0.515, 0.955);
   z-index: 20;
-  box-shadow: 0 0 0 3px var(--accent-color), 0 10px 25px rgba(0, 0, 0, 0.5);
+  border-color: var(--desert-sunset);
+  box-shadow: 0 0 25px var(--desert-sunset);
 }
 
 @keyframes pulse {
@@ -188,8 +193,9 @@ body {
   transform: rotateY(0deg) translateZ(calc(var(--circle-size) / 2 - var(--thumbnail-size) / 2)) 
              rotateZ(var(--thumbnail-rotation)) scale(var(--thumbnail-scale));
   filter: brightness(1.2) contrast(1.1);
+  border-color: var(--desert-gold);
   box-shadow: 0 8px 25px var(--desert-shadow),
-              0 0 0 2px var(--desert-gold);
+              0 0 15px var(--desert-dawn);
   z-index: 10;
 }
 
@@ -218,8 +224,8 @@ body {
   z-index: 1000;
   background: radial-gradient(
     circle at center,
-    var(--desert-shadow) 0%,
-    var(--desert-dusk) 100%
+    var(--desert-sky) 0%,
+    rgba(26, 47, 75, 0.95) 100%
   );
   transition: opacity 0.6s var(--smooth-ease),
               visibility 0.6s var(--smooth-ease);
@@ -262,10 +268,10 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.3);
-  color: white;
-  border: none;
-  border-radius: 50%;
+  background: var(--desert-stone);
+  color: var(--desert-sand);
+  border: 2px solid var(--desert-gold);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
   width: 50px;
   height: 50px;
   font-size: 24px;
@@ -278,7 +284,8 @@ body {
 }
 
 .nav-button:hover {
-  background-color: rgba(0, 0, 0, 0.6);
+  background: var(--desert-gold);
+  color: var(--desert-sky);
 }
 
 .prev-button {
@@ -401,6 +408,10 @@ body {
 
 /* Add subtle dust particle effect */
 @keyframes dustFloat {
-  from { transform: translateY(0); }
-  to { transform: translateY(-100%); }
+  from {
+    transform: translateY(0) rotate(0deg);
+  }
+  to {
+    transform: translateY(-100%) rotate(10deg);
+  }
 }
