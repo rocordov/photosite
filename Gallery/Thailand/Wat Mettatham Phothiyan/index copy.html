@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Wat Mettatham Phothiyan</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" id="jb-viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+		<meta name="description" content="" />
+				<!--START OPEN GRAPH TAGS-->
+		<meta property="og:description" content="" />
+		<meta property="og:image" content="/images/_DSC1041_HDR_2.jpg" />
+		<meta property="og:title" content="Wat Mettatham Phothiyan" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="/" />
+		<!--END OPEN GRAPH TAGS-->
+		<style type="text/css">
+			body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #222;
+}
+.trail-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+.trail-image {
+    position: absolute;
+    width: 180px;
+    height: auto;
+    opacity: 0.2;
+    transform: translate(-50%, -50%);
+    will-change: transform;
+    transition: transform 0.1s ease-out;
+}
+		</style>
+	</head>
+	<body>
+		<div class="trail-container"></div>
+<script>
+    const imagePaths = [
+        "images/_DSC1041_HDR_2.jpg", "images/_DSC1045_HDR.jpg", "images/_DSC1055_HDR_2.jpg", "images/_DSC1114_stack.jpg",
+        "images/_DSC1118_stack.jpg", "images/_DSC1122_HDR.jpg", "images/_DSC1132_stack.jpg", "images/_DSC1139_stack.jpg",
+        "images/_DSC1145_stack.jpg", "images/_DSC1148_stack.jpg", "images/_DSC1151_stack.jpg", "images/_DSC1161_HDR.jpg",
+        "images/_DSC1170_stack.jpg", "images/_DSC1175_stack.jpg", "images/_DSC1180_stack.jpg", "images/_DSC1183_HDR.jpg",
+        "images/_DSC1251_HDR_3.jpg", "images/_DSC1275_HDR.jpg", "images/_DSC1280_HDR_2.jpg", "images/_DSC1288_HDR.jpg",
+        "images/_DSC1299_HDR_2.jpg", "images/_DSC1310_HDR.jpg", "images/_DSC1332_HDR.jpg", "images/_DSC1365_HDR.jpg",
+        "images/_DSC1420_HDR.jpg", "images/_DSC1468_HDR.jpg", "images/_DSC1506_HDR.jpg", "images/_DSC1513_HDR.jpg",
+        "images/_DSC1546_HDR.jpg"
+    ];
+
+    const container = document.querySelector('.trail-container');
+    let index = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        const img = document.createElement('img');
+        img.src = imagePaths[index];
+        img.className = 'trail-image';
+        img.style.left = `${e.clientX}px`;
+        img.style.top = `${e.clientY}px`;
+        container.appendChild(img);
+
+        index = (index + 1) % imagePaths.length;
+
+        setTimeout(() => {
+            img.remove();
+        }, 600); // trail duration
+    });
+</script>
+	</body>
+</html>

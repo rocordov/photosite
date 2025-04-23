@@ -12,57 +12,156 @@
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="/" />
 		<!--END OPEN GRAPH TAGS-->
-		<style type="text/css">
-			body {
-				margin: 0px;
-			}
-		</style>
+			<style>
+				:root {
+					--temple-red: #9B2335;
+					--temple-gold: #D4AF37;
+					--temple-jade: #00A86B;
+					--temple-dark: #1A0F0F;
+					--temple-light: #F7E8D0;
+					--temple-shadow: rgba(0, 0, 0, 0.7);
+				}
+
+				body {
+					margin: 0;
+					background: var(--temple-dark);
+					background-image: 
+						linear-gradient(rgba(26, 15, 15, 0.95), rgba(26, 15, 15, 0.95)),
+						url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%239b2335' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+					color: var(--temple-light);
+					font-family: "Noto Serif", "serif";
+				}
+
+				.header {
+					text-align: center;
+					padding: 2rem;
+					background: var(--temple-shadow);
+					border-bottom: 2px solid var(--temple-gold);
+				}
+
+				.header h1 {
+					color: var(--temple-gold);
+					font-size: 2.5rem;
+					margin: 0;
+					text-shadow: 2px 2px 4px var(--temple-shadow);
+				}
+
+				.header h2 {
+					color: var(--temple-light);
+					font-size: 1.5rem;
+					margin: 0;
+					text-shadow: 1px 1px 2px var(--temple-shadow);
+				}
+
+				.trail-container {
+					position: fixed;
+					width: 100vw;
+					height: 100vh;
+					pointer-events: none;
+					overflow: hidden;
+					backdrop-filter: blur(5px);
+				}
+
+				.trail-image {
+					position: absolute;
+					width: 500px;
+					height: auto;
+					opacity: 0;
+					transform: translate(-50%, -50%) scale(0.9);
+					will-change: transform, opacity;
+					transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+					border: 3px solid var(--temple-gold);
+					box-shadow: 0 10px 30px var(--temple-shadow);
+					animation: fadeInScale 0.8s ease forwards;
+				}
+
+				@keyframes fadeInScale {
+					from {
+						opacity: 0;
+						transform: translate(-50%, -50%) scale(0.9);
+					}
+					to {
+						opacity: 0.9;
+						transform: translate(-50%, -50%) scale(1);
+					}
+				}
+
+				.instructions {
+					position: fixed;
+					bottom: 2rem;
+					left: 50%;
+					transform: translateX(-50%);
+					background: var(--temple-shadow);
+					color: var(--temple-light);
+					padding: 1rem 2rem;
+					border-radius: 2rem;
+					border: 1px solid var(--temple-gold);
+					font-size: 0.9rem;
+					opacity: 0.8;
+					transition: opacity 0.3s ease;
+				}
+
+				.instructions:hover {
+					opacity: 1;
+				}
+			</style>
 	</head>
 	<body>
-		<!--START JUICEBOX EMBED-->
-		<script src="jbcore/juicebox.js"></script>
+		<div class="header">
+			<h1>วัดเมตตาธรรมโพธิญาณ</h1>
+			<h2>Wat Mettatham Phothiyan</h2>
+		</div>
+		<div class="trail-container"></div>
+		<div class="instructions">Move your cursor to reveal temple photographs ✨</div>
 		<script>
-			new juicebox({
-				backgroundColor: "rgba(34,34,34,1)",
-				containerId: "juicebox-container",
-				galleryHeight: "100%",
-				galleryWidth: "100%"
-			});
+		  const container = document.querySelector('.trail-container');
+		  const imagePaths = [
+		    "images/_DSC1041_HDR_2.jpg", "images/_DSC1045_HDR.jpg", "images/_DSC1055_HDR_2.jpg", "images/_DSC1114_stack.jpg",
+		    "images/_DSC1118_stack.jpg", "images/_DSC1122_HDR.jpg", "images/_DSC1132_stack.jpg", "images/_DSC1139_stack.jpg",
+		    "images/_DSC1145_stack.jpg", "images/_DSC1148_stack.jpg", "images/_DSC1151_stack.jpg", "images/_DSC1161_HDR.jpg",
+		    "images/_DSC1170_stack.jpg", "images/_DSC1175_stack.jpg", "images/_DSC1180_stack.jpg", "images/_DSC1183_HDR.jpg",
+		    "images/_DSC1251_HDR_3.jpg", "images/_DSC1275_HDR.jpg", "images/_DSC1280_HDR_2.jpg", "images/_DSC1288_HDR.jpg",
+		    "images/_DSC1299_HDR_2.jpg", "images/_DSC1310_HDR.jpg", "images/_DSC1332_HDR.jpg", "images/_DSC1365_HDR.jpg",
+		    "images/_DSC1420_HDR.jpg", "images/_DSC1468_HDR.jpg", "images/_DSC1506_HDR.jpg", "images/_DSC1513_HDR.jpg",
+		    "images/_DSC1546_HDR.jpg"
+		  ];
+
+		  let currentImageIndex = 0;
+		  let visibleImages = [];
+
+		  function showTrailImage(x, y) {
+		    const img = document.createElement('img');
+		    img.src = imagePaths[currentImageIndex];
+		    img.className = 'trail-image';
+		    img.style.left = `${x}px`;
+		    img.style.top = `${y}px`;
+		    
+		    // Add loading animation
+		    img.style.transform = `translate(-50%, -50%) scale(0.9) rotate(${Math.random() * 6 - 3}deg)`;
+		    
+		    container.appendChild(img);
+		    visibleImages.push(img);
+
+		    // Adjust visible images limit
+		    if (visibleImages.length > 3) {
+		        const oldImg = visibleImages.shift();
+		        oldImg.style.opacity = '0';
+		        oldImg.style.transform = 'translate(-50%, -50%) scale(0.8)';
+		        setTimeout(() => oldImg.remove(), 1000);
+		    }
+
+		    currentImageIndex = (currentImageIndex + 1) % imagePaths.length;
+		  }
+
+		  // Update mouse movement handler for smoother performance
+		  let lastMoveTime = 0;
+		  document.addEventListener('mousemove', (e) => {
+		    const now = Date.now();
+		    if (now - lastMoveTime > 400) {
+		        showTrailImage(e.clientX, e.clientY);
+		        lastMoveTime = now;
+		    }
+		  });
 		</script>
-		<div id="juicebox-container">
-							<noscript>
-					<h1>Wat Mettatham Phothiyan</h1>
-											<p><img src="images/_DSC1041_HDR_2.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1045_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1055_HDR_2.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1114_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1118_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1122_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1132_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1139_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1145_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1148_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1151_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1161_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1170_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1175_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1180_stack.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1183_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1251_HDR_3.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1275_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1280_HDR_2.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1288_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1299_HDR_2.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1310_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1332_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1365_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1420_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1468_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1506_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1513_HDR.jpg" title="" alt="" /><br /></p>
-											<p><img src="images/_DSC1546_HDR.jpg" title="" alt="" /><br /></p>
-									</noscript>
-					</div>
-		<!--END JUICEBOX EMBED-->
 	</body>
 </html>
