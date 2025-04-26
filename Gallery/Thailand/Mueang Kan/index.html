@@ -401,19 +401,20 @@
 
         // Initialize Swiper instances
         function initializeSwipers() {
+            const isMobile = window.innerWidth <= 768;
             const mainSwiper = new Swiper('#main-swiper', {
-                effect: 'coverflow',
+                effect: isMobile ? 'slide' : 'coverflow',
                 grabCursor: true,
-                centeredSlides: true,
-                slidesPerView: 'auto',
+                centeredSlides: !isMobile,
+                slidesPerView: isMobile ? 1 : 'auto',
                 initialSlide: 2,
-                coverflowEffect: {
-                    rotate: 20,        // Reduced rotation
+                coverflowEffect: !isMobile ? {
+                    rotate: 20,
                     stretch: 0,
-                    depth: 250,        // Increased depth
+                    depth: 250,
                     modifier: 1,
                     slideShadows: true
-                },
+                } : undefined,
                 speed: 1000,
                 navigation: {
                     nextEl: '.swiper-button-next',
@@ -438,13 +439,24 @@
                     disableOnInteraction: false,
                     pauseOnMouseEnter: true
                 },
-                // Added responsive breakpoints
                 breakpoints: {
                     320: {
                         slidesPerView: 1,
                     },
                     768: {
                         slidesPerView: 'auto',
+                    }
+                },
+                on: {
+                    beforeInit: function() {
+                        // Limit number of slides on mobile for performance
+                        if (isMobile) {
+                            const wrapper = document.querySelector('#main-swiper .swiper-wrapper');
+                            const slides = wrapper ? wrapper.children : [];
+                            for (let i = slides.length - 1; i >= 20; i--) {
+                                wrapper.removeChild(slides[i]);
+                            }
+                        }
                     }
                 }
             });

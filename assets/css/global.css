@@ -136,3 +136,67 @@ h1, h2, h3, h4, h5, h6, p, span, a:not(.social-icon) {
     font-size: 1.1rem;
   }
 }
+
+/* 1. Add Reduced Motion Support for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 2. Add Focus Styles for Accessibility */
+a:focus, button:focus, input:focus, .focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 3. Add Utility Classes for Visually Hidden Content (for screen readers) */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* 4. Improve Button and Input Base Styles */
+button, input[type="button"], input[type="submit"] {
+  font-family: inherit;
+  border-radius: var(--border-radius);
+  border: none;
+  background: var(--accent);
+  color: var(--text);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover, input[type="button"]:hover, input[type="submit"]:hover {
+  background: var(--accent-glow);
+}
+
+/* 5. Add Responsive Font Sizing */
+html {
+  font-size: 16px;
+}
+@media (max-width: 600px) {
+  html {
+    font-size: 15px;
+  }
+}
+@media (max-width: 400px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* 6. Add Card Utility Class */
+.card {
+  background: var(--card);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-standard);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}

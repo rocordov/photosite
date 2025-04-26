@@ -206,6 +206,14 @@ body {
   pointer-events: none; /* Prevents image from capturing click events */
 }
 
+.thumbnail img.loading {
+  filter: blur(8px) grayscale(0.5);
+  transition: filter 0.5s;
+}
+.thumbnail img.loaded {
+  filter: none;
+}
+
 /* Fullscreen image display */
 .fullscreen-view {
   position: fixed;
@@ -411,4 +419,11 @@ body {
   to {
     transform: translateY(-100%) rotate(10deg);
   }
+}
+
+.thumbnail:focus,
+.nav-button:focus,
+.close-button:focus {
+  outline: 2px solid var(--temple-gold);
+  outline-offset: 2px;
 }

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "simple-weather": {
+      "type": "http",
+      "url": "http://localhost:3030",
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
