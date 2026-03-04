@@ -138,9 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('Component loader initialized');
   loadLayoutComponents();
   loadCustomizationsScript();
-  console.log('Component loader initialized');
-  loadLayoutComponents();
-  loadCustomizationsScript();
 });
 
 // Export functions for potential reuse

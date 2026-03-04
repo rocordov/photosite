@@ -3,28 +3,21 @@
  * Contains scripts specifically for the homepage functionality
  */
 
-// Welcome messages functionality
-let welcomeMessages = [];  // Will be populated from JSON
-
-// Load welcome messages from JSON file
-fetch('/assets/components/flags.json')
-  .then(response => response.json())
-  .then(data => {
-    welcomeMessages = data;
-  })
-  .catch(error => {
-    console.error('Error loading welcome messages:', error);
-    // Fallback welcome message if loading fails
-    
-    welcomeMessages = [{ text: "Welcome", flag: "👋" }];
-  });
-
-let currentIndex = 0;
 const welcomeEl = document.getElementById('animated-welcome');
+let welcomeMessages = [];
+let currentIndex = 0;
 
-/**
- * Cycle through welcome messages with animation
- */
+async function loadWelcomeMessages() {
+  try {
+    const response = await fetch('/assets/components/flags.json');
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    welcomeMessages = await response.json();
+  } catch (error) {
+    console.error('Error loading welcome messages:', error);
+    welcomeMessages = [{ text: "Welcome", flag: "👋" }];
+  }
+}
+
 function cycleWelcomeMessages() {
   if (!welcomeEl) return;
   
@@ -36,26 +29,19 @@ function cycleWelcomeMessages() {
   currentIndex = (currentIndex + 1) % welcomeMessages.length;
 }
 
-// Quotes functionality
-let quotes = []; // Will be populated from JSON
-console.debug('Starting loading quotes:');
-// Load quotes from JSON file
-fetch('/assets/components/quotes.json')
-  .then(response => response.json())
-  .then(data => {
-    quotes = data;
-    displayRandomQuote(); // Move this inside the .then block
-  })
-  .catch(error => {
-    console.error('Error loading quotes:', error);
-    // Fallback quote if loading fails
-    quotes = ["The meaning of life is just to be alive. — Alan Watts"];
-    displayRandomQuote(); // Ensure fallback quote is displayed
-  });
+let quotes = [];
 
-/**
- * Display a random quote from the quotes array
- */
+async function loadQuotes() {
+  try {
+    const response = await fetch('/assets/components/quotes.json');
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    quotes = await response.json();
+  } catch (error) {
+    console.error('Error loading quotes:', error);
+    quotes = ["The meaning of life is just to be alive. — Alan Watts"];
+  }
+}
+
 function displayRandomQuote() {
   const quoteDisplay = document.getElementById('quote-display');
   if (!quoteDisplay) {
@@ -63,7 +49,6 @@ function displayRandomQuote() {
     return;
   } 
   
-  // Guard against empty quotes array
   if (!quotes || quotes.length === 0) {
     console.warn('No quotes available to display');
     return;
@@ -71,7 +56,6 @@ function displayRandomQuote() {
 
   const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
   
-  // Handle both object and string formats
   if (typeof randomQuote === 'object' && randomQuote.quote && randomQuote.author) {
     quoteDisplay.textContent = `${randomQuote.quote} — ${randomQuote.author}`;
   } else if (typeof randomQuote === 'string') {
@@ -84,26 +68,17 @@ function displayRandomQuote() {
   console.debug('Random quote displayed:', randomQuote);
 }
 
-/**
- * Initialize gallery from albums.json
- */
 async function initGallery() {
   const galleryContainer = document.getElementById('gallery-menu');
   if (!galleryContainer) return;
   
   try {
-    // Fetch the albums data from the JSON file
     const response = await fetch('albums.json');
-    //console.debug('Response:', response);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     
     const albums = await response.json();
     console.debug(`Number of albums loaded: ${albums.length}`);
     
-    // Shuffle the albums array using Fisher-Yates algorithm
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -113,10 +88,8 @@ async function initGallery() {
     }
     const shuffledAlbums = shuffleArray(albums);
     
-    // Clear any existing content
     galleryContainer.innerHTML = '';
     
-    // Create and append gallery items in randomized order
     shuffledAlbums.forEach((album, index) => {
       const galleryItem = document.createElement('a');
       galleryItem.className = 'gallery-item';
@@ -147,18 +120,16 @@ async function initGallery() {
   }
 }
 
-// Initialize homepage elements
-document.addEventListener('DOMContentLoaded', () => {
-  // Initialize welcome message
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadWelcomeMessages();
   if (welcomeEl) {
     welcomeEl.classList.add('fade-in');
-    setInterval(cycleWelcomeMessages, 4500); // Change message every 4.5 seconds
+    cycleWelcomeMessages();
+    setInterval(cycleWelcomeMessages, 4500);
   }
-  
-  // Initialize quote
-  
+
+  await loadQuotes();
   displayRandomQuote();
-  
-  // Initialize gallery
+
   initGallery();
 });
